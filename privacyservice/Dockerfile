@@ -33,6 +33,8 @@ RUN /bin/busybox mkdir -p /databunker/data && \
     /bin/busybox ln -s /bin/busybox /bin/addgroup && \
     /bin/busybox ln -s /bin/busybox /bin/adduser && \
     /bin/busybox ln -s /bin/busybox /bin/chown && \
+    /bin/busybox ln -s /bin/busybox /bin/ls && \
+    /bin/busybox ln -s /bin/busybox /bin/cat && \
     /bin/busybox touch /etc/passwd && \
     /bin/busybox mkdir -p /tmp && \
     /bin/busybox chmod 0777 /tmp && \
@@ -41,8 +43,17 @@ RUN /bin/busybox mkdir -p /databunker/data && \
 # Tell docker that all future commands should run as the appuser user
 USER appuser
 COPY --from=builder /go/bin/databunker /databunker/bin/databunker
-COPY run.sh health-check.sh /databunker/bin/
+COPY run.sh startInDocker.sh health-check.sh /databunker/bin/
 EXPOSE 3000
-HEALTHCHECK --interval=5s --timeout=3s --start-period=33s --retries=3 CMD /databunker/bin/health-check.sh
-ENTRYPOINT ["/bin/sh", "/databunker/bin/run.sh"]
+#
+# Must first execute these commands before starting this container
+# DATABUNKER_MASTERKEY=`< /dev/urandom LC_CTYPE=C tr -dc 'a-f0-9' | head -c${1:-48};`
+# ROOTTOKEN=`uuidgen 2> /dev/null`
+# databunker -init -masterkey ${DATABUNKER_MASTERKEY} -roottoken ${ROOTTOKEN}
+#
+ENV DATABUNKER_MASTERKEY=e8de0079de860a194fd7ea15e2ad82c165f0075956d2a825
+ENV MMURL="https://api-joubert-us-east.eng.macrometa.io"
+ENV MMAPIKEY="joubert_databunker.com.databunkerDemo.VpT4zqdTT5qz4PycrDW2ItXFYGgcX8FOVJljFlEI3tMBAP7lnQBBoL3zgqRIlfuKf15116"
+#HEALTHCHECK --interval=5s --timeout=3s --start-period=33s --retries=3 CMD /databunker/bin/health-check.sh
+ENTRYPOINT ["/bin/sh", "/databunker/bin/startInDocker.sh"]
 #CMD ["/bin/sh", "-x", "-c", "/go/bin/databunker -init"]

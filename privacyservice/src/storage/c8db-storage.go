@@ -13,7 +13,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	_ "github.com/mattn/go-sqlite3" // load sqlite3 here
 	"go.mongodb.org/mongo-driver/bson"
@@ -75,64 +74,64 @@ func (dbobj C8DB) CreateTestDB() string {
 // OpenDB function opens the database
 func (dbobj *C8DB) OpenDB(filepath *string) error {
 	//fmt.Printf("OpenDB: filepath:%s", filepath)
+	fmt.Printf("******** Databunker with C8DB\n")
 
-	dbfile := "./databunker.db"
-	if filepath != nil {
-		if len(*filepath) > 0 {
-			dbfile = *filepath
-		}
-	}
-	if len(dbfile) >= 3 && dbfile[len(dbfile)-3:] != ".db" {
-		dbfile = dbfile + ".db"
-	}
-	fmt.Printf("Databunker db file is: %s\n", dbfile)
-	// collect list of all tables
-	/*
-		if _, err := os.Stat(dbfile); !os.IsNotExist(err) {
-			db2, err := ql.OpenFile(dbfile, &ql.Options{FileFormat: 2})
-			if err != nil {
-				return dbobj, err
-			}
-			dbinfo, err := db2.Info()
-			for _, v := range dbinfo.Tables {
-				knownApps = append(knownApps, v.Name)
-			}
-			db2.Close()
-		}
-	*/
+	// dbfile := "./databunker.db"
+	// if filepath != nil {
+	// 	if len(*filepath) > 0 {
+	// 		dbfile = *filepath
+	// 	}
+	// }
+	// if len(dbfile) >= 3 && dbfile[len(dbfile)-3:] != ".db" {
+	// 	dbfile = dbfile + ".db"
+	// }
+	// // collect list of all tables
+	// /*
+	// 	if _, err := os.Stat(dbfile); !os.IsNotExist(err) {
+	// 		db2, err := ql.OpenFile(dbfile, &ql.Options{FileFormat: 2})
+	// 		if err != nil {
+	// 			return dbobj, err
+	// 		}
+	// 		dbinfo, err := db2.Info()
+	// 		for _, v := range dbinfo.Tables {
+	// 			knownApps = append(knownApps, v.Name)
+	// 		}
+	// 		db2.Close()
+	// 	}
+	// */
 
-	//ql.RegisterDriver2()
-	//db, err := sql.Open("ql2", dbfile)
-	db, err := sql.Open("sqlite3", "file:"+dbfile+"?_journal_mode=WAL")
-	if err != nil {
-		log.Fatalf("Failed to open databunker.db file: %s", err)
-		return err
-	}
-	err = db.Ping()
-	if err != nil {
-		log.Fatalf("Error on opening database connection: %s", err.Error())
-		return err
-	}
-	_, err = db.Exec("vacuum")
-	if err != nil {
-		log.Fatalf("Error on vacuum database command")
-	}
-	dbobj.db = db
-	// load all table names
-	q := "select name from sqlite_master where type ='table'"
-	tx, err := dbobj.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-	rows, err := tx.Query(q)
-	for rows.Next() {
-		t := ""
-		rows.Scan(&t)
-		knownApps2 = append(knownApps2, t)
-	}
-	tx.Commit()
-	log.Printf("List of tables: %s\n", knownApps2)
+	// //ql.RegisterDriver2()
+	// //db, err := sql.Open("ql2", dbfile)
+	// db, err := sql.Open("sqlite3", "file:"+dbfile+"?_journal_mode=WAL")
+	// if err != nil {
+	// 	log.Fatalf("Failed to open databunker.db file: %s", err)
+	// 	return err
+	// }
+	// err = db.Ping()
+	// if err != nil {
+	// 	log.Fatalf("Error on opening database connection: %s", err.Error())
+	// 	return err
+	// }
+	// _, err = db.Exec("vacuum")
+	// if err != nil {
+	// 	log.Fatalf("Error on vacuum database command")
+	// }
+	// dbobj.db = db
+	// // load all table names
+	// q := "select name from sqlite_master where type ='table'"
+	// tx, err := dbobj.db.Begin()
+	// if err != nil {
+	// 	return err
+	// }
+	// defer tx.Rollback()
+	// rows, err := tx.Query(q)
+	// for rows.Next() {
+	// 	t := ""
+	// 	rows.Scan(&t)
+	// 	knownApps2 = append(knownApps2, t)
+	// }
+	// tx.Commit()
+	// log.Printf("List of tables: %s\n", knownApps2)
 	return nil
 }
 
@@ -784,57 +783,60 @@ func (dbobj C8DB) deleteRecordInTable2(table string, keyName string, keyValue st
 // DeleteExpired0 deletes expired records in database
 func (dbobj C8DB) DeleteExpired0(t Tbl, expt int32) (int64, error) {
 	//fmt.Println("*** DeleteExpired0")
+	return 0, nil
 
-	table := GetTable(t)
-	now := int32(time.Now().Unix())
-	q := fmt.Sprintf("delete from %s WHERE `when`>0 AND `when`<%d", table, now-expt)
-	log.Printf("q: %s\n", q)
-	tx, err := dbobj.db.Begin()
-	if err != nil {
-		return 0, err
-	}
-	defer tx.Rollback()
-	result, err := tx.Exec(q)
-	if err != nil {
-		return 0, err
-	}
-	if err = tx.Commit(); err != nil {
-		return 0, err
-	}
-	num, err := result.RowsAffected()
-	// vacuum database
-	dbobj.db.Exec("vacuum")
-	return num, err
+	// table := GetTable(t)
+	// now := int32(time.Now().Unix())
+	// q := fmt.Sprintf("delete from %s WHERE `when`>0 AND `when`<%d", table, now-expt)
+	// log.Printf("q: %s\n", q)
+	// tx, err := dbobj.db.Begin()
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// defer tx.Rollback()
+	// result, err := tx.Exec(q)
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// if err = tx.Commit(); err != nil {
+	// 	return 0, err
+	// }
+	// num, err := result.RowsAffected()
+	// // vacuum database
+	// dbobj.db.Exec("vacuum")
+	// return num, err
 }
 
 // DeleteExpired deletes expired records in database
 func (dbobj C8DB) DeleteExpired(t Tbl, keyName string, keyValue string) (int64, error) {
 	//	fmt.Println("*** DBeDeleteExpiredxists")
 
-	table := GetTable(t)
-	q := "delete from " + table + " WHERE endtime>0 AND endtime<$1 AND " + dbobj.escapeName(keyName) + "=$2"
-	log.Printf("q: %s\n", q)
+	return 0, nil
 
-	tx, err := dbobj.db.Begin()
-	if err != nil {
-		return 0, err
-	}
-	defer tx.Rollback()
-	now := int32(time.Now().Unix())
-	result, err := tx.Exec(q, now, keyValue)
-	if err != nil {
-		return 0, err
-	}
-	if err = tx.Commit(); err != nil {
-		return 0, err
-	}
-	num, err := result.RowsAffected()
-	return num, err
+	// table := GetTable(t)
+	// q := "delete from " + table + " WHERE endtime>0 AND endtime<$1 AND " + dbobj.escapeName(keyName) + "=$2"
+	// log.Printf("q: %s\n", q)
+
+	// tx, err := dbobj.db.Begin()
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// defer tx.Rollback()
+	// now := int32(time.Now().Unix())
+	// result, err := tx.Exec(q, now, keyValue)
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// if err = tx.Commit(); err != nil {
+	// 	return 0, err
+	// }
+	// num, err := result.RowsAffected()
+	// return num, err
 }
 
 // CleanupRecord nullifies specific feilds in records in database
 func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data interface{}) (int64, error) {
-	//	fmt.Println("*** CleanupRecord")
+	fmt.Println("*** CleanupRecord")
 
 	tbl := GetTable(t)
 	cleanup := dbobj.decodeForCleanup(data)
@@ -860,15 +862,16 @@ func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data int
 // GetExpiring get records that are expiring
 func (dbobj C8DB) GetExpiring(t Tbl, keyName string, keyValue string) ([]bson.M, error) {
 	//	fmt.Println("*** GetExpiring")
+	return nil, nil
 
-	table := GetTable(t)
-	now := int32(time.Now().Unix())
-	q := fmt.Sprintf("select * from %s WHERE endtime>0 AND endtime<%d AND %s=$1",
-		table, now, dbobj.escapeName(keyName))
-	//fmt.Printf("q: %s\n", q)
-	values := make([]interface{}, 0)
-	values = append(values, keyValue)
-	return dbobj.getListDo(q, values)
+	// table := GetTable(t)
+	// now := int32(time.Now().Unix())
+	// q := fmt.Sprintf("select * from %s WHERE endtime>0 AND endtime<%d AND %s=$1",
+	// 	table, now, dbobj.escapeName(keyName))
+	// //fmt.Printf("q: %s\n", q)
+	// values := make([]interface{}, 0)
+	// values = append(values, keyValue)
+	// return dbobj.getListDo(q, values)
 }
 
 // GetUniqueList returns a unique list of values from specific column in database

@@ -606,6 +606,7 @@ func main() {
 	initCaptcha(hash)
 	router := e.setupRouter()
 	router = e.setupConfRouter(router)
+	fmt.Printf("Listening on host: %s:%s\n", cfg.Server.Host, cfg.Server.Port)
 	srv := &http.Server{Addr: cfg.Server.Host + ":" + cfg.Server.Port, Handler: reqMiddleware(router)}
 
 	stop := make(chan os.Signal, 2)
