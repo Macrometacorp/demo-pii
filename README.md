@@ -1,2 +1,2 @@
-# demo-addressbook-privacy
+# demo-pii
 Data privacy and residency
