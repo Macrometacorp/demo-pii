@@ -906,7 +906,7 @@ func (dbobj C8DB) DeleteExpired(t Tbl, keyName string, keyValue string) (int64, 
 
 // CleanupRecord nullifies specific feilds in records in database
 func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data interface{}) (int64, error) {
-	fmt.Println("*** CleanupRecord")
+	//fmt.Println("*** CleanupRecord")
 
 	tbl := GetTable(t)
 
@@ -921,7 +921,7 @@ func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data int
 		" update { _key: doc._key} with {" + cleanup + "} into " + tbl
 
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
-	fmt.Printf("query: %s\n", query)
+	//fmt.Printf("query: %s\n", query)
 	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
 
 	client := &http.Client{}
