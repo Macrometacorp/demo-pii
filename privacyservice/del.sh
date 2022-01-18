@@ -2,7 +2,6 @@
 #
 
 . ./env
-DATABUNKER="http://localhost:3000"
 
 TOKEN=$1
-curl --request DELETE $DATABUNKER/v1/user/token/${TOKEN} -H "X-Bunker-Token: $DATABUNKER_ROOTTOKEN" 
+curl -s --request DELETE ${DATABUNKER_URL}/v1/user/token/${TOKEN} -H "X-Bunker-Token: $DATABUNKER_ROOTTOKEN" 

@@ -444,36 +444,37 @@ func (dbobj C8DB) UpdateRecordInTable(table string, keyName string, keyValue str
 // UpdateRecord2 updates database record
 func (dbobj C8DB) UpdateRecord2(t Tbl, keyName string, keyValue string,
 	keyName2 string, keyValue2 string, bdoc *bson.M, bdel *bson.M) (int64, error) {
-	fmt.Println("*** UpdateRecord2")
+	//fmt.Println("*** UpdateRecord2")
 
 	table := GetTable(t)
 	if table == "agreementsupdate" || table == "agreements" {
 		return 0, nil
 	}
-	fmt.Printf("XXX: (%s)\n", table)
-	fmt.Printf("XXXX: %s\n", bdoc)
 
-	q := "for doc in " + table + "update {" + keyName + ": \"" + keyValue + "\", " + keyName2 + ": \"" + keyValue2 + "\"} with {"
+	q := "for doc in " + table +
+		" filter doc." + keyName + " == '" + keyValue + "' and doc." + keyName2 + " == '" + keyValue2 + "'" +
+		" update { _key:doc._key } with {"
 
 	var updateValues = ""
 	for key, element := range *bdoc {
-		updateValues = updateValues + key + ": \"" + fmt.Sprintf("%v", element) + "\","
+		updateValues = updateValues + key + ": '" + fmt.Sprintf("%v", element) + "',"
 	}
 	updateValues = strings.TrimSuffix(updateValues, ",")
 
 	q = q + updateValues + "} in " + table
 
-	fmt.Printf("q:%s\n", q)
+	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
+	//fmt.Printf("q:%s\n", query)
 
 	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", endpoint, strings.NewReader(q))
+	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
 	req.Header.Add("Authorization", getMMApikey())
 	req.Header.Add("accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 
-	debug(httputil.DumpRequest(req, true))
+	//debug(httputil.DumpRequest(req, true))
 
 	if err != nil {
 		fmt.Printf("%s\n\n", err)
@@ -1197,6 +1198,8 @@ func createCollection(collectionName string) {
 		Name string `json:"name"`
 	}
 
+	fmt.Printf("Creating collection %s", collectionName)
+
 	var endpoint = getMMUrl() + "/_fabric/_system/_api/collection"
 	bytes, err := json.Marshal(Collection{Name: collectionName})
 
@@ -1306,7 +1309,7 @@ func (dbobj C8DB) initSharedRecords() error {
 
 func (dbobj C8DB) initAudit() error {
 	//fmt.Println("*** initAudit")
-	createCollection("sharedrecords")
+	createCollection("audit")
 	return nil
 
 	// queries := []string{`CREATE TABLE IF NOT EXISTS audit (
