@@ -1,5 +1,5 @@
 export default () => (
-  <div className="-mb-14">
+  <div className="-mb-14 flex flex-row">
     <div className="flex-1 lg:flex-none">
       <div className="form-control">
         <input type="text" placeholder="Search" className="input input-ghost" />
