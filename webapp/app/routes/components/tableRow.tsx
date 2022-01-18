@@ -9,7 +9,6 @@ export default ({ activeRow, data, setActiveRow }: RowProps) => (
     onMouseLeave={() => {
       setActiveRow("");
     }}
-    key={data.user_token}
   >
     <th>{data.user_token}</th>
     <td>{data.name}</td>
