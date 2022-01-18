@@ -234,18 +234,18 @@ func (dbobj C8DB) decodeForCleanup(data interface{}) string {
 	case primitive.M:
 		for idx := range data.(primitive.M) {
 			if len(fields) == 0 {
-				fields = dbobj.escapeName(idx) + "=null"
+				fields = dbobj.escapeName(idx) + ": ''"
 			} else {
-				fields = fields + "," + dbobj.escapeName(idx) + "=null"
+				fields = fields + "," + dbobj.escapeName(idx) + ": ''"
 			}
 		}
 		return fields
 	case map[string]interface{}:
 		for idx := range data.(map[string]interface{}) {
 			if len(fields) == 0 {
-				fields = dbobj.escapeName(idx) + "=null"
+				fields = dbobj.escapeName(idx) + ": ''"
 			} else {
-				fields = fields + "," + dbobj.escapeName(idx) + "=null"
+				fields = fields + "," + dbobj.escapeName(idx) + ": ''"
 			}
 		}
 	default:
@@ -447,9 +447,50 @@ func (dbobj C8DB) UpdateRecord2(t Tbl, keyName string, keyValue string,
 	fmt.Println("*** UpdateRecord2")
 
 	table := GetTable(t)
-	filter := dbobj.escapeName(keyName) + "=\"" + keyValue + "\" AND " +
-		dbobj.escapeName(keyName2) + "=\"" + keyValue2 + "\""
-	return dbobj.updateRecordInTableDo(table, filter, bdoc, bdel)
+	if table == "agreementsupdate" || table == "agreements" {
+		return 0, nil
+	}
+	fmt.Printf("XXX: (%s)\n", table)
+	fmt.Printf("XXXX: %s\n", bdoc)
+
+	q := "for doc in " + table + "update {" + keyName + ": \"" + keyValue + "\", " + keyName2 + ": \"" + keyValue2 + "\"} with {"
+
+	var updateValues = ""
+	for key, element := range *bdoc {
+		updateValues = updateValues + key + ": \"" + fmt.Sprintf("%v", element) + "\","
+	}
+	updateValues = strings.TrimSuffix(updateValues, ",")
+
+	q = q + updateValues + "} in " + table
+
+	fmt.Printf("q:%s\n", q)
+
+	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", endpoint, strings.NewReader(q))
+	req.Header.Add("Authorization", getMMApikey())
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	debug(httputil.DumpRequest(req, true))
+
+	if err != nil {
+		fmt.Printf("%s\n\n", err)
+		log.Fatalln(err)
+	}
+
+	resp, _ := client.Do(req)
+
+	if !strings.Contains(resp.Status, "201") {
+		debug(httputil.DumpResponse(resp, true))
+	}
+
+	return 1, nil
+
+	// filter := dbobj.escapeName(keyName) + "=\"" + keyValue + "\" AND " +
+	// 	dbobj.escapeName(keyName2) + "=\"" + keyValue2 + "\""
+	// return dbobj.updateRecordInTableDo(table, filter, bdoc, bdel)
 }
 
 // UpdateRecordInTable2 updates database record
@@ -506,7 +547,7 @@ func (dbobj C8DB) LookupRecord(t Tbl, row bson.M) (bson.M, error) {
 
 // GetRecord returns specific record from database
 func (dbobj C8DB) GetRecord(t Tbl, keyName string, keyValue string) (bson.M, error) {
-	//log.Printf("*** GetRecord: keyName: %s keyValue: %s\n", keyName, keyValue)
+	//fmt.Printf("*** GetRecord: keyName: %s keyValue: %s\n", keyName, keyValue)
 
 	table := GetTable(t)
 	// q1 := "select * from " + table + " WHERE " + dbobj.escapeName(keyName) + "=$1"
@@ -722,10 +763,39 @@ func (dbobj C8DB) getRecordInTableDo(q string, values []interface{}) (bson.M, er
 
 // DeleteRecord deletes record in database
 func (dbobj C8DB) DeleteRecord(t Tbl, keyName string, keyValue string) (int64, error) {
-	fmt.Println("*** DeleteRecord")
+	//fmt.Println("*** DeleteRecord")
 
 	tbl := GetTable(t)
-	return dbobj.DeleteRecordInTable(tbl, keyName, keyValue)
+
+	q := "for doc in " + tbl +
+		" filter doc." + keyName + " == '" + keyValue + "'" +
+		" remove { _key: doc._key } in " + tbl
+
+	//fmt.Printf("q:%s\n", q)
+	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
+	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
+	req.Header.Add("Authorization", getMMApikey())
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	//debug(httputil.DumpRequest(req, true))
+
+	if err != nil {
+		fmt.Printf("%s\n\n", err)
+		log.Fatalln(err)
+	}
+
+	resp, _ := client.Do(req)
+
+	if !strings.Contains(resp.Status, "201") {
+		debug(httputil.DumpResponse(resp, true))
+	}
+
+	return 0, nil
+	//return dbobj.DeleteRecordInTable(tbl, keyName, keyValue)
 }
 
 // DeleteRecordInTable deletes record in database
@@ -839,24 +909,61 @@ func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data int
 	fmt.Println("*** CleanupRecord")
 
 	tbl := GetTable(t)
-	cleanup := dbobj.decodeForCleanup(data)
-	q := "update " + tbl + " SET " + cleanup + " WHERE " + dbobj.escapeName(keyName) + "=$1"
-	log.Printf("q: %s\n", q)
 
-	tx, err := dbobj.db.Begin()
+	if tbl == "agreementsupdate" || tbl == "agreements" {
+		return 0, nil
+	}
+
+	cleanup := dbobj.decodeForCleanup(data)
+
+	q := "for doc in " + tbl +
+		" filter doc." + keyName + " == '" + keyValue + "'" +
+		" update { _key: doc._key} with {" + cleanup + "} into " + tbl
+
+	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
+	fmt.Printf("query: %s\n", query)
+	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
+	req.Header.Add("Authorization", getMMApikey())
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	//	debug(httputil.DumpRequest(req, true))
+
 	if err != nil {
-		return 0, err
+		fmt.Printf("%s\n\n", err)
+		log.Fatalln(err)
 	}
-	defer tx.Rollback()
-	result, err := tx.Exec(q, keyValue)
-	if err != nil {
-		return 0, err
-	}
-	if err = tx.Commit(); err != nil {
-		return 0, err
-	}
-	num, err := result.RowsAffected()
-	return num, err
+
+	resp, _ := client.Do(req)
+
+	//if !strings.Contains(resp.Status, "201") {
+	debug(httputil.DumpResponse(resp, true))
+	//}
+
+	// cleanup := dbobj.decodeForCleanup(data)
+	// q := "update " + tbl + " SET " + cleanup + " WHERE " + dbobj.escapeName(keyName) + "=$1"
+	// log.Printf("q: %s\n", q)
+
+	// tx, err := dbobj.db.Begin()
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// defer tx.Rollback()
+	// result, err := tx.Exec(q, keyValue)
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// if err = tx.Commit(); err != nil {
+	// 	return 0, err
+	// }
+	// num, err := result.RowsAffected()
+	// return num, err
+	fmt.Println("*** CleanupRecord")
+
+	return 0, nil
 }
 
 // GetExpiring get records that are expiring
@@ -919,6 +1026,10 @@ func (dbobj C8DB) GetList(t Tbl, keyName string, keyValue string, start int32, l
 		limit = 100
 	}
 
+	if table == "agreementsupdate" || table == "agreements" {
+		return nil, nil
+	}
+
 	q := "select * from " + table + " WHERE " + dbobj.escapeName(keyName) + "=$1"
 	if len(orderField) > 0 {
 		q = q + " ORDER BY " + dbobj.escapeName(orderField) + " DESC"
@@ -929,7 +1040,7 @@ func (dbobj C8DB) GetList(t Tbl, keyName string, keyValue string, start int32, l
 	} else if limit > 0 {
 		q = q + " LIMIT " + strconv.FormatInt(int64(limit), 10)
 	}
-	//fmt.Printf("q: %s\n", q)
+	fmt.Printf("q: %s\n", q)
 	values := make([]interface{}, 0)
 	values = append(values, keyValue)
 	return dbobj.getListDo(q, values)
