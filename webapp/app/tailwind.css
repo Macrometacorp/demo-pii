@@ -1691,16 +1691,16 @@ html {
   height: 8rem;
 }
 
+.h-20 {
+  height: 5rem;
+}
+
 .h-24 {
   height: 6rem;
 }
 
 .h-10 {
   height: 2.5rem;
-}
-
-.h-20 {
-  height: 5rem;
 }
 
 .w-6 {
@@ -1737,10 +1737,6 @@ html {
 
 .flex-row {
   flex-direction: row;
-}
-
-.flex-col {
-  flex-direction: column;
 }
 
 .justify-end {

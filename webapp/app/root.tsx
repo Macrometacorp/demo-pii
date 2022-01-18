@@ -9,7 +9,7 @@ import {
 
 import type { MetaFunction } from "remix";
 
-import Menu from "./routes/components/header";
+import Header from "./routes/components/header";
 import styles from "./tailwind.css";
 
 export function links() {
@@ -30,7 +30,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Menu />
+        <Header />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
