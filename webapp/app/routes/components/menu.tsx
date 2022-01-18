@@ -1,6 +1,9 @@
 import { parse as parseCSV } from "papaparse";
+import { Form } from "remix";
+import { AppPaths } from "~/constants";
 
 const FILE_SELECTOR_ID = "file-selector";
+const LOGOUT_FORM_ID = "logout_form";
 
 export default () => (
   <div className="-mb-12 flex flex-row">
@@ -113,6 +116,7 @@ export default () => (
       >
         <img src="macrometa-icon.png" className="w-6 h-6 m-1" />
       </button>
+      <Form action={AppPaths.Logout} method="post" id={LOGOUT_FORM_ID}></Form>
       <ul
         tabIndex={0}
         className="p-2 shadow menu dropdown-content bg-primary rounded-box w-52"
@@ -126,7 +130,9 @@ export default () => (
         </li>
         <li
           onClick={() => {
-            alert("change region");
+            (
+              document.getElementById(LOGOUT_FORM_ID) as HTMLFormElement
+            ).submit();
           }}
         >
           <a>Logout</a>

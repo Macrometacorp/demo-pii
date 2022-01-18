@@ -1815,11 +1815,6 @@ html {
   bottom: auto;
 }
 
-.tooltip-info {
-  --tooltip-color: hsla(var(--in) / .1);
-  --tooltip-text-color: hsl(var(--in));
-}
-
 .rounded-box {
   border-radius: var(--rounded-box, 1rem);
 }
@@ -1900,10 +1895,6 @@ html {
   margin-bottom: 0.5rem;
 }
 
-.-mb-14 {
-  margin-bottom: -3.5rem;
-}
-
 .-mb-12 {
   margin-bottom: -3rem;
 }
@@ -1934,10 +1925,6 @@ html {
 
 .h-20 {
   height: 5rem;
-}
-
-.h-24 {
-  height: 6rem;
 }
 
 .w-6 {
@@ -2017,11 +2004,6 @@ html {
 .text-neutral-content {
   --tw-text-opacity: 1;
   color: hsla(var(--nc) / var(--tw-text-opacity));
-}
-
-.text-primary-content {
-  --tw-text-opacity: 1;
-  color: hsla(var(--pc) / var(--tw-text-opacity));
 }
 
 .text-blue-600 {

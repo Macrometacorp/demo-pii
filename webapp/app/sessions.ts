@@ -1,4 +1,5 @@
-import { createCookieSessionStorage } from "remix";
+import { createCookieSessionStorage, json, redirect } from "remix";
+import { AppPaths, Session } from "./constants";
 
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage({
@@ -14,5 +15,52 @@ const { getSession, commitSession, destroySession } =
       secure: true,
     },
   });
+
+export const login = async (
+  request: Request,
+  email: FormDataEntryValue,
+  password: FormDataEntryValue
+) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  const response = await fetch(`${FEDERATION_URL}/_open/auth`, {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
+  const body = await response.json();
+  const { jwt, tenant } = body;
+
+  if (!jwt) {
+    return json(body, { status: 401 });
+  } else {
+    session.set(Session.Jwt, jwt);
+    session.set(Session.Tenant, tenant);
+    return redirect(AppPaths.Region, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+};
+
+export const logout = async (request: Request) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  return redirect(AppPaths.Root, {
+    headers: {
+      "Set-Cookie": await destroySession(session),
+    },
+  });
+};
+
+export const getAuthTokens = async (request: Request) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  return {
+    [Session.Jwt]: session.get(Session.Jwt),
+    [Session.Tenant]: session.get(Session.Tenant),
+  };
+};
 
 export { getSession, commitSession, destroySession };

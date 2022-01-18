@@ -2,14 +2,12 @@ import { useLoaderData, Form } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
 import { AppPaths, Session } from "~/constants";
-import { getSession } from "../sessions";
+import { getAuthTokens, getSession } from "../sessions";
 import { DataCenter, RegionInfo } from "~/interfaces";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const session = await getSession(request.headers.get("Cookie"));
-
-  const token = session.get(Session.Jwt);
-  const tenant = session.get(Session.Tenant);
+  const { [Session.Jwt]: token, [Session.Tenant]: tenant } =
+    await getAuthTokens(request);
 
   const response = await fetch(
     `${FEDERATION_URL}/datacenter/_tenant/${tenant}`,

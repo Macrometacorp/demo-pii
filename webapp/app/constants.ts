@@ -8,6 +8,7 @@ export enum AppPaths {
   Login = "/login",
   Region = "/region",
   UserManagement = "/user-management",
+  Logout = "/logout",
 }
 
 export const HEADINGS = [

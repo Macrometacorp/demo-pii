@@ -1,13 +1,11 @@
-import { ActionFunction, Form, redirect, json, useActionData } from "remix";
-import { AppPaths, Session } from "~/constants";
-import { getSession, commitSession } from "../sessions";
+import { ActionFunction, Form, useActionData } from "remix";
+import { login } from "../sessions";
 
 export const action: ActionFunction = async ({ request }) => {
-  const session = await getSession(request.headers.get("Cookie"));
   const form = await request.formData();
   const email = form.get("email");
   const fabric = form.get("fabric");
-  const password = form.get("password");
+  const password = form.get("password") || "";
   const content = form.get("content");
   // we do this type check to be extra sure and to make TypeScript happy
   // we'll explore validation next!
@@ -19,30 +17,7 @@ export const action: ActionFunction = async ({ request }) => {
     throw new Error(`Form not submitted correctly.`);
   }
 
-  const fields = { email, password };
-
-  // TODO: handle error
-  const response = await fetch(`${FEDERATION_URL}/_open/auth`, {
-    method: "POST",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-  const body = await response.json();
-  const { jwt, tenant } = body;
-
-  if (!jwt) {
-    return json(body, { status: 401 });
-  } else {
-    session.set(Session.Jwt, jwt);
-    session.set(Session.Tenant, tenant);
-    return redirect(AppPaths.Region, {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
-  }
+  return await login(request, email, password);
 };
 
 export default function Login() {
