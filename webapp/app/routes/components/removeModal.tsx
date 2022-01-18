@@ -1,3 +1,5 @@
+import { AppPaths } from "~/constants";
+
 export default () => (
   <div id="remove-modal" className="modal">
     <div className="modal-box">
@@ -10,7 +12,7 @@ export default () => (
         <a href="/components/modal#" className="btn btn-primary">
           Accept
         </a>
-        <a href="/addressbook" className="btn">
+        <a href={AppPaths.UserManagement} className="btn">
           Close
         </a>
       </div>

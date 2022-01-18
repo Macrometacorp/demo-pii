@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { AppPaths } from "~/constants";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ export default function Index() {
       <button
         className="btn btn-primary"
         onClick={() => {
-          navigate("/login");
+          navigate(AppPaths.Login);
         }}
       >
         Login

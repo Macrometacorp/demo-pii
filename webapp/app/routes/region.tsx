@@ -1,7 +1,7 @@
 import { useLoaderData, Form } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
-import { Session } from "~/constants";
+import { AppPaths, Session } from "~/constants";
 import { getSession } from "../sessions";
 import { DataCenter, RegionInfo } from "~/interfaces";
 
@@ -42,7 +42,7 @@ export default function SelectRegion() {
             const api = splitted?.[1];
             sessionStorage.setItem("region", label);
             sessionStorage.setItem("api", api);
-            navigate("/user-management");
+            navigate(AppPaths.UserManagement);
           }}
         >
           {dcInfo.map((dc: DataCenter) => {

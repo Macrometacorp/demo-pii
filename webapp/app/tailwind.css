@@ -533,6 +533,23 @@ html {
   display: flex;
 }
 
+.avatar {
+  display: inline-flex;
+  position: relative;
+}
+
+.avatar>div {
+  display: block;
+  overflow: hidden;
+}
+
+.avatar img {
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+}
+
 .avatar.placeholder>div {
   display: flex;
   align-items: center;
@@ -589,6 +606,12 @@ html {
   --tw-border-opacity: 0;
   --tw-text-opacity: 0.2;
   color: hsla(var(--bc) / var(--tw-text-opacity, 1));
+}
+
+.btn-square {
+  height: 3rem;
+  padding: 0;
+  width: 3rem;
 }
 
 .btn.loading,.btn.loading:hover {
@@ -821,6 +844,18 @@ html {
   margin-top: 1.5rem;
 }
 
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: var(--navbar-padding, .5rem);
+  min-height: 4rem;
+}
+
+.navbar>* {
+  display: flex;
+  align-items: center;
+}
+
 .radio:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -836,6 +871,14 @@ html {
   position: -webkit-sticky;
   left: 0;
   z-index: 10;
+}
+
+.avatar-group .avatar {
+  --tw-border-opacity: 1;
+  border-color: hsla(var(--b1) / var(--tw-border-opacity, 1));
+  border-radius: 9999px;
+  border-width: 4px;
+  overflow: hidden;
 }
 
 .btn .badge {
@@ -1310,6 +1353,17 @@ html {
   --tw-border-opacity: 0.2;
 }
 
+.input-ghost {
+  --tw-bg-opacity: 0.05;
+}
+
+.input-ghost:focus {
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  color: hsla(var(--bc) / var(--tw-text-opacity, 1));
+  box-shadow: none;
+}
+
 .input-primary {
   --tw-border-opacity: 1;
   border-color: hsla(var(--p) / var(--tw-border-opacity, 1));
@@ -1519,10 +1573,28 @@ html {
   font-size: .875rem;
 }
 
+.btn-square:where(.btn-xs) {
+  height: 1.5rem;
+  padding: 0;
+  width: 1.5rem;
+}
+
 .btn-square:where(.btn-sm) {
   height: 2rem;
   padding: 0;
   width: 2rem;
+}
+
+.btn-square:where(.btn-md) {
+  height: 3rem;
+  padding: 0;
+  width: 3rem;
+}
+
+.btn-square:where(.btn-lg) {
+  height: 4rem;
+  padding: 0;
+  width: 4rem;
 }
 
 .btn-circle:where(.btn-sm) {
@@ -1537,6 +1609,40 @@ html {
   background-color: hsla(var(--er) / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
   color: hsla(var(--er) / var(--tw-text-opacity, 1));
+}
+
+.avatar.online:before {
+  content: "";
+  --tw-bg-opacity: 1;
+  background-color: hsla(var(--su) / var(--tw-bg-opacity, 1));
+  border-radius: 9999px;
+  display: block;
+  position: absolute;
+  z-index: 10;
+  width: 15%;
+  height: 15%;
+  top: 7%;
+  right: 7%;
+  box-shadow: 0 0 0 2px hsl(var(--b1));
+}
+
+.avatar.offline:before {
+  content: "";
+  --tw-bg-opacity: 1;
+  background-color: hsla(var(--b3) / var(--tw-bg-opacity, 1));
+  border-radius: 9999px;
+  display: block;
+  position: absolute;
+  z-index: 10;
+  width: 15%;
+  height: 15%;
+  top: 7%;
+  right: 7%;
+  box-shadow: 0 0 0 2px hsl(var(--b1));
+}
+
+.m-1 {
+  margin: 0.25rem;
 }
 
 .mx-auto {
@@ -1557,6 +1663,18 @@ html {
   margin-top: 1.5rem;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.-mb-14 {
+  margin-bottom: -3.5rem;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
 .flex {
   display: flex;
 }
@@ -1565,20 +1683,20 @@ html {
   display: table;
 }
 
-.h-36 {
-  height: 9rem;
+.h-6 {
+  height: 1.5rem;
+}
+
+.h-32 {
+  height: 8rem;
 }
 
 .h-24 {
   height: 6rem;
 }
 
-.h-6 {
-  height: 1.5rem;
-}
-
-.w-96 {
-  width: 24rem;
+.h-10 {
+  height: 2.5rem;
 }
 
 .w-6 {
@@ -1589,6 +1707,14 @@ html {
   width: 100%;
 }
 
+.w-96 {
+  width: 24rem;
+}
+
+.w-10 {
+  width: 2.5rem;
+}
+
 .max-w-lg {
   max-width: 32rem;
 }
@@ -1597,12 +1723,20 @@ html {
   flex: 1 1 0%;
 }
 
+.flex-none {
+  flex: none;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.rounded-full {
+  border-radius: 9999px;
 }
 
 .bg-primary {
@@ -1625,6 +1759,11 @@ html {
 
 .leading-7 {
   line-height: 1.75rem;
+}
+
+.text-neutral-content {
+  --tw-text-opacity: 1;
+  color: hsla(var(--nc) / var(--tw-text-opacity));
 }
 
 .text-primary-content {
@@ -1657,4 +1796,10 @@ html {
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+@media (min-width: 1024px) {
+  .lg\:flex-none {
+    flex: none;
+  }
 }

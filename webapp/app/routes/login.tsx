@@ -1,5 +1,5 @@
 import { ActionFunction, Form, redirect, json, useActionData } from "remix";
-import { Session } from "~/constants";
+import { AppPaths, Session } from "~/constants";
 import { getSession, commitSession } from "../sessions";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -37,7 +37,7 @@ export const action: ActionFunction = async ({ request }) => {
   } else {
     session.set(Session.Jwt, jwt);
     session.set(Session.Tenant, tenant);
-    return redirect(`/region`, {
+    return redirect(AppPaths.Region, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
