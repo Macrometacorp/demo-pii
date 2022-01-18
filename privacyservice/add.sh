@@ -9,5 +9,6 @@ LOGIN=${FIRST}${LAST}
 EMAIL="${FIRST}@${LAST}.com"
 
 curl -s ${DATABUNKER_URL}/v1/user \
-  -H "X-Bunker-Token: $DATABUNKER_ROOTTOKEN" -H "Content-Type: application/json" \
+  -H "X-Bunker-Token: $DATABUNKER_ROOTTOKEN" \
+  -H "Content-Type: application/json" \
   -d "{\"first\": \"${FIRST}\", \"last\": \"${LAST}\", \"login\": \"${LOGIN}\", \"phone\": \"${PHONE}\", \"email\": \"${EMAIL}\"}"
