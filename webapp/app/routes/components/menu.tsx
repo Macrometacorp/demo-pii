@@ -3,7 +3,7 @@ import { parse as parseCSV } from "papaparse";
 const FILE_SELECTOR_ID = "file-selector";
 
 export default () => (
-  <div className="-mb-14 flex flex-row">
+  <div className="-mb-12 flex flex-row">
     <div className="flex-1 lg:flex-none">
       <div className="form-control">
         <input type="text" placeholder="Search" className="input input-ghost" />
