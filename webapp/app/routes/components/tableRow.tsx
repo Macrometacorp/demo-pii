@@ -1,9 +1,4 @@
-interface RowProps {
-  activeRow: string;
-  // FIXME: proper types
-  data: any;
-  setActiveRow: (arg: string) => void;
-}
+import { RowProps } from "~/interfaces";
 
 export default ({ activeRow, data, setActiveRow }: RowProps) => (
   <tr

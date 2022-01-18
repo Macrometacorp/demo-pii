@@ -13,3 +13,10 @@ export interface RegionInfo {
   dcInfo: Array<DataCenter>;
   tenant: string;
 }
+
+export interface RowProps {
+  activeRow: string;
+  // FIXME: proper types
+  data: any;
+  setActiveRow: (arg: string) => void;
+}

@@ -42,7 +42,7 @@ export default function SelectRegion() {
             const api = splitted?.[1];
             sessionStorage.setItem("region", label);
             sessionStorage.setItem("api", api);
-            navigate("/addressbook");
+            navigate("/user-management");
           }}
         >
           {dcInfo.map((dc: DataCenter) => {

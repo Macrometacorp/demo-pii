@@ -41,9 +41,7 @@ export default function App() {
                 navigate("/");
               }}
             />
-            <div className="text-center">
-              Addressbook with Data Privacy & Residency
-            </div>
+            <div className="text-center">User Management Portal</div>
           </div>
           <Outlet />
         </div>
