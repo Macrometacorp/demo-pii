@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
-import { Session } from "~/constants";
+import { HEADINGS, Session } from "~/constants";
 import { getSession } from "~/sessions";
 import EditModal from "./components/editModal";
 import RemoveModal from "./components/removeModal";
@@ -58,16 +58,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   ];
 };
-
-const HEADINGS = [
-  "user token",
-  "name",
-  "phone",
-  "email",
-  "city",
-  "zip code",
-  "actions",
-];
 
 export default function addressbook() {
   const userData = useLoaderData();
