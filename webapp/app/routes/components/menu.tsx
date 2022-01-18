@@ -71,10 +71,29 @@ export default () => (
         </svg>
       </button>
     </div>
-    <div className="flex-none">
+    <div className="flex-none dropdown dropdown-end">
       <button className="btn btn-square btn-ghost">
         <img src="macrometa-icon.png" className="w-6 h-6 m-1" />
       </button>
+      <ul
+        tabIndex={0}
+        className="p-2 shadow menu dropdown-content bg-primary rounded-box w-52"
+      >
+        <li
+          onClick={() => {
+            alert("change region");
+          }}
+        >
+          <a>Change Region</a>
+        </li>
+        <li
+          onClick={() => {
+            alert("change region");
+          }}
+        >
+          <a>Logout</a>
+        </li>
+      </ul>
     </div>
   </div>
 );
