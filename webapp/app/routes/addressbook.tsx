@@ -5,6 +5,7 @@ import { getSession } from "~/sessions";
 import EditModal from "./components/editModal";
 import RemoveModal from "./components/removeModal";
 import ShareModal from "./components/shareModal";
+import Row from "./components/tableRow";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -90,43 +91,11 @@ export default function addressbook() {
         <tbody>
           {/* FIXME: proper interface */}
           {userData.map((data: any) => (
-            <tr
-              className={activeRow === data.user_token ? "active" : ""}
-              onMouseEnter={() => {
-                setActiveRow(data.user_token);
-              }}
-              onMouseLeave={() => {
-                setActiveRow("");
-              }}
-              key={data.user_token}
-            >
-              <th>{data.user_token}</th>
-              <td>{data.name}</td>
-              <td>{data.phone}</td>
-              <td>{data.email}</td>
-              <td>{data.city}</td>
-              <td>{data.zipcode}</td>
-              <td className="flex">
-                <a
-                  href="#edit-modal"
-                  className="flex-1 btn-sm btn-ghost text-blue-600 text-center leading-7"
-                >
-                  Edit
-                </a>
-                <a
-                  href="#remove-modal"
-                  className="flex-1 btn-sm btn-ghost text-red-600 text-center leading-7"
-                >
-                  Remove
-                </a>
-                <a
-                  href="#share-modal"
-                  className="flex-1 btn-sm btn-ghost text-green-600 text-center leading-7"
-                >
-                  Share
-                </a>
-              </td>
-            </tr>
+            <Row
+              activeRow={activeRow}
+              setActiveRow={setActiveRow}
+              data={data}
+            />
           ))}
         </tbody>
       </table>
