@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
-import { parse as parseCSV } from "papaparse";
 import { Session } from "~/constants";
 import { getSession } from "~/sessions";
 import EditModal from "./components/editModal";
@@ -76,18 +75,6 @@ export default function addressbook() {
 
   return (
     <div className="overflow-x-auto">
-      {/* FIXME: proper UI */}
-      <input
-        type="file"
-        onChange={(event) => {
-          const file = event.target.files?.[0] || "";
-          parseCSV(file, {
-            complete: (results) => {
-              console.log(results);
-            },
-          });
-        }}
-      />
       <table className="table w-full">
         <thead>
           <tr>
