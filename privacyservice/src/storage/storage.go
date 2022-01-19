@@ -40,7 +40,7 @@ var TblName = &listTbls{
 func GetTable(t Tbl) string {
 	switch t {
 	case TblName.Users:
-		return "users"
+		return "pii_users"
 	case TblName.Audit:
 		return "audit"
 	case TblName.Xtokens:

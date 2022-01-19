@@ -362,6 +362,8 @@ func (dbobj C8DB) CreateRecord(t Tbl, data interface{}) (int, error) {
 	resp, _ := client.Do(req)
 
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("CreateRecord Table: %s\n", tbl)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 
@@ -466,6 +468,8 @@ func (dbobj C8DB) UpdateRecord(t Tbl, keyName string, keyValue string, bdoc *bso
 	resp, _ := client.Do(req)
 
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("UpdateRecord Table: %s\n", table)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 
@@ -526,6 +530,8 @@ func (dbobj C8DB) UpdateRecord2(t Tbl, keyName string, keyValue string,
 	resp, _ := client.Do(req)
 
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("UpdateRecord2 Table: %s\n", table)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 
@@ -624,6 +630,8 @@ func (dbobj C8DB) GetRecord(t Tbl, keyName string, keyValue string) (bson.M, err
 
 	resp, _ := client.Do(req)
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("GetRecord Table: %s\n", table)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 	defer resp.Body.Close()
@@ -719,6 +727,8 @@ func (dbobj C8DB) GetRecord2(t Tbl, keyName string, keyValue string,
 
 	resp, _ := client.Do(req)
 	if !strings.Contains(resp.Status, "200") {
+		fmt.Printf("GetRecord2 Table: %s\n", table)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 
@@ -834,6 +844,8 @@ func (dbobj C8DB) DeleteRecord(t Tbl, keyName string, keyValue string) (int64, e
 	resp, _ := client.Do(req)
 
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("DeleteRecord Table: %s\n", tbl)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 
@@ -983,6 +995,8 @@ func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data int
 	resp, _ := client.Do(req)
 
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("CleanupRecord Table: %s\n", tbl)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 
@@ -1039,6 +1053,8 @@ func (dbobj C8DB) GetExpiring(t Tbl, keyName string, keyValue string) ([]bson.M,
 
 	resp, _ := client.Do(req)
 	if !strings.Contains(resp.Status, "201") {
+		fmt.Printf("GetExpiring Table: %s\n", table)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 	defer resp.Body.Close()
@@ -1322,6 +1338,8 @@ func createCollection(collectionName string) {
 
 	resp, _ := client.Do(req)
 	if !strings.Contains(resp.Status, "200") {
+		fmt.Printf("createCollection Table: %s\n", collectionName)
+		debug(httputil.DumpRequest(req, true))
 		debug(httputil.DumpResponse(resp, true))
 	}
 }
@@ -1329,7 +1347,7 @@ func createCollection(collectionName string) {
 func (dbobj C8DB) initUsers() error {
 	//fmt.Println("*** initUsers")
 
-	createCollection("users")
+	createCollection("pii_users")
 	return nil
 
 	// queries := []string{`CREATE TABLE IF NOT EXISTS users (
