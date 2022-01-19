@@ -353,7 +353,8 @@ func (e mainEnv) dbCleanupDo() {
 }
 
 func (e mainEnv) dbCleanup() {
-	ticker := time.NewTicker(time.Duration(10) * time.Minute)
+	// Change to once a minute
+	ticker := time.NewTicker(time.Duration(1) * time.Minute)
 
 	go func() {
 		for {

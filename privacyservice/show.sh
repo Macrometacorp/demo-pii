@@ -1,5 +1,7 @@
-. ./env
-DATABUNKER="http://localhost:3000"
+#execute this as follows:  show.sh token (e.g show.sh )
+#
 
-USER="johndow"
-curl -s $DATABUNKER/v1/user/login/${USER} -H "X-Bunker-Token: $DATABUNKER_ROOTTOKEN" 
+. ./env
+
+TOKEN=$1
+curl -s ${DATABUNKER_URL}/v1/user/token/${TOKEN} -H "X-Bunker-Token: $DATABUNKER_ROOTTOKEN" 
