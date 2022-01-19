@@ -4,9 +4,10 @@ import { Fabrics, HEADINGS, Queries, Session } from "~/constants";
 import { LocationData, UserData } from "~/interfaces";
 import { getSession } from "~/sessions";
 import { c8ql } from "~/utils";
-import EditModal from "./components/editModal";
-import RemoveModal from "./components/removeModal";
-import ShareModal from "./components/shareModal";
+import EditModal from "./components/modals/editModal";
+import RemoveModal from "./components/modals/removeModal";
+import ShareModal from "./components/modals/shareModal";
+import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -79,6 +80,7 @@ export default function addressbook() {
       <EditModal />
       <RemoveModal />
       <ShareModal />
+      <AddContactModal />
     </div>
   );
 }

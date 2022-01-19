@@ -1,7 +1,7 @@
 import { parse as parseCSV } from "papaparse";
 import { Form } from "remix";
 import { useNavigate } from "react-router-dom";
-import { AppPaths } from "~/constants";
+import { AppPaths, ModalPaths } from "~/constants";
 import { useEffect, useState } from "react";
 
 const FILE_SELECTOR_ID = "file-selector";
@@ -64,6 +64,9 @@ export default () => {
           <button
             className="btn btn-square btn-ghost tooltip"
             data-tip="Add Contact"
+            onClick={() => {
+              window.location.href = ModalPaths.AddContactModal;
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

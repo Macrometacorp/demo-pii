@@ -11,6 +11,13 @@ export enum AppPaths {
   Logout = "/logout",
 }
 
+export enum ModalPaths {
+  EditModal = "#edit-modal",
+  RemoveModal = "#remove-modal",
+  ShareModal = "#share-modal",
+  AddContactModal = "#contact-modal",
+}
+
 export const HEADINGS = [
   "token",
   "name",

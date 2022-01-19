@@ -1,10 +1,11 @@
-import { AppPaths } from "~/constants";
+import { AppPaths, ModalPaths } from "~/constants";
+import { getModalId } from "~/utils";
 
 export default () => (
-  <div id="remove-modal" className="modal">
+  <div id={getModalId(ModalPaths.ShareModal)} className="modal">
     <div className="modal-box">
       <p>
-        Remove \n Enim dolorem dolorum omnis atque necessitatibus. Consequatur
+        Share \n Enim dolorem dolorum omnis atque necessitatibus. Consequatur
         aut adipisci qui iusto illo eaque. Consequatur repudiandae et. Nulla ea
         quasi eligendi. Saepe velit autem minima.
       </p>

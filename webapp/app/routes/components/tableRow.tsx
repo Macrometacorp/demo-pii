@@ -1,3 +1,4 @@
+import { ModalPaths } from "~/constants";
 import { RowProps } from "~/interfaces";
 
 export default ({ activeRow, data, setActiveRow }: RowProps) => (
@@ -20,19 +21,19 @@ export default ({ activeRow, data, setActiveRow }: RowProps) => (
     <td>{data.job_title}</td>
     <td className="flex">
       <a
-        href="#edit-modal"
+        href={ModalPaths.EditModal}
         className="flex-1 btn-sm btn-ghost text-center leading-7 text-blue-600"
       >
         Edit
       </a>
       <a
-        href="#remove-modal"
+        href={ModalPaths.RemoveModal}
         className="flex-1 btn-sm btn-ghost text-center leading-7 text-red-600"
       >
         Remove
       </a>
       <a
-        href="#share-modal"
+        href={ModalPaths.ShareModal}
         className="flex-1 btn-sm btn-ghost text-center leading-7 text-green-600"
       >
         Share

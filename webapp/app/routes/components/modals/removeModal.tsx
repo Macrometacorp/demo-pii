@@ -1,11 +1,12 @@
-import { AppPaths } from "~/constants";
+import { AppPaths, ModalPaths } from "~/constants";
+import { getModalId } from "~/utils";
 
 export default () => (
-  <div id="edit-modal" className="modal">
+  <div id={getModalId(ModalPaths.RemoveModal)} className="modal">
     <div className="modal-box">
       <p>
-        Edit \n Enim dolorem dolorum omnis atque necessitatibus. Consequatur aut
-        adipisci qui iusto illo eaque. Consequatur repudiandae et. Nulla ea
+        Remove \n Enim dolorem dolorum omnis atque necessitatibus. Consequatur
+        aut adipisci qui iusto illo eaque. Consequatur repudiandae et. Nulla ea
         quasi eligendi. Saepe velit autem minima.
       </p>
       <div className="modal-action">
