@@ -22,3 +22,18 @@ export const HEADINGS = [
   "job title",
   "actions",
 ];
+
+export enum Fabrics {
+  Global = "pii_global",
+  Eu = "pii_eu",
+}
+
+export enum Collections {
+  Users = "users",
+  UserLocations = "user_locations",
+}
+
+export const Queries = {
+  GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
+  GetLocations: `FOR doc in ${Collections.UserLocations} RETURN doc`,
+};

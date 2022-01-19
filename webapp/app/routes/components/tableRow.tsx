@@ -2,20 +2,22 @@ import { RowProps } from "~/interfaces";
 
 export default ({ activeRow, data, setActiveRow }: RowProps) => (
   <tr
-    className={activeRow === data.user_token ? "active" : ""}
+    className={activeRow === data.token ? "active" : ""}
     onMouseEnter={() => {
-      setActiveRow(data.user_token);
+      setActiveRow(data.token);
     }}
     onMouseLeave={() => {
       setActiveRow("");
     }}
   >
-    <th>{data.user_token}</th>
+    <th>{data.token}</th>
     <td>{data.name}</td>
-    <td>{data.phone}</td>
     <td>{data.email}</td>
-    <td>{data.city}</td>
+    <td>{data.phone}</td>
+    <td>{data.state}</td>
+    <td>{data.country}</td>
     <td>{data.zipcode}</td>
+    <td>{data.job_title}</td>
     <td className="flex">
       <a
         href="#edit-modal"

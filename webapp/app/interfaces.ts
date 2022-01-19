@@ -14,9 +14,25 @@ export interface RegionInfo {
   tenant: string;
 }
 
+export interface PiiData {
+  email: string;
+  name: string;
+  phone: string;
+  token: string;
+}
+
+export interface LocationData {
+  token: string;
+  state: string;
+  country: string;
+  zipcode: string;
+  job_title: string;
+}
+
+export interface UserData extends PiiData, LocationData {}
+
 export interface RowProps {
   activeRow: string;
-  // FIXME: proper types
-  data: any;
+  data: PiiData & LocationData;
   setActiveRow: (arg: string) => void;
 }

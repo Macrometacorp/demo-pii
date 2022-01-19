@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
-import { HEADINGS, Session } from "~/constants";
+import { Fabrics, HEADINGS, Queries, Session } from "~/constants";
+import { LocationData, UserData } from "~/interfaces";
 import { getSession } from "~/sessions";
+import { c8ql } from "~/utils";
 import EditModal from "./components/editModal";
 import RemoveModal from "./components/removeModal";
 import ShareModal from "./components/shareModal";
@@ -11,52 +13,37 @@ export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
 
   const token = session.get(Session.Jwt);
-  const tenant = session.get(Session.Tenant);
 
-  const response = await fetch(
-    `${FEDERATION_URL}/datacenter/_tenant/${tenant}`,
-    {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-    }
+  const getUsersPromise = c8ql(token, Fabrics.Global, Queries.GetUsers).then(
+    (response) => response.json()
   );
-  const regions = await response.json();
-  // return regions;
-  return [
-    {
-      user_token: 1234,
-      name: "abhishek",
-      phone: "4321",
-      email: "test@macrometa.com",
-      city: "lko",
-      zipcode: 226016,
-    },
-    {
-      user_token: 1235,
-      name: "abhishek",
-      phone: "4321",
-      email: "test@macrometa.com",
-      city: "lko",
-      zipcode: 226016,
-    },
-    {
-      user_token: 1236,
-      name: "abhishek",
-      phone: "4321",
-      email: "test@macrometa.com",
-      city: "lko",
-      zipcode: 226016,
-    },
-    {
-      user_token: 1237,
-      name: "abhishek",
-      phone: "4321",
-      email: "test@macrometa.com",
-      city: "lko",
-      zipcode: 226016,
-    },
-  ];
+
+  const getLocationsPromise = c8ql(
+    token,
+    Fabrics.Global,
+    Queries.GetLocations
+  ).then((response) => response.json());
+
+  const allResponses = await Promise.all([
+    getUsersPromise,
+    getLocationsPromise,
+  ]);
+
+  const users: Array<UserData> = allResponses[0].result;
+  const locations: Array<LocationData> = allResponses[1].result;
+
+  const result = users.map((user) => {
+    // FIXME: use actual token
+    // const { token } = user;
+    const token = "dummy";
+    const location = locations.find((location) => location.token === token);
+    return {
+      ...user,
+      ...location,
+    };
+  });
+
+  return result;
 };
 
 export default function addressbook() {
@@ -79,10 +66,9 @@ export default function addressbook() {
           </tr>
         </thead>
         <tbody>
-          {/* FIXME: proper interface */}
-          {userData.map((data: any) => (
+          {userData.map((data: UserData) => (
             <Row
-              key={data.user_token}
+              key={data.token}
               activeRow={activeRow}
               setActiveRow={setActiveRow}
               data={data}
