@@ -53,6 +53,7 @@ EXPOSE 3000
 #
 ENV DATABUNKER_MASTERKEY=e8de0079de860a194fd7ea15e2ad82c165f0075956d2a825
 ENV MMURL="https://api-joubert-us-east.eng.macrometa.io"
+ENV MMFABRIC="_system"
 ENV MMAPIKEY="joubert_databunker.com.databunkerDemo.VpT4zqdTT5qz4PycrDW2ItXFYGgcX8FOVJljFlEI3tMBAP7lnQBBoL3zgqRIlfuKf15116"
 #HEALTHCHECK --interval=5s --timeout=3s --start-period=33s --retries=3 CMD /databunker/bin/health-check.sh
 ENTRYPOINT ["/bin/sh", "/databunker/bin/startInDocker.sh"]

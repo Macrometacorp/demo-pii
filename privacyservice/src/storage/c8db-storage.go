@@ -39,10 +39,14 @@ func getMMApikey() string {
 	return "apikey " + os.Getenv("MMAPIKEY")
 }
 
+func getMMFabric() string {
+	return os.Getenv("MMFABRIC")
+}
+
 // DBExists function checks if database exists
 func (dbobj C8DB) DBExists(filepath *string) bool {
 
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/collection/xtokens"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/collection/xtokens"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", endpoint, nil)
@@ -344,7 +348,7 @@ func (dbobj C8DB) CreateRecord(t Tbl, data interface{}) (int, error) {
 	q = q + "} into " + tbl
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
 
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
@@ -450,7 +454,7 @@ func (dbobj C8DB) UpdateRecord(t Tbl, keyName string, keyValue string, bdoc *bso
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
 	//fmt.Printf("q:%s\n", query)
 
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
@@ -512,7 +516,7 @@ func (dbobj C8DB) UpdateRecord2(t Tbl, keyName string, keyValue string,
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
 	//fmt.Printf("q:%s\n", query)
 
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
@@ -611,7 +615,7 @@ func (dbobj C8DB) GetRecord(t Tbl, keyName string, keyValue string) (bson.M, err
 		BindVars    BindVarType `json:"bindVars"`
 		QueryString string      `json:"query"`
 	}
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 	bytes, err := json.Marshal(Query{
 		QueryString: q,
 		BindVars:    BindVarType{KeyName: keyValue}})
@@ -705,7 +709,7 @@ func (dbobj C8DB) GetRecord2(t Tbl, keyName string, keyValue string,
 		BindVars    BindVarType `json:"bindVars"`
 		QueryString string      `json:"query"`
 	}
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	bytes, err := json.Marshal(Query{
 		QueryString: q,
@@ -826,7 +830,7 @@ func (dbobj C8DB) DeleteRecord(t Tbl, keyName string, keyValue string) (int64, e
 
 	//fmt.Printf("q:%s\n", q)
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
@@ -977,7 +981,7 @@ func (dbobj C8DB) CleanupRecord(t Tbl, keyName string, keyValue string, data int
 
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
 	//fmt.Printf("query: %s\n", query)
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
@@ -1037,7 +1041,7 @@ func (dbobj C8DB) GetExpiring(t Tbl, keyName string, keyValue string) ([]bson.M,
 
 	query := "{\"bindvars\":{}, \"query\": \"" + q + "\"}"
 
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/cursor"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/cursor"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(query))
@@ -1320,7 +1324,7 @@ func createCollection(collectionName string) {
 
 	fmt.Printf("Creating collection %s", collectionName)
 
-	var endpoint = getMMUrl() + "/_fabric/_system/_api/collection"
+	var endpoint = getMMUrl() + "/_fabric/" + getMMFabric() + "/_api/collection"
 	bytes, err := json.Marshal(Collection{Name: collectionName})
 
 	client := &http.Client{}
