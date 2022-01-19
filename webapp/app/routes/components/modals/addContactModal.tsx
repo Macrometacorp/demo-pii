@@ -1,14 +1,102 @@
+import { Form } from "remix";
 import { AppPaths, ModalPaths } from "~/constants";
 import { getModalId } from "~/utils";
 
 export default () => (
   <div id={getModalId(ModalPaths.AddContactModal)} className="modal">
     <div className="modal-box">
-      <p>
-        Add contact \n Enim dolorem dolorum omnis atque necessitatibus.
-        Consequatur aut adipisci qui iusto illo eaque. Consequatur repudiandae
-        et. Nulla ea quasi eligendi. Saepe velit autem minima.
-      </p>
+      <Form method="post">
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Name</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="Bruce Wayne"
+            className="input input-primary input-bordered"
+          />
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Email</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="bruce@wayneindustries.com"
+            className="input input-primary input-bordered"
+          />
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Phone</span>
+          </label>
+          <input
+            type="tel"
+            name="phone"
+            required
+            placeholder="272984356"
+            className="input input-primary input-bordered"
+          />
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">State</span>
+          </label>
+          <input
+            type="text"
+            name="state"
+            required
+            placeholder="New Jersey"
+            className="input input-primary input-bordered"
+          />
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Country</span>
+          </label>
+          <input
+            type="text"
+            name="country"
+            required
+            placeholder="USA"
+            className="input input-primary input-bordered"
+          />
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Zipcode</span>
+          </label>
+          <input
+            type="text"
+            name="zipcode"
+            required
+            placeholder="53540"
+            className="input input-primary input-bordered"
+          />
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Job Title</span>
+          </label>
+          <input
+            type="text"
+            name="job_title"
+            required
+            placeholder="CEO"
+            className="input input-primary input-bordered"
+          />
+        </div>
+      </Form>
       <div className="modal-action">
         <a href="/components/modal#" className="btn btn-primary">
           Accept
