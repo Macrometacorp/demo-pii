@@ -5,17 +5,7 @@ import Menu from "./menu";
 
 export default () => {
   const navigate = useNavigate();
-  const [showMenu, setShowMenu] = useState(false);
 
-  useEffect(() => {
-    const {
-      location: { pathname },
-    } = window;
-
-    pathname === AppPaths.UserManagement
-      ? setShowMenu(true)
-      : setShowMenu(false);
-  });
   return (
     <div className="navbar mb-2 shadow-lg bg-primary text-neutral-content box h-32">
       <div className="flex-1"></div>
@@ -32,7 +22,9 @@ export default () => {
           <div className="text-center">User Management Portal</div>
         </div>
       </div>
-      <div className="flex-1 justify-end">{showMenu && <Menu />}</div>
+      <div className="flex-1 justify-end">
+        <Menu />
+      </div>
     </div>
   );
 };

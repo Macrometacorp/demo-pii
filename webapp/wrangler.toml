@@ -8,7 +8,8 @@ workers_dev = true
 
 # FIXME: change this to proper URL
 [vars]
-FEDERATION_URL="https://api-abhishek.eng.macrometa.io"
+FEDERATION_URL="https://api-smoke4.eng.macrometa.io"
+PRIVACY_SERVICE_URL="http://privacy-service.eng.macrometa.io:3000"
 
 [site]
 bucket = "./public"

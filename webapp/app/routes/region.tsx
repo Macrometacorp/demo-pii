@@ -2,8 +2,9 @@ import { useLoaderData, Form } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
 import { AppPaths, Session } from "~/constants";
-import { getAuthTokens, getSession } from "../sessions";
+import { getAuthTokens } from "../sessions";
 import { DataCenter, RegionInfo } from "~/interfaces";
+import { useState } from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { [Session.Jwt]: token, [Session.Tenant]: tenant } =
@@ -24,6 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function SelectRegion() {
   const [regionInfo] = useLoaderData();
   const navigate = useNavigate();
+  const [region, setRegion] = useState("");
 
   const { dcInfo } = regionInfo as RegionInfo;
   return (
@@ -34,12 +36,7 @@ export default function SelectRegion() {
           method="post"
           onSubmit={(event: any) => {
             event.preventDefault();
-            const { value } = event.target[0];
-            const splitted = value?.toString().split(":");
-            const label = splitted?.[0];
-            const api = splitted?.[1];
-            sessionStorage.setItem("region", label);
-            sessionStorage.setItem("api", api);
+            sessionStorage.setItem("region", region);
             navigate(AppPaths.UserManagement);
           }}
         >
@@ -59,7 +56,10 @@ export default function SelectRegion() {
                     name="region"
                     className="radio"
                     required
-                    value={`${label}:${api}`}
+                    value={label}
+                    onChange={(event) => {
+                      setRegion(event.target.value);
+                    }}
                   />
                 </label>
               </div>
