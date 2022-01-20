@@ -1,6 +1,6 @@
 import { ActionFunction, redirect } from "remix";
 import { v4 as uuidv4 } from "uuid";
-import { AppPaths, Fabrics, Queries, SessionStorage } from "~/constants";
+import { AppPaths, Fabrics, MM_TOKEN_PREFIX, Queries } from "~/constants";
 import { c8ql } from "~/utilities/REST/mm";
 import { piiAddContact } from "~/utilities/REST/pii";
 import { isPrivateRegion } from "~/utilities/utils";
@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
       console.error(error);
     }
   } else {
-    token = `mm_${uuidv4()}`;
+    token = `${MM_TOKEN_PREFIX}${uuidv4()}`;
     await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
       token,
       name,

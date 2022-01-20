@@ -156,6 +156,7 @@ export default () => {
               activeRow={activeRow}
               setActiveRow={setActiveRow}
               data={data}
+              isPrivateRegion={isPrivateRegion}
             />
           ))}
         </tbody>

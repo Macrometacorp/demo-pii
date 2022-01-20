@@ -1917,6 +1917,10 @@ html {
   color: hsla(var(--er) / var(--tw-text-opacity, 1));
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .m-1 {
   margin: 0.25rem;
 }
@@ -2096,6 +2100,11 @@ html {
 .text-green-600 {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
+.text-neutral {
+  --tw-text-opacity: 1;
+  color: hsla(var(--n) / var(--tw-text-opacity));
 }
 
 .opacity-95 {

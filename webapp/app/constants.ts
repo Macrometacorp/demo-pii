@@ -46,6 +46,8 @@ export enum Collections {
   UserLocations = "user_locations",
 }
 
+export const MM_TOKEN_PREFIX = "mm_";
+
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
   GetLocations: `FOR doc in ${Collections.UserLocations} RETURN doc`,
