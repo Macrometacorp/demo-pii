@@ -8,7 +8,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
     <div className="modal-box">
       <Form action={AppPaths.AddContact} method="post" reloadDocument>
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">Name</span>
           </label>
           <input
@@ -21,7 +21,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
         </div>
 
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">Email</span>
           </label>
           <input
@@ -34,7 +34,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
         </div>
 
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">Phone</span>
           </label>
           <input
@@ -47,7 +47,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
         </div>
 
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">State</span>
           </label>
           <input
@@ -60,7 +60,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
         </div>
 
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">Country</span>
           </label>
           <input
@@ -73,7 +73,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
         </div>
 
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">Zipcode</span>
           </label>
           <input
@@ -86,7 +86,7 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
         </div>
 
         <div className="form-control">
-          <label className="label">
+          <label className="label font-semibold">
             <span className="label-text">Job Title</span>
           </label>
           <input

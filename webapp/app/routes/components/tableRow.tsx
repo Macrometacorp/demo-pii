@@ -55,7 +55,7 @@ export default ({
         >
           Share
         </a>
-        <a href={ModalPaths.ShareModal} className={showClass}>
+        <a href={ModalPaths.ShowDecryptedModal} className={showClass}>
           Show
         </a>
       </td>

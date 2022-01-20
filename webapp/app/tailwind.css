@@ -2043,6 +2043,10 @@ html {
   overflow-x: auto;
 }
 
+.border {
+  border-width: 1px;
+}
+
 .bg-primary {
   --tw-bg-opacity: 1;
   background-color: hsla(var(--p) / var(--tw-bg-opacity));
@@ -2076,6 +2080,10 @@ html {
 
 .font-bold {
   font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
 }
 
 .leading-7 {

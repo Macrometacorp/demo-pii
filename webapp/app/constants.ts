@@ -22,6 +22,7 @@ export enum ModalPaths {
   RemoveModal = "#remove-modal",
   ShareModal = "#share-modal",
   AddContactModal = "#contact-modal",
+  ShowDecryptedModal = "#decrypted-modal",
 }
 
 export const HEADINGS = [

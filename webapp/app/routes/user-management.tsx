@@ -14,6 +14,7 @@ import { piiSearch } from "~/utilities/REST/pii";
 import Unauthorized from "./components/unauthorized";
 import Error from "./components/error";
 import { isLoggedIn } from "~/utilities/utils";
+import DecryptedModal from "./components/modals/showDecryptedModal";
 
 const handleSearch = async (request: Request, email: string) => {
   let result: Array<UserData> = [];
@@ -165,6 +166,7 @@ export default () => {
       <RemoveModal />
       <ShareModal />
       <AddContactModal isPrivateRegion={isPrivateRegion} />
+      <DecryptedModal />
     </div>
   );
 };
