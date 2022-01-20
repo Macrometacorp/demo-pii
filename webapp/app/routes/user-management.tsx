@@ -42,9 +42,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const locations: Array<LocationData> = allResponses?.[1]?.result ?? [];
 
   const result = users?.map((user) => {
-    // FIXME: use actual token
-    // const { token } = user;
-    const token = "dummy";
+    const { token } = user;
     const location = locations.find((location) => location.token === token);
     return {
       ...user,
