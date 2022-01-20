@@ -9,15 +9,6 @@ export const piiSearch = (email: string) =>
 export const piiAddContact = (name: string, email: string, phone: string) => {
   const [first, last] = name.split(" ");
 
-  console.log(
-    JSON.stringify({
-      first,
-      last,
-      login: name,
-      phone,
-      email,
-    })
-  );
   return fetch(`${PRIVACY_SERVICE_URL}/v1/user`, {
     method: "POST",
     headers: {
