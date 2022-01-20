@@ -1,7 +1,7 @@
 import { parse as parseCSV } from "papaparse";
 import { Form } from "remix";
 import { useNavigate } from "react-router-dom";
-import { AppPaths, ModalPaths } from "~/constants";
+import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
 import { useEffect, useState } from "react";
 import SearchSVG from "../components/svgs/search";
 import ContactSVG from "../components/svgs/contact";
@@ -24,7 +24,7 @@ export default () => {
     pathname === AppPaths.UserManagement
       ? setShowMenu(true)
       : setShowMenu(false);
-    setRegion(sessionStorage.getItem("region") || "");
+    setRegion(sessionStorage.getItem(SessionStorage.Region) || "");
   });
   return (
     <div

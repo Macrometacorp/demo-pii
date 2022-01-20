@@ -1,23 +1,14 @@
 import { useLoaderData, Form } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
-import { AppPaths, Session } from "~/constants";
+import { AppPaths, Session, SessionStorage } from "~/constants";
 import { getAuthTokens } from "../sessions";
 import { DataCenter, RegionInfo } from "~/interfaces";
 import { useState } from "react";
+import { getDatacenters, getRegionLabel, isEu } from "~/utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { [Session.Jwt]: token, [Session.Tenant]: tenant } =
-    await getAuthTokens(request);
-
-  const response = await fetch(
-    `${FEDERATION_URL}/datacenter/_tenant/${tenant}`,
-    {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-    }
-  );
+  const response = await getDatacenters(request);
   const regions = await response.json();
   return regions;
 };
@@ -36,17 +27,20 @@ export default function SelectRegion() {
           method="post"
           onSubmit={(event: any) => {
             event.preventDefault();
-            sessionStorage.setItem("region", region);
+            const dc =
+              dcInfo.find((info) => info.name === region) ?? ({} as DataCenter);
+            const label = getRegionLabel(dc);
+            sessionStorage.setItem(SessionStorage.Region, label);
+            sessionStorage.setItem(
+              SessionStorage.IsEu,
+              isEu(region) === true ? "true" : "false"
+            );
             navigate(AppPaths.UserManagement);
           }}
         >
           {dcInfo.map((dc: DataCenter) => {
-            const {
-              name,
-              locationInfo: { city, countrycode },
-              tags: { api },
-            } = dc;
-            const label = `${city}, ${countrycode}`;
+            const { name } = dc;
+            const label = getRegionLabel(dc);
             return (
               <div className="form-control" key={name}>
                 <label className="cursor-pointer label">
@@ -56,7 +50,7 @@ export default function SelectRegion() {
                     name="region"
                     className="radio"
                     required
-                    value={label}
+                    value={name}
                     onChange={(event) => {
                       setRegion(event.target.value);
                     }}

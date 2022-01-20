@@ -16,23 +16,20 @@ export const loader: LoaderFunction = async ({ request }) => {
   const {
     query: { search },
   } = queryString.parseUrl(request.url);
-  const session = await getSession(request.headers.get("Cookie"));
-
-  const token = session.get(Session.Jwt);
 
   let getUsersPromise;
 
   if (search) {
     console.log(`Search::::${search}`);
-    // getUsersPromise = 
+    // getUsersPromise =
   } else {
-    getUsersPromise = c8ql(token, Fabrics.Global, Queries.GetUsers).then(
+    getUsersPromise = c8ql(request, Fabrics.Global, Queries.GetUsers).then(
       (response) => response.json()
     );
   }
 
   const getLocationsPromise = c8ql(
-    token,
+    request,
     Fabrics.Global,
     Queries.GetLocations
   ).then((response) => response.json());

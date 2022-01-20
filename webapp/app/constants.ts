@@ -3,6 +3,11 @@ export enum Session {
   Tenant = "tenant",
 }
 
+export enum SessionStorage {
+  IsEu = "isEu",
+  Region = "region",
+}
+
 export enum AppPaths {
   Root = "/",
   Login = "/login",
