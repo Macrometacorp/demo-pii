@@ -17,10 +17,18 @@ const handleSearch = async (request: Request, email: string) => {
   let token;
   let user;
   // check PII
-  const res = await piiSearch(email.toString()).then((response) =>
-    response.json()
-  );
-  token = res.token;
+  const textRes = await piiSearch(email.toString())
+    .then((response) => response.text())
+    .catch((err) => {
+      return JSON.stringify({ error: true, message: err.message });
+    });
+
+  try {
+    const res = JSON.parse(textRes);
+    token = res?.token;
+  } catch (error: any) {
+    console.error(error);
+  }
   if (!token) {
     // not found in PII, check users table
     const c8Res = await c8ql(
@@ -62,7 +70,10 @@ const handleSearch = async (request: Request, email: string) => {
     ];
   } else {
     // did not find anything for this email
+    console.log("--------NOT FOUND ANYWHERE----------");
   }
+  console.log("--------FINAL----------");
+  console.log(JSON.stringify(result));
   return result;
 };
 const handleList = async (request: Request) => {

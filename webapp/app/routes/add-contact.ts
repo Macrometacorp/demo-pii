@@ -22,10 +22,18 @@ export const action: ActionFunction = async ({ request }) => {
 
   let token;
   if (isPrivate) {
-    const res = await piiAddContact(name, email, phone).then((response) =>
-      response.json()
-    );
-    token = res.token;
+    const resText = await piiAddContact(name, email, phone)
+      .then((response) => response.text())
+      .catch((err) => {
+        console.error(err);
+        return JSON.stringify({ error: true, message: err.message });
+      });
+    try {
+      const res = JSON.parse(resText);
+      token = res.token;
+    } catch (error) {
+      console.error(error);
+    }
   } else {
     token = `mm_${uuidv4()}`;
     await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
