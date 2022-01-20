@@ -1,5 +1,5 @@
 import { parse as parseCSV } from "papaparse";
-import { Form } from "remix";
+import { Form, Link } from "remix";
 import { useNavigate } from "react-router-dom";
 import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
 import { useEffect, useState } from "react";
@@ -48,15 +48,20 @@ export default () => {
           </div>
         </div>
         <div className="flex-none">
-          <button
-            className="btn btn-square btn-ghost tooltip"
-            data-tip="Search"
-            onClick={() => {
-              navigate(`${AppPaths.UserManagement}?search=${search}`);
-            }}
+          <Link
+            to={
+              search?.trim()
+                ? `${AppPaths.UserManagement}?email=${search}`
+                : AppPaths.UserManagement
+            }
           >
-            <SearchSVG />
-          </button>
+            <button
+              className="btn btn-square btn-ghost tooltip"
+              data-tip="Search"
+            >
+              <SearchSVG />
+            </button>
+          </Link>
         </div>
 
         <div className="flex-none">

@@ -3,6 +3,7 @@ export const piiSearch = (email: string) =>
     method: "GET",
     headers: {
       "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
+      "Content-Type": "application/json",
     },
   });
 

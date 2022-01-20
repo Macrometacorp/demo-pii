@@ -55,4 +55,7 @@ export const Queries = {
   UpsertLocation: `UPSERT { _key: @token }
   INSERT { _key: @token, token: @token, state: @state, country: @country, zipcode: @zipcode, job_title: @job_title }
   UPDATE { state: @state, country: @country, zipcode: @zipcode, job_title: @job_title } IN ${Collections.UserLocations}`,
+  SearchUserByEmail: `FOR user IN ${Collections.Users} FILTER user.email == @email RETURN user`,
+  SearchUserByToken: `FOR user IN ${Collections.Users} FILTER user._key == @token RETURN user`,
+  SearchLocationByToken: `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
 };
