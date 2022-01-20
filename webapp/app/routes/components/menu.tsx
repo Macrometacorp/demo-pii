@@ -10,6 +10,7 @@ const LOGOUT_FORM_ID = "logout_form";
 export default () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const [search, setSearch] = useState("");
   const [region, setRegion] = useState("");
 
   useEffect(() => {
@@ -34,8 +35,12 @@ export default () => {
           <div className="form-control">
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search by email"
               className="input input-ghost"
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value);
+              }}
             />
           </div>
         </div>
@@ -43,6 +48,9 @@ export default () => {
           <button
             className="btn btn-square btn-ghost tooltip"
             data-tip="Search"
+            onClick={() => {
+              navigate(`${AppPaths.UserManagement}?search=${search}`);
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

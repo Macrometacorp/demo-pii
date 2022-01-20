@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
+import * as queryString from "query-string";
+
 import { Fabrics, HEADINGS, Queries, Session } from "~/constants";
 import { LocationData, UserData } from "~/interfaces";
 import { getSession } from "~/sessions";
@@ -11,13 +13,23 @@ import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const {
+    query: { search },
+  } = queryString.parseUrl(request.url);
   const session = await getSession(request.headers.get("Cookie"));
 
   const token = session.get(Session.Jwt);
 
-  const getUsersPromise = c8ql(token, Fabrics.Global, Queries.GetUsers).then(
-    (response) => response.json()
-  );
+  let getUsersPromise;
+
+  if (search) {
+    console.log(`Search::::${search}`);
+    // getUsersPromise = 
+  } else {
+    getUsersPromise = c8ql(token, Fabrics.Global, Queries.GetUsers).then(
+      (response) => response.json()
+    );
+  }
 
   const getLocationsPromise = c8ql(
     token,
