@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LoaderFunction, useLoaderData } from "remix";
+import { LoaderFunction, useCatch, useLoaderData } from "remix";
 import * as queryString from "query-string";
 
 import { Fabrics, HEADINGS, Queries, SessionStorage } from "~/constants";
@@ -11,6 +11,9 @@ import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
 import { piiSearch } from "~/utilities/REST/pii";
+import Unauthorized from "./components/unauthorized";
+import Error from "./components/error";
+import { isLoggedIn } from "~/utilities/utils";
 
 const handleSearch = async (request: Request, email: string) => {
   let result: Array<UserData> = [];
@@ -106,6 +109,9 @@ const handleList = async (request: Request) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  if (!(await isLoggedIn(request))) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
   const {
     query: { email },
   } = queryString.parseUrl(request.url);
@@ -161,3 +167,16 @@ export default () => {
     </div>
   );
 };
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  if (caught.status === 401) {
+    return <Unauthorized />;
+  }
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return <Error />;
+}

@@ -1,13 +1,18 @@
-import { useLoaderData, Form } from "remix";
+import { useLoaderData, Form, useCatch } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
 import { AppPaths, SessionStorage } from "~/constants";
 import { DataCenter, RegionInfo } from "~/interfaces";
 import { useState } from "react";
-import { getRegionLabel, isEu } from "~/utilities/utils";
+import { getRegionLabel, isEu, isLoggedIn } from "~/utilities/utils";
 import { getDatacenters } from "~/utilities/REST/mm";
+import Unauthorized from "./components/unauthorized";
+import Error from "./components/error";
 
 export const loader: LoaderFunction = async ({ request }) => {
+  if (!(await isLoggedIn(request))) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
   const response = await getDatacenters(request);
   const regions = await response.json();
   return regions;
@@ -66,4 +71,17 @@ export default function SelectRegion() {
       </div>
     </div>
   );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  if (caught.status === 401) {
+    return <Unauthorized />;
+  }
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return <Error />;
 }

@@ -1,4 +1,5 @@
-import { ModalPaths } from "../constants";
+import { getAuthTokens } from "~/sessions";
+import { ModalPaths, Session } from "../constants";
 import { DataCenter } from "../interfaces";
 import EuroCountries from "./euro-countries";
 
@@ -21,4 +22,9 @@ export const isPrivateRegion = (country: string): boolean => {
       countryDetail.code.toUpperCase() === country.toUpperCase()
   );
   return !!found;
+};
+
+export const isLoggedIn = async (request: Request): Promise<boolean> => {
+  const { [Session.Jwt]: token } = await getAuthTokens(request);
+  return !!token;
 };
