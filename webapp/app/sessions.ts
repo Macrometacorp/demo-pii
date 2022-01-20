@@ -1,5 +1,6 @@
 import { createCookieSessionStorage, json, redirect } from "remix";
 import { AppPaths, Session } from "./constants";
+import { mmLogin } from "./utilities/REST/mm";
 
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage({
@@ -22,13 +23,7 @@ export const login = async (
   password: FormDataEntryValue
 ) => {
   const session = await getSession(request.headers.get("Cookie"));
-  const response = await fetch(`${FEDERATION_URL}/_open/auth`, {
-    method: "POST",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
+  const response = await mmLogin(email.toString(), password.toString());
   const body = await response.json();
   const { jwt, tenant } = body;
 

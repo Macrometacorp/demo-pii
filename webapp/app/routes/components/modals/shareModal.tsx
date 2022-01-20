@@ -1,5 +1,5 @@
 import { AppPaths, ModalPaths } from "~/constants";
-import { getModalId } from "~/utils";
+import { getModalId } from "~/utilities/utils";
 
 export default () => (
   <div id={getModalId(ModalPaths.ShareModal)} className="modal">

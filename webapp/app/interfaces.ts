@@ -36,3 +36,7 @@ export interface RowProps {
   data: PiiData & LocationData;
   setActiveRow: (arg: string) => void;
 }
+
+export interface AddContactModalProps {
+  isPrivateRegion: string;
+}

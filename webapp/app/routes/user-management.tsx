@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
 import * as queryString from "query-string";
 
-import { Fabrics, HEADINGS, Queries, Session } from "~/constants";
+import { Fabrics, HEADINGS, Queries, SessionStorage } from "~/constants";
 import { LocationData, UserData } from "~/interfaces";
-import { getSession } from "~/sessions";
-import { c8ql } from "~/utils";
+import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
 import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
@@ -39,10 +38,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     getLocationsPromise,
   ]);
 
-  const users: Array<UserData> = allResponses[0].result;
-  const locations: Array<LocationData> = allResponses[1].result;
+  const users: Array<UserData> = allResponses?.[0]?.result ?? [];
+  const locations: Array<LocationData> = allResponses?.[1]?.result ?? [];
 
-  const result = users.map((user) => {
+  const result = users?.map((user) => {
     // FIXME: use actual token
     // const { token } = user;
     const token = "dummy";
@@ -59,7 +58,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function addressbook() {
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
-
+  const [isPrivateRegion, setIsPrivateRegion] = useState("");
+  useEffect(() => {
+    setIsPrivateRegion(
+      sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
+    );
+  }, []);
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -89,7 +93,7 @@ export default function addressbook() {
       <EditModal />
       <RemoveModal />
       <ShareModal />
-      <AddContactModal />
+      <AddContactModal isPrivateRegion={isPrivateRegion} />
     </div>
   );
 }

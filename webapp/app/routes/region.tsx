@@ -1,11 +1,11 @@
 import { useLoaderData, Form } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
-import { AppPaths, Session, SessionStorage } from "~/constants";
-import { getAuthTokens } from "../sessions";
+import { AppPaths, SessionStorage } from "~/constants";
 import { DataCenter, RegionInfo } from "~/interfaces";
 import { useState } from "react";
-import { getDatacenters, getRegionLabel, isEu } from "~/utils";
+import { getRegionLabel, isEu } from "~/utilities/utils";
+import { getDatacenters } from "~/utilities/REST/mm";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const response = await getDatacenters(request);
@@ -32,7 +32,7 @@ export default function SelectRegion() {
             const label = getRegionLabel(dc);
             sessionStorage.setItem(SessionStorage.Region, label);
             sessionStorage.setItem(
-              SessionStorage.IsEu,
+              SessionStorage.IsPrivateRegion,
               isEu(region) === true ? "true" : "false"
             );
             navigate(AppPaths.UserManagement);

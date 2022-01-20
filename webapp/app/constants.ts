@@ -4,7 +4,7 @@ export enum Session {
 }
 
 export enum SessionStorage {
-  IsEu = "isEu",
+  IsPrivateRegion = "isPrivateregion",
   Region = "region",
 }
 
@@ -14,6 +14,7 @@ export enum AppPaths {
   Region = "/region",
   UserManagement = "/user-management",
   Logout = "/logout",
+  AddContact = "/add-contact",
 }
 
 export enum ModalPaths {
@@ -48,4 +49,10 @@ export enum Collections {
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
   GetLocations: `FOR doc in ${Collections.UserLocations} RETURN doc`,
+  UpsertUser: `UPSERT { _key: @token }
+  INSERT { _key: @token, token: @token, name: @name, email: @email, phone: @phone }
+  UPDATE { name: @name, email: @email, phone: @phone } IN ${Collections.Users}`,
+  UpsertLocation: `UPSERT { _key: @token }
+  INSERT { _key: @token, token: @token, state: @state, country: @country, zipcode: @zipcode, job_title: @job_title }
+  UPDATE { state: @state, country: @country, zipcode: @zipcode, job_title: @job_title } IN ${Collections.UserLocations}`,
 };
