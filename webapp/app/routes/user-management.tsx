@@ -53,7 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return result;
 };
 
-export default function addressbook() {
+export default () => {
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
@@ -94,4 +94,4 @@ export default function addressbook() {
       <AddContactModal isPrivateRegion={isPrivateRegion} />
     </div>
   );
-}
+};
