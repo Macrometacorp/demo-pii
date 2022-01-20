@@ -15,6 +15,7 @@ export enum AppPaths {
   UserManagement = "/user-management",
   Logout = "/logout",
   AddContact = "/add-contact",
+  Share = "/share"
 }
 
 export enum ModalPaths {
