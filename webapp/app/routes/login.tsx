@@ -6,7 +6,6 @@ export const action: ActionFunction = async ({ request }) => {
   const email = form.get("email");
   const fabric = form.get("fabric");
   const password = form.get("password") || "";
-  const content = form.get("content");
   // we do this type check to be extra sure and to make TypeScript happy
   // we'll explore validation next!
   if (
