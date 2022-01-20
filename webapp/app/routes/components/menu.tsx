@@ -1,6 +1,5 @@
 import { parse as parseCSV } from "papaparse";
-import { Form, Link } from "remix";
-import { useNavigate } from "react-router-dom";
+import { Link } from "remix";
 import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
 import { useEffect, useState } from "react";
 import SearchSVG from "../components/svgs/search";
@@ -8,10 +7,8 @@ import ContactSVG from "../components/svgs/contact";
 import UploadSVG from "../components/svgs/upload";
 
 const FILE_SELECTOR_ID = "file-selector";
-const LOGOUT_FORM_ID = "logout_form";
 
 export default () => {
-  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [search, setSearch] = useState("");
   const [region, setRegion] = useState("");
@@ -107,31 +104,20 @@ export default () => {
           >
             <img src="macrometa-icon.png" className="w-6 h-6 m-1" />
           </button>
-          <Form
-            action={AppPaths.Logout}
-            method="post"
-            id={LOGOUT_FORM_ID}
-          ></Form>
           <ul
             tabIndex={0}
             className="p-2 shadow menu dropdown-content bg-primary rounded-box w-52"
           >
-            <li
-              onClick={() => {
-                navigate(AppPaths.Region);
-              }}
-            >
-              <a>Change Region</a>
-            </li>
-            <li
-              onClick={() => {
-                (
-                  document.getElementById(LOGOUT_FORM_ID) as HTMLFormElement
-                ).submit();
-              }}
-            >
-              <a>Logout</a>
-            </li>
+            <Link to={AppPaths.Region}>
+              <li>
+                <a>Change Region</a>
+              </li>
+            </Link>
+            <Link to={AppPaths.Logout} reloadDocument>
+              <li>
+                <a>Logout</a>
+              </li>
+            </Link>
           </ul>
         </div>
       </div>

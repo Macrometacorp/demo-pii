@@ -1931,6 +1931,10 @@ html {
   margin-right: 0.5rem;
 }
 
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+
 .mt-20 {
   margin-top: 5rem;
 }
@@ -1949,10 +1953,6 @@ html {
 
 .-mb-4 {
   margin-bottom: -1rem;
-}
-
-.mb-5 {
-  margin-bottom: 1.25rem;
 }
 
 .inline-block {
@@ -1983,10 +1983,6 @@ html {
   height: 5rem;
 }
 
-.min-h-screen {
-  min-height: 100vh;
-}
-
 .w-6 {
   width: 1.5rem;
 }
@@ -2003,12 +1999,12 @@ html {
   width: 13rem;
 }
 
-.max-w-lg {
-  max-width: 32rem;
-}
-
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
 }
 
 .flex-1 {
@@ -2048,11 +2044,6 @@ html {
   background-color: hsla(var(--p) / var(--tw-bg-opacity));
 }
 
-.bg-base-200 {
-  --tw-bg-opacity: 1;
-  background-color: hsla(var(--b2) / var(--tw-bg-opacity));
-}
-
 .stroke-current {
   stroke: currentColor;
 }
@@ -2072,11 +2063,6 @@ html {
 
 .text-center {
   text-align: center;
-}
-
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
 }
 
 .text-3xl {
