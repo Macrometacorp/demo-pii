@@ -1,8 +1,8 @@
-name = "remix-cloudflare-workers"
+name = "mm-data-privacy"
 type = "javascript"
 
 zone_id = ""
-account_id = ""
+account_id = "xxxx"
 route = ""
 workers_dev = true
 
@@ -10,7 +10,10 @@ workers_dev = true
 [vars]
 FEDERATION_URL="https://api-smoke4.eng.macrometa.io"
 PRIVACY_SERVICE_URL="http://privacy-service.eng.macrometa.io:3000"
-DATABUNKER_ROOTTOKEN="75277d58-bf99-4e7e-9cae-94c700828ffd"
+DATABUNKER_ROOTTOKEN="xxxx"
+TWILIO_ACCOUNT_SID="xxxx"
+TWILIO_AUTH_TOKEN="xxxx"
+TWILIO_MESSAGE_ENDPOINT="https://api.twilio.com/2010-04-01/Accounts/"
 
 [site]
 bucket = "./public"
