@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { AppPaths, Fabrics, Queries, SessionStorage } from "~/constants";
 import { c8ql } from "~/utilities/REST/mm";
 import { piiAddContact } from "~/utilities/REST/pii";
+import { isPrivateRegion } from "~/utilities/utils";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -14,10 +15,13 @@ export const action: ActionFunction = async ({ request }) => {
   const zipcode = form.get("zipcode")?.toString() ?? "";
   const job_title = form.get("job_title")?.toString() ?? "";
 
-  const isPrivateRegion = form.get(SessionStorage.IsPrivateRegion) === "true";
+  // FIXME: remove checking for EU if not needed
+  // const isPrivateRegion = form.get(SessionStorage.IsPrivateRegion) === "true";
+
+  const isPrivate = isPrivateRegion(country);
 
   let token;
-  if (isPrivateRegion) {
+  if (isPrivate) {
     const res = await piiAddContact(name, email, phone).then((response) =>
       response.json()
     );
