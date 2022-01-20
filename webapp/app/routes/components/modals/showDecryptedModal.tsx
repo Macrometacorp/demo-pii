@@ -1,6 +1,4 @@
-import { Form } from "remix";
-import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
-import { AddContactModalProps, UserData } from "~/interfaces";
+import { AppPaths, ModalPaths } from "~/constants";
 import { getModalId } from "~/utilities/utils";
 
 export default () => (
