@@ -15,6 +15,7 @@ import Unauthorized from "./components/unauthorized";
 import Error from "./components/error";
 import { isLoggedIn } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
+import {Pagination} from "./components/Pagination";
 
 const handleSearch = async (request: Request, email: string) => {
   let result: Array<UserData> = [];
@@ -130,11 +131,19 @@ export default () => {
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contactsPerPage] = useState(10);
+  const indexOfLastContact = currentPage * contactsPerPage;
+  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+  const currentContacts = userData.slice(indexOfFirstContact, indexOfLastContact);
+  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
+  
   useEffect(() => {
     setIsPrivateRegion(
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
     );
   }, []);
+  
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -151,7 +160,7 @@ export default () => {
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: UserData) => (
+          {currentContacts.map((data: UserData) => (
             <Row
               key={data.token}
               activeRow={activeRow}
@@ -167,6 +176,12 @@ export default () => {
       <ShareModal />
       <AddContactModal isPrivateRegion={isPrivateRegion} />
       <DecryptedModal />
+      <Pagination
+        contactsPerPage={contactsPerPage}
+        totalContacts={userData.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </div>
   );
 };
