@@ -1871,6 +1871,14 @@ html {
   width: 320px;
 }
 
+.btn-xs {
+  height: 1.5rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  min-height: 1.5rem;
+  font-size: .75rem;
+}
+
 .btn-sm {
   height: 2rem;
   padding-left: .75rem;
@@ -1903,11 +1911,39 @@ html {
   width: 4rem;
 }
 
+.btn-circle:where(.btn-xs) {
+  border-radius: 9999px;
+  height: 1.5rem;
+  padding: 0;
+  width: 1.5rem;
+}
+
 .btn-circle:where(.btn-sm) {
   border-radius: 9999px;
   height: 2rem;
   padding: 0;
   width: 2rem;
+}
+
+.alert-info {
+  --tw-bg-opacity: 0.1;
+  background-color: hsla(var(--in) / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: hsla(var(--in) / var(--tw-text-opacity, 1));
+}
+
+.alert-success {
+  --tw-bg-opacity: 0.1;
+  background-color: hsla(var(--su) / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: hsla(var(--su) / var(--tw-text-opacity, 1));
+}
+
+.alert-warning {
+  --tw-bg-opacity: 0.1;
+  background-color: hsla(var(--wa) / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: hsla(var(--wa) / var(--tw-text-opacity, 1));
 }
 
 .alert-error {
@@ -1919,6 +1955,38 @@ html {
 
 .invisible {
   visibility: hidden;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.top-0 {
+  top: 0px;
+}
+
+.left-0 {
+  left: 0px;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.bottom-0 {
+  bottom: 0px;
+}
+
+.bottom-10 {
+  bottom: 2.5rem;
+}
+
+.left-10 {
+  left: 2.5rem;
+}
+
+.right-10 {
+  right: 2.5rem;
 }
 
 .m-1 {

@@ -15,6 +15,7 @@ import {
   MM_TOKEN_PREFIX,
   Queries,
   SessionStorage,
+  ToastTypes,
 } from "~/constants";
 import { LocationData, PiiData, UserData } from "~/interfaces";
 import { c8ql } from "~/utilities/REST/mm";
@@ -28,6 +29,7 @@ import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
 import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
+import Toast from "./components/toast";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -222,25 +224,10 @@ export default () => {
       <AddContactModal />
       <DecryptedModal />
       {actionData && (
-        // FIXME: better notification
-        <div className="alert alert-error">
-          <div className="flex-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="w-6 h-6 mx-2 stroke-current"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-              ></path>
-            </svg>
-            <label>{actionData?.errorMessage}</label>
-          </div>
-        </div>
+        <Toast
+          toastType={ToastTypes.Error}
+          message={`${actionData.name}: ${actionData.errorMessage}`}
+        />
       )}
     </div>
   );
@@ -251,6 +238,8 @@ export function CatchBoundary() {
 
   if (caught.status === 401) {
     return <Unauthorized />;
+  } else {
+    return <ErrorComponent />;
   }
 }
 

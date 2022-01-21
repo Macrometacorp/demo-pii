@@ -24,6 +24,12 @@ export enum ModalPaths {
   ShowDecryptedModal = "#decrypted-modal",
 }
 
+export enum ToastTypes {
+  Success = "Success",
+  Error = "Error",
+  Info = "Info",
+}
+
 export const HEADINGS = [
   "name",
   "email",
