@@ -1,4 +1,4 @@
-import { MM_TOKEN_PREFIX, ModalPaths } from "~/constants";
+import { MM_TOKEN_PREFIX, ModalPaths, SessionStorage } from "~/constants";
 import { RowProps } from "~/interfaces";
 import { truncate } from "~/utilities/utils";
 
@@ -13,7 +13,8 @@ export default ({
   const isPrivate = isPrivateRegion === "true";
   const isMMToken =
     token.substring(0, MM_TOKEN_PREFIX.length) === MM_TOKEN_PREFIX;
-  let showClass = "flex-1 btn-sm btn-ghost text-center leading-7 text-neutral";
+  let showClass =
+    "flex-1 btn-sm btn-ghost text-center leading-7 text-neutral cursor-pointer";
   if (isPrivate) {
     showClass += isMMToken ? " invisible" : "";
   } else {
@@ -55,7 +56,17 @@ export default ({
         >
           Share
         </a>
-        <a href={ModalPaths.ShowDecryptedModal} className={showClass}>
+        <a
+          onClick={() => {
+            // not the best approach
+            sessionStorage.setItem(
+              SessionStorage.RowData,
+              JSON.stringify(data)
+            );
+            window.location.href = ModalPaths.ShowDecryptedModal;
+          }}
+          className={showClass}
+        >
           Show
         </a>
       </td>

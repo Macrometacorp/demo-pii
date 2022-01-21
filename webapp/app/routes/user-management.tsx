@@ -24,7 +24,7 @@ import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
-import { piiAddContact, piiSearch } from "~/utilities/REST/pii";
+import { piiAddContact, piiSearchByEmail } from "~/utilities/REST/pii";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
 import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
@@ -77,7 +77,7 @@ const handleSearch = async (request: Request, email: string) => {
   let token;
   let user;
   // check PII
-  const textRes = await piiSearch(email.toString())
+  const textRes = await piiSearchByEmail(email.toString())
     .then((response) => response.text())
     .catch((err) => {
       return JSON.stringify({ error: true, message: err.message });
