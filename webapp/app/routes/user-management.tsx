@@ -66,6 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
       zipcode,
       job_title,
     });
+    return { isPrivate };
   } catch (error: any) {
     return { error: true, errorMessage: error?.message, name: error?.name };
   }
@@ -186,6 +187,23 @@ export default () => {
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
+
+  let toastType = ToastTypes.Info;
+  let toastMessage = "";
+  if (actionData) {
+    const { error, isPrivate } = actionData;
+    toastType = error
+      ? ToastTypes.Error
+      : isPrivate
+      ? ToastTypes.Info
+      : ToastTypes.Success;
+
+    toastMessage = error
+      ? `${error.name}: ${error.errorMessage}`
+      : isPrivate
+      ? "Your new record will reflect shortly"
+      : "New record added successfully";
+  }
   useEffect(() => {
     setIsPrivateRegion(
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
@@ -223,12 +241,7 @@ export default () => {
       <ShareModal />
       <AddContactModal />
       <DecryptedModal />
-      {actionData && (
-        <Toast
-          toastType={ToastTypes.Error}
-          message={`${actionData.name}: ${actionData.errorMessage}`}
-        />
-      )}
+      {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };
