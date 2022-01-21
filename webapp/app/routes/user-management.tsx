@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
-import { LoaderFunction, useCatch, useLoaderData } from "remix";
+import {
+  ActionFunction,
+  LoaderFunction,
+  useActionData,
+  useCatch,
+  useLoaderData,
+} from "remix";
 import * as queryString from "query-string";
+import { v4 as uuidv4 } from "uuid";
 
-import { Fabrics, HEADINGS, Queries, SessionStorage } from "~/constants";
+import {
+  Fabrics,
+  HEADINGS,
+  MM_TOKEN_PREFIX,
+  Queries,
+  SessionStorage,
+} from "~/constants";
 import { LocationData, PiiData, UserData } from "~/interfaces";
 import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
@@ -10,11 +23,51 @@ import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
-import { piiSearch } from "~/utilities/REST/pii";
+import { piiAddContact, piiSearch } from "~/utilities/REST/pii";
 import Unauthorized from "./components/unauthorized";
-import Error from "./components/error";
-import { isLoggedIn } from "~/utilities/utils";
+import ErrorComponent from "./components/error";
+import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
+
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData();
+  const name = form.get("name")?.toString() ?? "";
+  const email = form.get("email")?.toString() ?? "";
+  const phone = form.get("phone")?.toString() ?? "";
+  const state = form.get("state")?.toString() ?? "";
+  const country = form.get("country")?.toString() ?? "";
+  const zipcode = form.get("zipcode")?.toString() ?? "";
+  const job_title = form.get("job_title")?.toString() ?? "";
+
+  try {
+    const isPrivate = isPrivateRegion(country);
+    let token;
+    if (isPrivate) {
+      const resText = await piiAddContact(name, email, phone).then((response) =>
+        response.text()
+      );
+      const res = JSON.parse(resText);
+      token = res.token;
+    } else {
+      token = `${MM_TOKEN_PREFIX}${uuidv4()}`;
+      await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
+        token,
+        name,
+        email,
+        phone,
+      });
+    }
+    await c8ql(request, Fabrics.Global, Queries.UpsertLocation, {
+      token,
+      state,
+      country,
+      zipcode,
+      job_title,
+    });
+  } catch (error: any) {
+    return { error: true, errorMessage: error?.message, name: error?.name };
+  }
+};
 
 const handleSearch = async (request: Request, email: string) => {
   let result: Array<UserData> = [];
@@ -127,6 +180,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
+  const actionData = useActionData();
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
@@ -165,8 +219,29 @@ export default () => {
       <EditModal />
       <RemoveModal />
       <ShareModal />
-      <AddContactModal isPrivateRegion={isPrivateRegion} />
+      <AddContactModal />
       <DecryptedModal />
+      {actionData && (
+        // FIXME: better notification
+        <div className="alert alert-error">
+          <div className="flex-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="w-6 h-6 mx-2 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+              ></path>
+            </svg>
+            <label>{actionData?.errorMessage}</label>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -181,5 +256,5 @@ export function CatchBoundary() {
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
-  return <Error />;
+  return <ErrorComponent />;
 }

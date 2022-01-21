@@ -37,7 +37,3 @@ export interface RowProps {
   isPrivateRegion: string;
   setActiveRow: (arg: string) => void;
 }
-
-export interface AddContactModalProps {
-  isPrivateRegion: string;
-}
