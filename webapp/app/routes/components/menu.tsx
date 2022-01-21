@@ -110,12 +110,12 @@ export default () => {
           >
             <Link to={AppPaths.Region}>
               <li>
-                <a>Change Region</a>
+                <button className="btn btn-primary">Change Region</button>
               </li>
             </Link>
             <Link to={AppPaths.Logout} reloadDocument>
               <li>
-                <a>Logout</a>
+                <button className="btn btn-primary">Logout</button>
               </li>
             </Link>
           </ul>

@@ -2072,6 +2072,18 @@ html {
   padding: 0.5rem;
 }
 
+.p-4 {
+  padding: 1rem;
+}
+
+.p-8 {
+  padding: 2rem;
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -2141,6 +2153,11 @@ html {
 .hover\:bg-indigo-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(99 102 241 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-primary-focus:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsla(var(--pf) / var(--tw-bg-opacity));
 }
 
 .hover\:shadow-2xl:hover {

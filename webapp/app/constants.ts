@@ -48,7 +48,7 @@ export enum Collections {
 
 export const MM_TOKEN_PREFIX = "mm_";
 
-export const TRUNCATE_LENGTH = 20;
+export const TRUNCATE_LENGTH = 30;
 
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
