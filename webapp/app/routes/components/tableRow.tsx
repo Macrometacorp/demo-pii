@@ -1,5 +1,6 @@
 import { MM_TOKEN_PREFIX, ModalPaths } from "~/constants";
 import { RowProps } from "~/interfaces";
+import { truncate } from "~/utilities/utils";
 
 export default ({
   activeRow,
@@ -28,14 +29,13 @@ export default ({
         setActiveRow("");
       }}
     >
-      <th>{token}</th>
-      <td>{name}</td>
-      <td>{email}</td>
-      <td>{phone}</td>
-      <td>{state}</td>
-      <td>{country}</td>
-      <td>{zipcode}</td>
-      <td>{job_title}</td>
+      <td>{truncate(name)}</td>
+      <td>{truncate(email)}</td>
+      <td>{truncate(phone)}</td>
+      <td>{truncate(state)}</td>
+      <td>{truncate(country)}</td>
+      <td>{truncate(zipcode)}</td>
+      <td>{truncate(job_title)}</td>
       <td className="flex">
         <a
           href={ModalPaths.EditModal}

@@ -1,5 +1,5 @@
 import { getAuthTokens } from "~/sessions";
-import { ModalPaths, Session } from "../constants";
+import { ModalPaths, Session, TRUNCATE_LENGTH } from "../constants";
 import { DataCenter } from "../interfaces";
 import EuroCountries from "./euro-countries";
 
@@ -27,4 +27,11 @@ export const isPrivateRegion = (country: string): boolean => {
 export const isLoggedIn = async (request: Request): Promise<boolean> => {
   const { [Session.Jwt]: token } = await getAuthTokens(request);
   return !!token;
+};
+
+export const truncate = (text: string) => {
+  if (text?.length > TRUNCATE_LENGTH) {
+    text = `${text.substring(0, TRUNCATE_LENGTH)}...`;
+  }
+  return text;
 };

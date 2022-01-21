@@ -26,7 +26,6 @@ export enum ModalPaths {
 }
 
 export const HEADINGS = [
-  "token",
   "name",
   "email",
   "phone",
@@ -48,6 +47,8 @@ export enum Collections {
 }
 
 export const MM_TOKEN_PREFIX = "mm_";
+
+export const TRUNCATE_LENGTH = 20;
 
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
