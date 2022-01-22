@@ -70,3 +70,17 @@ export const Queries = {
   SearchUserByToken: `FOR user IN ${Collections.Users} FILTER user._key == @token RETURN user`,
   SearchLocationByToken: `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
 };
+
+export enum ActionButtons {
+  Edit = "EDIT",
+  Remove = "REMOVE",
+  Share = "SHARE",
+  Show = "SHOW",
+}
+
+export enum HttpMethods {
+  Get = "get",
+  Post = "post",
+  Put = "put",
+  Delete = "delete",
+}

@@ -1,25 +1,24 @@
-import { MM_TOKEN_PREFIX } from "~/constants";
+import { ActionButtons, MM_TOKEN_PREFIX } from "~/constants";
 import { RowProps } from "~/interfaces";
-import { truncate } from "~/utilities/utils";
+import { isMMToken, truncate } from "~/utilities/utils";
 
 export default ({
   activeRow,
   data,
   setActiveRow,
   isPrivateRegion,
-  onShowDecryptDetailsClicked,
+  onActionButtonClicked,
 }: RowProps) => {
   const { token, name, email, phone, state, country, zipcode, job_title } =
     data;
   const isPrivate = isPrivateRegion === "true";
-  const isMMToken =
-    token.substring(0, MM_TOKEN_PREFIX.length) === MM_TOKEN_PREFIX;
+  const isPrivateRecord = !isMMToken(token);
 
-  const isButtonDisabled = !isPrivate && !isMMToken;
+  const isButtonDisabled = !isPrivate && isPrivateRecord;
 
   let showClass = "flex-1 btn-sm btn-ghost text-center leading-7 text-neutral";
   if (isPrivate) {
-    showClass += isMMToken ? " invisible" : "";
+    showClass += isPrivateRecord ? "" : " invisible";
   } else {
     showClass += " hidden";
   }
@@ -46,8 +45,11 @@ export default ({
             isButtonDisabled ? "btn-disabled" : ""
           }`}
           disabled={isButtonDisabled}
+          onClick={() => {
+            onActionButtonClicked(ActionButtons.Edit, data);
+          }}
         >
-          Edit
+          {ActionButtons.Edit}
         </button>
         <button
           className={`flex-1 btn btn-ghost btn-sm text-center leading-7 text-error mr-2 ${
@@ -55,7 +57,7 @@ export default ({
           }`}
           disabled={isButtonDisabled}
         >
-          Remove
+          {ActionButtons.Remove}
         </button>
         <button
           className={`flex-1 btn btn-ghost btn-sm text-center leading-7 text-green-600 mr-2 ${
@@ -63,16 +65,16 @@ export default ({
           }`}
           disabled={isButtonDisabled}
         >
-          Share
+          {ActionButtons.Share}
         </button>
         <button
           className={showClass}
           disabled={isButtonDisabled}
           onClick={() => {
-            onShowDecryptDetailsClicked(data);
+            onActionButtonClicked(ActionButtons.Show, data);
           }}
         >
-          Show
+          {ActionButtons.Show}
         </button>
       </td>
     </tr>

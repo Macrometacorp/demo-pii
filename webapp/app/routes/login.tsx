@@ -1,4 +1,5 @@
 import { ActionFunction, Form, useActionData } from "remix";
+import { HttpMethods } from "~/constants";
 import { login } from "../sessions";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -25,7 +26,7 @@ export default function Login() {
     <div className="card shadow-lg max-w-lg mx-auto mt-20 hover:shadow-2xl">
       <div className="card-body">
         <h2 className="card-title">Login</h2>
-        <Form method="post">
+        <Form method={HttpMethods.Post}>
           <div className="form-control">
             <label className="label">
               <span className="label-text">Email</span>

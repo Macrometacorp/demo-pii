@@ -11,12 +11,14 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   CONTACTS_PER_PAGE,
+  ActionButtons,
   Fabrics,
   HEADINGS,
   MM_TOKEN_PREFIX,
   Queries,
   SessionStorage,
   ToastTypes,
+  HttpMethods,
 } from "~/constants";
 import { LocationData, PiiData, UserData } from "~/interfaces";
 import { c8ql } from "~/utilities/REST/mm";
@@ -25,12 +27,16 @@ import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
-import { piiAddContact, piiSearchByEmail } from "~/utilities/REST/pii";
+import {
+  piiAddContact,
+  piiSearchByEmail,
+  piiUpdateContact,
+} from "~/utilities/REST/pii";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
 import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
-import {Pagination} from "./components/Pagination";
+import { Pagination } from "./components/Pagination";
 import Toast from "./components/toast";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -42,18 +48,30 @@ export const action: ActionFunction = async ({ request }) => {
   const country = form.get("country")?.toString() ?? "";
   const zipcode = form.get("zipcode")?.toString() ?? "";
   const job_title = form.get("job_title")?.toString() ?? "";
+  // token will be sent in case of update
+  let token = form.get("token")?.toString() ?? "";
+
+  const isCreate = !token;
+
+  const isPrivate = isPrivateRegion(country);
 
   try {
-    const isPrivate = isPrivateRegion(country);
-    let token;
     if (isPrivate) {
-      const resText = await piiAddContact(name, email, phone).then((response) =>
-        response.text()
-      );
-      const res = JSON.parse(resText);
-      token = res.token;
+      if (isCreate) {
+        const resText = await piiAddContact(name, email, phone).then(
+          (response) => response.text()
+        );
+        const res = JSON.parse(resText);
+        token = res.token;
+      } else {
+        const resText = await piiUpdateContact(token, name, email, phone).then(
+          (response) => response.text()
+        );
+        // error if expected format is not received
+        JSON.parse(resText);
+      }
     } else {
-      token = `${MM_TOKEN_PREFIX}${uuidv4()}`;
+      token = token || `${MM_TOKEN_PREFIX}${uuidv4()}`;
       await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
         token,
         name,
@@ -193,13 +211,15 @@ export default () => {
   const [contactsPerPage] = useState(CONTACTS_PER_PAGE);
   const indexOfLastContact = currentPage * contactsPerPage;
   const indexOfFirstContact = indexOfLastContact - contactsPerPage;
-  const currentContacts = userData.slice(indexOfFirstContact, indexOfLastContact);
-  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
-  
-  const [showDecryptModal, setShowDecryptModal] = useState(false);
-  const [decryptModalDetails, setDecryptModalDetails] = useState(
-    {} as LocationData
+  const currentContacts = userData.slice(
+    indexOfFirstContact,
+    indexOfLastContact
   );
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const [showDecryptModal, setShowDecryptModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [modalUserDetails, setModalUserDetails] = useState({} as UserData);
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -222,7 +242,7 @@ export default () => {
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
     );
   }, []);
-  
+
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -246,28 +266,45 @@ export default () => {
               setActiveRow={setActiveRow}
               data={data}
               isPrivateRegion={isPrivateRegion}
-              onShowDecryptDetailsClicked={(decryptDetails: LocationData) => {
-                setDecryptModalDetails(decryptDetails);
-                setShowDecryptModal(true);
+              onActionButtonClicked={(
+                action: ActionButtons,
+                details: UserData
+              ) => {
+                setModalUserDetails(details);
+                switch (action) {
+                  case ActionButtons.Show:
+                    setShowDecryptModal(true);
+                    break;
+                  case ActionButtons.Edit:
+                    setShowEditModal(true);
+                    break;
+                }
               }}
             />
           ))}
         </tbody>
       </table>
-      <EditModal />
+      {showEditModal && (
+        <EditModal
+          modalUserDetails={modalUserDetails}
+          onModalClose={() => {
+            setShowEditModal(false);
+          }}
+        />
+      )}
       <RemoveModal />
       <ShareModal />
 
       <AddContactModal />
       {showDecryptModal && (
         <DecryptedModal
-          decryptModalDetails={decryptModalDetails}
+          modalUserDetails={modalUserDetails}
           onModalClose={() => {
             setShowDecryptModal(false);
           }}
         />
       )}
-    
+
       <Pagination
         contactsPerPage={contactsPerPage}
         totalContacts={userData.length}
@@ -275,7 +312,7 @@ export default () => {
         currentPage={currentPage}
       />
 
-{actionData && <Toast toastType={toastType} message={toastMessage} />}
+      {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };

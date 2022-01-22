@@ -1,7 +1,7 @@
 import { useLoaderData, Form, useCatch } from "remix";
 import { useNavigate } from "react-router-dom";
 import type { LoaderFunction } from "remix";
-import { AppPaths, SessionStorage } from "~/constants";
+import { AppPaths, HttpMethods, SessionStorage } from "~/constants";
 import { DataCenter, RegionInfo } from "~/interfaces";
 import { useState } from "react";
 import { getRegionLabel, isEu, isLoggedIn } from "~/utilities/utils";
@@ -29,7 +29,7 @@ export default function SelectRegion() {
       <div className="card-body">
         <h2 className="card-title">Select Region</h2>
         <Form
-          method="post"
+          method={HttpMethods.Post}
           onSubmit={(event: any) => {
             event.preventDefault();
             const dc =
