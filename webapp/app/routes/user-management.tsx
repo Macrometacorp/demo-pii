@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   CONTACTS_PER_PAGE,
+  ActionButtons,
   Fabrics,
   HEADINGS,
   MM_TOKEN_PREFIX,
@@ -30,7 +31,7 @@ import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
 import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
-import {Pagination} from "./components/Pagination";
+import { Pagination } from "./components/Pagination";
 import Toast from "./components/toast";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -193,13 +194,16 @@ export default () => {
   const [contactsPerPage] = useState(CONTACTS_PER_PAGE);
   const indexOfLastContact = currentPage * contactsPerPage;
   const indexOfFirstContact = indexOfLastContact - contactsPerPage;
-  const currentContacts = userData.slice(indexOfFirstContact, indexOfLastContact);
-  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
-  
-  const [showDecryptModal, setShowDecryptModal] = useState(false);
-  const [decryptModalDetails, setDecryptModalDetails] = useState(
-    {} as LocationData
+  const currentContacts = userData.slice(
+    indexOfFirstContact,
+    indexOfLastContact
   );
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const [showDecryptModal, setShowDecryptModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddContactModal, setShowAddContactModal] = useState(false);
+  const [modalUserDetails, setModalUserDetails] = useState({} as LocationData);
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -222,7 +226,7 @@ export default () => {
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
     );
   }, []);
-  
+
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -246,28 +250,45 @@ export default () => {
               setActiveRow={setActiveRow}
               data={data}
               isPrivateRegion={isPrivateRegion}
-              onShowDecryptDetailsClicked={(decryptDetails: LocationData) => {
-                setDecryptModalDetails(decryptDetails);
-                setShowDecryptModal(true);
+              onActionButtonClicked={(
+                action: ActionButtons,
+                details: LocationData
+              ) => {
+                setModalUserDetails(details);
+                switch (action) {
+                  case ActionButtons.Show:
+                    setShowDecryptModal(true);
+                    break;
+                  case ActionButtons.Edit:
+                    setShowEditModal(true);
+                    break;
+                }
               }}
             />
           ))}
         </tbody>
       </table>
-      <EditModal />
+      {showEditModal && (
+        <EditModal
+          modalUserDetails={modalUserDetails}
+          onModalClose={() => {
+            setShowEditModal(false);
+          }}
+        />
+      )}
       <RemoveModal />
       <ShareModal />
 
       <AddContactModal />
       {showDecryptModal && (
         <DecryptedModal
-          decryptModalDetails={decryptModalDetails}
+          modalUserDetails={modalUserDetails}
           onModalClose={() => {
             setShowDecryptModal(false);
           }}
         />
       )}
-    
+
       <Pagination
         contactsPerPage={contactsPerPage}
         totalContacts={userData.length}
@@ -275,7 +296,7 @@ export default () => {
         currentPage={currentPage}
       />
 
-{actionData && <Toast toastType={toastType} message={toastMessage} />}
+      {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };

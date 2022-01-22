@@ -1,5 +1,10 @@
 import { getAuthTokens } from "~/sessions";
-import { ModalPaths, Session, TRUNCATE_LENGTH } from "../constants";
+import {
+  MM_TOKEN_PREFIX,
+  ModalPaths,
+  Session,
+  TRUNCATE_LENGTH,
+} from "../constants";
 import { DataCenter } from "../interfaces";
 import EuroCountries from "./euro-countries";
 
@@ -35,3 +40,6 @@ export const truncate = (text: string) => {
   }
   return text;
 };
+
+export const isMMToken = (token: string) =>
+  token.substring(0, MM_TOKEN_PREFIX.length) === MM_TOKEN_PREFIX;

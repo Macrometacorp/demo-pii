@@ -1,3 +1,5 @@
+import { ActionButtons } from "./constants";
+
 export interface DataCenter {
   name: string;
   tags: {
@@ -36,10 +38,13 @@ export interface RowProps {
   data: PiiData & LocationData;
   isPrivateRegion: string;
   setActiveRow: (arg: string) => void;
-  onShowDecryptDetailsClicked: (arg: LocationData) => void;
+  onActionButtonClicked: (action: ActionButtons, details: LocationData) => void;
 }
 
-export interface DecryptModalProps {
-  decryptModalDetails: LocationData;
+export interface ModalProps {
+  modalUserDetails: LocationData;
   onModalClose: () => void;
 }
+
+export interface AddContactModalProps
+  extends Omit<ModalProps, "modalUserDetails"> {}
