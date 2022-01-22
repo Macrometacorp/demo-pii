@@ -10,6 +10,7 @@ import * as queryString from "query-string";
 import { v4 as uuidv4 } from "uuid";
 
 import {
+  CONTACTS_PER_PAGE,
   Fabrics,
   HEADINGS,
   MM_TOKEN_PREFIX,
@@ -189,7 +190,7 @@ export default () => {
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [contactsPerPage] = useState(10);
+  const [contactsPerPage] = useState(CONTACTS_PER_PAGE);
   const indexOfLastContact = currentPage * contactsPerPage;
   const indexOfFirstContact = indexOfLastContact - contactsPerPage;
   const currentContacts = userData.slice(indexOfFirstContact, indexOfLastContact);
