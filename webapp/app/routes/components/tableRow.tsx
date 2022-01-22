@@ -7,6 +7,7 @@ export default ({
   data,
   setActiveRow,
   isPrivateRegion,
+  onShowDecryptDetailsClicked,
 }: RowProps) => {
   const { token, name, email, phone, state, country, zipcode, job_title } =
     data;
@@ -58,12 +59,7 @@ export default ({
         </a>
         <a
           onClick={() => {
-            // not the best approach
-            sessionStorage.setItem(
-              SessionStorage.RowData,
-              JSON.stringify(data)
-            );
-            window.location.href = ModalPaths.ShowDecryptedModal;
+            onShowDecryptDetailsClicked(data);
           }}
           className={showClass}
         >

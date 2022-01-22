@@ -1,38 +1,45 @@
 import { useEffect, useState } from "react";
 import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
-import { LocationData } from "~/interfaces";
+import { DecryptModalProps, LocationData, UserData } from "~/interfaces";
 import { getModalId } from "~/utilities/utils";
 
-export default () => {
-  const [decryptData, setDecryptData] = useState(null);
-  const [rowData, setRowData] = useState(null);
-  useEffect(() => {
-    const rowData = sessionStorage.getItem(SessionStorage.RowData);
+export default ({ decryptModalDetails, onModalClose }: DecryptModalProps) => {
+  const [decryptData, setDecryptData] = useState({});
 
-    if (rowData) {
-      const parsedRowData = JSON.parse(rowData);
-      fetch(`/decrypt?token=${parsedRowData.token}`)
-        .then((response) => {
-          return response.text();
-        })
-        .then((response) => {
-          const parsed = JSON.parse(response);
-          console.log(parsed);
-          setDecryptData(parsed.data);
-          setRowData(parsedRowData);
-        })
-        .catch((error) => {
-          alert("failed op");
-          console.error(error);
-        });
-    }
+  useEffect(() => {
+    fetch(`/decrypt?token=${decryptModalDetails.token}`)
+      .then((response) => {
+        return response.text();
+      })
+      .then((response) => {
+        const parsed = JSON.parse(response);
+        const { state, country, zipcode, job_title, token } =
+          decryptModalDetails;
+        const { login, email, phone } = parsed?.data;
+
+        const decryptedData: UserData = {
+          token,
+          name: login,
+          email,
+          phone,
+          state,
+          country,
+          zipcode,
+          job_title,
+        };
+
+        setDecryptData(decryptedData);
+      })
+      .catch((error) => {
+        alert("failed op");
+        console.error(error);
+      });
   }, []);
 
   let content = <div>Loading...</div>;
-  if (decryptData) {
-    const { login, email, phone } = decryptData;
-    const { state, country, zipcode, job_title } = (rowData ||
-      {}) as LocationData;
+  if (Object.keys(decryptData).length) {
+    const { name, email, phone, state, country, zipcode, job_title } =
+      decryptData as UserData;
     content = (
       <>
         <div className="form-control">
@@ -43,7 +50,7 @@ export default () => {
             type="text"
             name="name"
             disabled
-            value={login}
+            value={name}
             className="input input-primary input-bordered"
           />
         </div>
@@ -130,11 +137,14 @@ export default () => {
   }
 
   return (
-    <div id={getModalId(ModalPaths.ShowDecryptedModal)} className="modal">
+    <div
+      id={getModalId(ModalPaths.ShowDecryptedModal)}
+      className="modal modal-open"
+    >
       <div className="modal-box">
         {content}
         <div className="modal-action">
-          <a href={AppPaths.UserManagement} className="btn">
+          <a onClick={onModalClose} className="btn">
             Close
           </a>
         </div>

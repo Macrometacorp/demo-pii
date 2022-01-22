@@ -187,6 +187,10 @@ export default () => {
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
+  const [showDecryptModal, setShowDecryptModal] = useState(false);
+  const [decryptModalDetails, setDecryptModalDetails] = useState(
+    {} as LocationData
+  );
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -232,6 +236,10 @@ export default () => {
               setActiveRow={setActiveRow}
               data={data}
               isPrivateRegion={isPrivateRegion}
+              onShowDecryptDetailsClicked={(decryptDetails: LocationData) => {
+                setDecryptModalDetails(decryptDetails);
+                setShowDecryptModal(true);
+              }}
             />
           ))}
         </tbody>
@@ -240,7 +248,14 @@ export default () => {
       <RemoveModal />
       <ShareModal />
       <AddContactModal />
-      <DecryptedModal />
+      {showDecryptModal && (
+        <DecryptedModal
+          decryptModalDetails={decryptModalDetails}
+          onModalClose={() => {
+            setShowDecryptModal(false);
+          }}
+        />
+      )}
       {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
