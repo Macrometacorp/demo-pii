@@ -18,6 +18,7 @@ import {
   Queries,
   SessionStorage,
   ToastTypes,
+  HttpMethods,
 } from "~/constants";
 import { LocationData, PiiData, UserData } from "~/interfaces";
 import { c8ql } from "~/utilities/REST/mm";
@@ -26,7 +27,11 @@ import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
-import { piiAddContact, piiSearchByEmail } from "~/utilities/REST/pii";
+import {
+  piiAddContact,
+  piiSearchByEmail,
+  piiUpdateContact,
+} from "~/utilities/REST/pii";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
 import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
@@ -43,18 +48,30 @@ export const action: ActionFunction = async ({ request }) => {
   const country = form.get("country")?.toString() ?? "";
   const zipcode = form.get("zipcode")?.toString() ?? "";
   const job_title = form.get("job_title")?.toString() ?? "";
+  // token will be sent in case of update
+  let token = form.get("token")?.toString() ?? "";
+
+  const isCreate = !token;
+
+  const isPrivate = isPrivateRegion(country);
 
   try {
-    const isPrivate = isPrivateRegion(country);
-    let token;
     if (isPrivate) {
-      const resText = await piiAddContact(name, email, phone).then((response) =>
-        response.text()
-      );
-      const res = JSON.parse(resText);
-      token = res.token;
+      if (isCreate) {
+        const resText = await piiAddContact(name, email, phone).then(
+          (response) => response.text()
+        );
+        const res = JSON.parse(resText);
+        token = res.token;
+      } else {
+        const resText = await piiUpdateContact(token, name, email, phone).then(
+          (response) => response.text()
+        );
+        // error if expected format is not received
+        JSON.parse(resText);
+      }
     } else {
-      token = `${MM_TOKEN_PREFIX}${uuidv4()}`;
+      token = token || `${MM_TOKEN_PREFIX}${uuidv4()}`;
       await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
         token,
         name,
@@ -202,8 +219,7 @@ export default () => {
 
   const [showDecryptModal, setShowDecryptModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showAddContactModal, setShowAddContactModal] = useState(false);
-  const [modalUserDetails, setModalUserDetails] = useState({} as LocationData);
+  const [modalUserDetails, setModalUserDetails] = useState({} as UserData);
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -252,7 +268,7 @@ export default () => {
               isPrivateRegion={isPrivateRegion}
               onActionButtonClicked={(
                 action: ActionButtons,
-                details: LocationData
+                details: UserData
               ) => {
                 setModalUserDetails(details);
                 switch (action) {

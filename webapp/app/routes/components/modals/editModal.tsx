@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
 import { Form } from "remix";
-import { AppPaths, ModalPaths } from "~/constants";
+import { AppPaths, HttpMethods, ModalPaths } from "~/constants";
 import { ModalProps, UserData } from "~/interfaces";
 import { getModalId, isMMToken } from "~/utilities/utils";
 
 export default ({ modalUserDetails, onModalClose }: ModalProps) => {
-  const [decryptData, setDecryptData] = useState({});
+  const [decryptData, setDecryptData] = useState({} as UserData);
+
+  const handleInput = (inputType: string) => {
+    return (event: any) => {
+      const { value } = event.target;
+      setDecryptData({
+        ...decryptData,
+        [inputType]: value,
+      });
+    };
+  };
 
   useEffect(() => {
     const { token } = modalUserDetails;
@@ -46,10 +56,15 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
 
   let content = <div>Getting decrypted data...</div>;
   if (Object.keys(decryptData).length) {
-    const { name, email, phone, state, country, zipcode, job_title } =
-      decryptData as UserData;
+    const { country, token } = decryptData as UserData;
     content = (
-      <Form action={AppPaths.UserManagement} method="put">
+      <Form
+        action={AppPaths.UserManagement}
+        method={HttpMethods.Put}
+        // with "reloadDocument" always "post" request is being sent
+        // hence use "token" to distinguish between create/update
+        reloadDocument
+      >
         <div className="form-control">
           <label className="label font-semibold">
             <span className="label-text">Name</span>
@@ -57,7 +72,8 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input
             type="text"
             name="name"
-            value={name}
+            value={decryptData?.name}
+            onChange={handleInput("name")}
             className="input input-primary input-bordered"
           />
         </div>
@@ -69,7 +85,8 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input
             type="email"
             name="email"
-            value={email}
+            value={decryptData?.email}
+            onChange={handleInput("email")}
             className="input input-primary input-bordered"
           />
         </div>
@@ -81,7 +98,8 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input
             type="tel"
             name="phone"
-            value={phone}
+            value={decryptData?.phone}
+            onChange={handleInput("phone")}
             className="input input-primary input-bordered"
           />
         </div>
@@ -93,7 +111,8 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input
             type="text"
             name="state"
-            value={state}
+            value={decryptData?.state}
+            onChange={handleInput("state")}
             className="input input-primary input-bordered"
           />
         </div>
@@ -104,7 +123,6 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           </label>
           <input
             type="text"
-            name="country"
             disabled
             value={country}
             className="input input-primary input-bordered"
@@ -118,7 +136,8 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input
             type="text"
             name="zipcode"
-            value={zipcode}
+            value={decryptData?.zipcode}
+            onChange={handleInput("zipcode")}
             className="input input-primary input-bordered"
           />
         </div>
@@ -130,9 +149,22 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input
             type="text"
             name="job_title"
-            value={job_title}
+            value={decryptData?.job_title}
+            onChange={handleInput("job_title")}
             className="input input-primary input-bordered"
           />
+        </div>
+
+        <input type="text" name="token" value={token} className="hidden" />
+        <input type="text" name="country" value={country} className="hidden" />
+
+        <div className="modal-action">
+          <button className="btn btn-primary" type="submit">
+            Update
+          </button>
+          <a onClick={onModalClose} className="btn">
+            Close
+          </a>
         </div>
       </Form>
     );
@@ -142,14 +174,14 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
     <div id={getModalId(ModalPaths.EditModal)} className="modal modal-open">
       <div className="modal-box">
         {content}
-        <div className="modal-action">
-          <button className="btn btn-primary" type="submit">
-            Accept
-          </button>
-          <a onClick={onModalClose} className="btn">
-            Close
-          </a>
-        </div>
+        {/* use <Form> button instead when data is there */}
+        {!Object.keys(decryptData).length && (
+          <div className="modal-action">
+            <a onClick={onModalClose} className="btn">
+              Close
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

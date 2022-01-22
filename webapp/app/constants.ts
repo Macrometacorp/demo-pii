@@ -77,3 +77,10 @@ export enum ActionButtons {
   Share = "SHARE",
   Show = "SHOW",
 }
+
+export enum HttpMethods {
+  Get = "get",
+  Post = "post",
+  Put = "put",
+  Delete = "delete",
+}

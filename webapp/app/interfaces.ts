@@ -38,11 +38,11 @@ export interface RowProps {
   data: PiiData & LocationData;
   isPrivateRegion: string;
   setActiveRow: (arg: string) => void;
-  onActionButtonClicked: (action: ActionButtons, details: LocationData) => void;
+  onActionButtonClicked: (action: ActionButtons, details: UserData) => void;
 }
 
 export interface ModalProps {
-  modalUserDetails: LocationData;
+  modalUserDetails: UserData;
   onModalClose: () => void;
 }
 

@@ -1,11 +1,15 @@
 import { Form } from "remix";
-import { AppPaths, ModalPaths } from "~/constants";
+import { AppPaths, HttpMethods, ModalPaths } from "~/constants";
 import { getModalId } from "~/utilities/utils";
 
 export default () => (
   <div id={getModalId(ModalPaths.AddContactModal)} className="modal">
     <div className="modal-box">
-      <Form action={AppPaths.UserManagement} method="post" reloadDocument>
+      <Form
+        action={AppPaths.UserManagement}
+        method={HttpMethods.Post}
+        reloadDocument
+      >
         <div className="form-control">
           <label className="label font-semibold">
             <span className="label-text">Name</span>
