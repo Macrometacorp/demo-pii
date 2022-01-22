@@ -1,22 +1,39 @@
-import { AppPaths, ModalPaths } from "~/constants";
+import { useSubmit } from "remix";
+import { AppPaths, HttpMethods, ModalPaths } from "~/constants";
+import { ModalProps } from "~/interfaces";
 import { getModalId } from "~/utilities/utils";
 
-export default () => (
-  <div id={getModalId(ModalPaths.RemoveModal)} className="modal">
-    <div className="modal-box">
-      <p>
-        Remove \n Enim dolorem dolorum omnis atque necessitatibus. Consequatur
-        aut adipisci qui iusto illo eaque. Consequatur repudiandae et. Nulla ea
-        quasi eligendi. Saepe velit autem minima.
-      </p>
-      <div className="modal-action">
-        <a href="/components/modal#" className="btn btn-primary">
-          Accept
-        </a>
-        <a href={AppPaths.UserManagement} className="btn">
-          Close
-        </a>
+export default ({ modalUserDetails, onModalClose }: ModalProps) => {
+  const submit = useSubmit();
+  return (
+    <div id={getModalId(ModalPaths.RemoveModal)} className="modal modal-open">
+      <div className="modal-box">
+        <p>Are you sure you want to delete? This operation is irreversible!</p>
+        <div className="modal-action">
+          <button
+            className="btn btn-warning"
+            onClick={() => {
+              submit(
+                { token: modalUserDetails.token },
+                {
+                  method: HttpMethods.Delete,
+                  action: AppPaths.UserManagement,
+                }
+              );
+            }}
+          >
+            Yes, I understand.
+          </button>
+          <button
+            className="btn btn-neutral"
+            onClick={() => {
+              onModalClose();
+            }}
+          >
+            No, please take me back!
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};

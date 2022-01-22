@@ -51,6 +51,8 @@ export const action: ActionFunction = async ({ request }) => {
   // token will be sent in case of update
   let token = form.get("token")?.toString() ?? "";
 
+  console.log("------->>>>", token, request.method);
+
   const isCreate = !token;
 
   const isPrivate = isPrivateRegion(country);
@@ -219,6 +221,7 @@ export default () => {
 
   const [showDecryptModal, setShowDecryptModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [modalUserDetails, setModalUserDetails] = useState({} as UserData);
 
   let toastType = ToastTypes.Info;
@@ -278,6 +281,9 @@ export default () => {
                   case ActionButtons.Edit:
                     setShowEditModal(true);
                     break;
+                  case ActionButtons.Remove:
+                    setShowRemoveModal(true);
+                    break;
                 }
               }}
             />
@@ -292,7 +298,16 @@ export default () => {
           }}
         />
       )}
-      <RemoveModal />
+
+      {showRemoveModal && (
+        <RemoveModal
+          modalUserDetails={modalUserDetails}
+          onModalClose={() => {
+            setShowRemoveModal(false);
+          }}
+        />
+      )}
+
       <ShareModal />
 
       <AddContactModal />

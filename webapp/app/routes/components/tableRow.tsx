@@ -56,6 +56,9 @@ export default ({
             isButtonDisabled ? "btn-disabled" : ""
           }`}
           disabled={isButtonDisabled}
+          onClick={() => {
+            onActionButtonClicked(ActionButtons.Remove, data);
+          }}
         >
           {ActionButtons.Remove}
         </button>
