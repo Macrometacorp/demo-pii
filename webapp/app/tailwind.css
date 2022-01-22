@@ -1618,7 +1618,7 @@ html {
   background-color: hsla(var(--bc) / var(--tw-bg-opacity, 1));
 }
 
-.menu li>:where(a.active),.menu li>:where(button.active) {
+.menu li>:where(a.active) {
   --tw-bg-opacity: 1;
   background-color: hsla(var(--p) / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
@@ -1910,6 +1910,20 @@ html {
   width: 2rem;
 }
 
+.alert-info {
+  --tw-bg-opacity: 0.1;
+  background-color: hsla(var(--in) / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: hsla(var(--in) / var(--tw-text-opacity, 1));
+}
+
+.alert-success {
+  --tw-bg-opacity: 0.1;
+  background-color: hsla(var(--su) / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: hsla(var(--su) / var(--tw-text-opacity, 1));
+}
+
 .alert-error {
   --tw-bg-opacity: 0.1;
   background-color: hsla(var(--er) / var(--tw-bg-opacity, 1));
@@ -1921,8 +1935,24 @@ html {
   visibility: hidden;
 }
 
+.fixed {
+  position: fixed;
+}
+
 .relative {
   position: relative;
+}
+
+.bottom-10 {
+  bottom: 2.5rem;
+}
+
+.right-10 {
+  right: 2.5rem;
+}
+
+.left-10 {
+  left: 2.5rem;
 }
 
 .m-1 {
@@ -2069,6 +2099,12 @@ html {
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .rounded {

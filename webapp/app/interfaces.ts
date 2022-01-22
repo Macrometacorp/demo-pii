@@ -36,8 +36,10 @@ export interface RowProps {
   data: PiiData & LocationData;
   isPrivateRegion: string;
   setActiveRow: (arg: string) => void;
+  onShowDecryptDetailsClicked: (arg: LocationData) => void;
 }
 
-export interface AddContactModalProps {
-  isPrivateRegion: string;
+export interface DecryptModalProps {
+  decryptModalDetails: LocationData;
+  onModalClose: () => void;
 }

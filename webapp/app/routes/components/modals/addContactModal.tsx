@@ -1,12 +1,11 @@
 import { Form } from "remix";
-import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
-import { AddContactModalProps } from "~/interfaces";
+import { AppPaths, ModalPaths } from "~/constants";
 import { getModalId } from "~/utilities/utils";
 
-export default ({ isPrivateRegion }: AddContactModalProps) => (
+export default () => (
   <div id={getModalId(ModalPaths.AddContactModal)} className="modal">
     <div className="modal-box">
-      <Form action={AppPaths.AddContact} method="post" reloadDocument>
+      <Form action={AppPaths.UserManagement} method="post" reloadDocument>
         <div className="form-control">
           <label className="label font-semibold">
             <span className="label-text">Name</span>
@@ -97,12 +96,6 @@ export default ({ isPrivateRegion }: AddContactModalProps) => (
             className="input input-primary input-bordered"
           />
         </div>
-
-        <input
-          type="hidden"
-          name={SessionStorage.IsPrivateRegion}
-          value={isPrivateRegion}
-        />
 
         <div className="modal-action">
           <button className="btn btn-primary" type="submit">

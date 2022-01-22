@@ -4,7 +4,7 @@ export enum Session {
 }
 
 export enum SessionStorage {
-  IsPrivateRegion = "isPrivateregion",
+  IsPrivateRegion = "isPrivateRegion",
   Region = "region",
 }
 
@@ -14,7 +14,6 @@ export enum AppPaths {
   Region = "/region",
   UserManagement = "/user-management",
   Logout = "/logout",
-  AddContact = "/add-contact",
 }
 
 export enum ModalPaths {
@@ -25,8 +24,13 @@ export enum ModalPaths {
   ShowDecryptedModal = "#decrypted-modal",
 }
 
+export enum ToastTypes {
+  Success = "Success",
+  Error = "Error",
+  Info = "Info",
+}
+
 export const HEADINGS = [
-  "token",
   "name",
   "email",
   "phone",
@@ -48,6 +52,8 @@ export enum Collections {
 }
 
 export const MM_TOKEN_PREFIX = "mm_";
+
+export const TRUNCATE_LENGTH = 30;
 
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
