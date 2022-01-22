@@ -29,6 +29,7 @@ import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
 import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
+import {Pagination} from "./components/Pagination";
 import Toast from "./components/toast";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -187,6 +188,13 @@ export default () => {
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contactsPerPage] = useState(10);
+  const indexOfLastContact = currentPage * contactsPerPage;
+  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+  const currentContacts = userData.slice(indexOfFirstContact, indexOfLastContact);
+  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
+  
   const [showDecryptModal, setShowDecryptModal] = useState(false);
   const [decryptModalDetails, setDecryptModalDetails] = useState(
     {} as LocationData
@@ -213,6 +221,7 @@ export default () => {
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
     );
   }, []);
+  
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -229,7 +238,7 @@ export default () => {
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: UserData) => (
+          {currentContacts.map((data: UserData) => (
             <Row
               key={data.token}
               activeRow={activeRow}
@@ -247,6 +256,7 @@ export default () => {
       <EditModal />
       <RemoveModal />
       <ShareModal />
+
       <AddContactModal />
       {showDecryptModal && (
         <DecryptedModal
@@ -256,7 +266,15 @@ export default () => {
           }}
         />
       )}
-      {actionData && <Toast toastType={toastType} message={toastMessage} />}
+    
+      <Pagination
+        contactsPerPage={contactsPerPage}
+        totalContacts={userData.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
+
+{actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };
