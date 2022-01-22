@@ -55,6 +55,8 @@ export const MM_TOKEN_PREFIX = "mm_";
 
 export const TRUNCATE_LENGTH = 30;
 
+export const CONTACTS_PER_PAGE = 10;
+
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
   GetLocations: `FOR doc in ${Collections.UserLocations} RETURN doc`,
