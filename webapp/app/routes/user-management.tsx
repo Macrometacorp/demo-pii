@@ -1,8 +1,22 @@
 import { useEffect, useState } from "react";
-import { LoaderFunction, useCatch, useLoaderData } from "remix";
+import {
+  ActionFunction,
+  LoaderFunction,
+  useActionData,
+  useCatch,
+  useLoaderData,
+} from "remix";
 import * as queryString from "query-string";
+import { v4 as uuidv4 } from "uuid";
 
-import { Fabrics, HEADINGS, Queries, SessionStorage } from "~/constants";
+import {
+  Fabrics,
+  HEADINGS,
+  MM_TOKEN_PREFIX,
+  Queries,
+  SessionStorage,
+  ToastTypes,
+} from "~/constants";
 import { LocationData, PiiData, UserData } from "~/interfaces";
 import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
@@ -10,17 +24,61 @@ import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
-import { piiSearch } from "~/utilities/REST/pii";
+import { piiAddContact, piiSearchByEmail } from "~/utilities/REST/pii";
 import Unauthorized from "./components/unauthorized";
-import Error from "./components/error";
-import { isLoggedIn } from "~/utilities/utils";
+import ErrorComponent from "./components/error";
+import { isLoggedIn, isPrivateRegion } from "~/utilities/utils";
+import DecryptedModal from "./components/modals/showDecryptedModal";
+import {Pagination} from "./components/Pagination";
+import Toast from "./components/toast";
+
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData();
+  const name = form.get("name")?.toString() ?? "";
+  const email = form.get("email")?.toString() ?? "";
+  const phone = form.get("phone")?.toString() ?? "";
+  const state = form.get("state")?.toString() ?? "";
+  const country = form.get("country")?.toString() ?? "";
+  const zipcode = form.get("zipcode")?.toString() ?? "";
+  const job_title = form.get("job_title")?.toString() ?? "";
+
+  try {
+    const isPrivate = isPrivateRegion(country);
+    let token;
+    if (isPrivate) {
+      const resText = await piiAddContact(name, email, phone).then((response) =>
+        response.text()
+      );
+      const res = JSON.parse(resText);
+      token = res.token;
+    } else {
+      token = `${MM_TOKEN_PREFIX}${uuidv4()}`;
+      await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
+        token,
+        name,
+        email,
+        phone,
+      });
+    }
+    await c8ql(request, Fabrics.Global, Queries.UpsertLocation, {
+      token,
+      state,
+      country,
+      zipcode,
+      job_title,
+    });
+    return { isPrivate };
+  } catch (error: any) {
+    return { error: true, errorMessage: error?.message, name: error?.name };
+  }
+};
 
 const handleSearch = async (request: Request, email: string) => {
   let result: Array<UserData> = [];
   let token;
   let user;
   // check PII
-  const textRes = await piiSearch(email.toString())
+  const textRes = await piiSearchByEmail(email.toString())
     .then((response) => response.text())
     .catch((err) => {
       return JSON.stringify({ error: true, message: err.message });
@@ -126,14 +184,44 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
+  const actionData = useActionData();
   const userData = useLoaderData();
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contactsPerPage] = useState(10);
+  const indexOfLastContact = currentPage * contactsPerPage;
+  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+  const currentContacts = userData.slice(indexOfFirstContact, indexOfLastContact);
+  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
+  
+  const [showDecryptModal, setShowDecryptModal] = useState(false);
+  const [decryptModalDetails, setDecryptModalDetails] = useState(
+    {} as LocationData
+  );
+
+  let toastType = ToastTypes.Info;
+  let toastMessage = "";
+  if (actionData) {
+    const { error, isPrivate } = actionData;
+    toastType = error
+      ? ToastTypes.Error
+      : isPrivate
+      ? ToastTypes.Info
+      : ToastTypes.Success;
+
+    toastMessage = error
+      ? `${error.name}: ${error.errorMessage}`
+      : isPrivate
+      ? "Your new record will reflect shortly"
+      : "New record added successfully";
+  }
   useEffect(() => {
     setIsPrivateRegion(
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
     );
   }, []);
+  
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -150,12 +238,17 @@ export default () => {
           </tr>
         </thead>
         <tbody>
-          {userData.map((data: UserData) => (
+          {currentContacts.map((data: UserData) => (
             <Row
               key={data.token}
               activeRow={activeRow}
               setActiveRow={setActiveRow}
               data={data}
+              isPrivateRegion={isPrivateRegion}
+              onShowDecryptDetailsClicked={(decryptDetails: LocationData) => {
+                setDecryptModalDetails(decryptDetails);
+                setShowDecryptModal(true);
+              }}
             />
           ))}
         </tbody>
@@ -163,7 +256,25 @@ export default () => {
       <EditModal />
       <RemoveModal />
       <ShareModal />
-      <AddContactModal isPrivateRegion={isPrivateRegion} />
+
+      <AddContactModal />
+      {showDecryptModal && (
+        <DecryptedModal
+          decryptModalDetails={decryptModalDetails}
+          onModalClose={() => {
+            setShowDecryptModal(false);
+          }}
+        />
+      )}
+    
+      <Pagination
+        contactsPerPage={contactsPerPage}
+        totalContacts={userData.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
+
+{actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };
@@ -173,10 +284,12 @@ export function CatchBoundary() {
 
   if (caught.status === 401) {
     return <Unauthorized />;
+  } else {
+    return <ErrorComponent />;
   }
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
-  return <Error />;
+  return <ErrorComponent />;
 }

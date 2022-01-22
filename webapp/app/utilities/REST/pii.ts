@@ -1,5 +1,13 @@
-export const piiSearch = (email: string) =>
+export const piiSearchByEmail = (email: string) =>
   fetch(`${PRIVACY_SERVICE_URL}/v1/user/email/${email}`, {
+    method: "GET",
+    headers: {
+      "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
+    },
+  });
+
+export const piiGetUserByToken = (token: string) =>
+  fetch(`${PRIVACY_SERVICE_URL}/v1/user/token/${token}`, {
     method: "GET",
     headers: {
       "X-Bunker-Token": DATABUNKER_ROOTTOKEN,

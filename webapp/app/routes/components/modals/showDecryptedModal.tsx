@@ -1,11 +1,47 @@
-import { Form } from "remix";
-import { AppPaths, ModalPaths } from "~/constants";
+import { useEffect, useState } from "react";
+import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
+import { DecryptModalProps, LocationData, UserData } from "~/interfaces";
 import { getModalId } from "~/utilities/utils";
 
-export default () => (
-  <div id={getModalId(ModalPaths.AddContactModal)} className="modal">
-    <div className="modal-box">
-      <Form action={AppPaths.UserManagement} method="post" reloadDocument>
+export default ({ decryptModalDetails, onModalClose }: DecryptModalProps) => {
+  const [decryptData, setDecryptData] = useState({});
+
+  useEffect(() => {
+    fetch(`/decrypt?token=${decryptModalDetails.token}`)
+      .then((response) => {
+        return response.text();
+      })
+      .then((response) => {
+        const parsed = JSON.parse(response);
+        const { state, country, zipcode, job_title, token } =
+          decryptModalDetails;
+        const { login, email, phone } = parsed?.data;
+
+        const decryptedData: UserData = {
+          token,
+          name: login,
+          email,
+          phone,
+          state,
+          country,
+          zipcode,
+          job_title,
+        };
+
+        setDecryptData(decryptedData);
+      })
+      .catch((error) => {
+        alert("failed op");
+        console.error(error);
+      });
+  }, []);
+
+  let content = <div>Loading...</div>;
+  if (Object.keys(decryptData).length) {
+    const { name, email, phone, state, country, zipcode, job_title } =
+      decryptData as UserData;
+    content = (
+      <>
         <div className="form-control">
           <label className="label font-semibold">
             <span className="label-text">Name</span>
@@ -13,8 +49,8 @@ export default () => (
           <input
             type="text"
             name="name"
-            required
-            placeholder="Bruce Wayne"
+            disabled
+            value={name}
             className="input input-primary input-bordered"
           />
         </div>
@@ -26,8 +62,8 @@ export default () => (
           <input
             type="email"
             name="email"
-            required
-            placeholder="bruce@wayneindustries.com"
+            disabled
+            value={email}
             className="input input-primary input-bordered"
           />
         </div>
@@ -39,8 +75,8 @@ export default () => (
           <input
             type="tel"
             name="phone"
-            required
-            placeholder="272984356"
+            disabled
+            value={phone}
             className="input input-primary input-bordered"
           />
         </div>
@@ -52,8 +88,8 @@ export default () => (
           <input
             type="text"
             name="state"
-            required
-            placeholder="New Jersey"
+            disabled
+            value={state}
             className="input input-primary input-bordered"
           />
         </div>
@@ -65,8 +101,8 @@ export default () => (
           <input
             type="text"
             name="country"
-            required
-            placeholder="USA"
+            disabled
+            value={country}
             className="input input-primary input-bordered"
           />
         </div>
@@ -78,8 +114,8 @@ export default () => (
           <input
             type="text"
             name="zipcode"
-            required
-            placeholder="53540"
+            disabled
+            value={zipcode}
             className="input input-primary input-bordered"
           />
         </div>
@@ -91,21 +127,28 @@ export default () => (
           <input
             type="text"
             name="job_title"
-            required
-            placeholder="CEO"
+            disabled
+            value={job_title}
             className="input input-primary input-bordered"
           />
         </div>
+      </>
+    );
+  }
 
+  return (
+    <div
+      id={getModalId(ModalPaths.ShowDecryptedModal)}
+      className="modal modal-open"
+    >
+      <div className="modal-box">
+        {content}
         <div className="modal-action">
-          <button className="btn btn-primary" type="submit">
-            Accept
-          </button>
-          <a href={AppPaths.UserManagement} className="btn">
+          <a onClick={onModalClose} className="btn">
             Close
           </a>
         </div>
-      </Form>
+      </div>
     </div>
-  </div>
-);
+  );
+};
