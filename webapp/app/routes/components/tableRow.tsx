@@ -1,4 +1,4 @@
-import { MM_TOKEN_PREFIX, ModalPaths, SessionStorage } from "~/constants";
+import { MM_TOKEN_PREFIX } from "~/constants";
 import { RowProps } from "~/interfaces";
 import { truncate } from "~/utilities/utils";
 
@@ -14,8 +14,10 @@ export default ({
   const isPrivate = isPrivateRegion === "true";
   const isMMToken =
     token.substring(0, MM_TOKEN_PREFIX.length) === MM_TOKEN_PREFIX;
-  let showClass =
-    "flex-1 btn-sm btn-ghost text-center leading-7 text-neutral cursor-pointer";
+
+  const isButtonDisabled = !isPrivate && !isMMToken;
+
+  let showClass = "flex-1 btn-sm btn-ghost text-center leading-7 text-neutral";
   if (isPrivate) {
     showClass += isMMToken ? " invisible" : "";
   } else {
@@ -39,32 +41,39 @@ export default ({
       <td>{truncate(zipcode)}</td>
       <td>{truncate(job_title)}</td>
       <td className="flex">
-        <a
-          href={ModalPaths.EditModal}
-          className="flex-1 btn-sm btn-ghost text-center leading-7 text-blue-600"
+        <button
+          className={`flex-1 btn btn-ghost btn-sm text-center leading-7 text-blue-600 mr-2 ${
+            isButtonDisabled ? "btn-disabled" : ""
+          }`}
+          disabled={isButtonDisabled}
         >
           Edit
-        </a>
-        <a
-          href={ModalPaths.RemoveModal}
-          className="flex-1 btn-sm btn-ghost text-center leading-7 text-red-600"
+        </button>
+        <button
+          className={`flex-1 btn btn-ghost btn-sm text-center leading-7 text-error mr-2 ${
+            isButtonDisabled ? "btn-disabled" : ""
+          }`}
+          disabled={isButtonDisabled}
         >
           Remove
-        </a>
-        <a
-          href={ModalPaths.ShareModal}
-          className="flex-1 btn-sm btn-ghost text-center leading-7 text-green-600"
+        </button>
+        <button
+          className={`flex-1 btn btn-ghost btn-sm text-center leading-7 text-green-600 mr-2 ${
+            isButtonDisabled ? "btn-disabled" : ""
+          }`}
+          disabled={isButtonDisabled}
         >
           Share
-        </a>
-        <a
+        </button>
+        <button
+          className={showClass}
+          disabled={isButtonDisabled}
           onClick={() => {
             onShowDecryptDetailsClicked(data);
           }}
-          className={showClass}
         >
           Show
-        </a>
+        </button>
       </td>
     </tr>
   );

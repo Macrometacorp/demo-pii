@@ -1273,6 +1273,23 @@ html {
   box-shadow: 0 0 0 2px currentColor;
 }
 
+.btn-link {
+  background-color: transparent;
+  border-color: transparent;
+  --tw-text-opacity: 1;
+  color: hsla(var(--p) / var(--tw-text-opacity, 1));
+}
+
+.btn-link.btn-active,.btn-link:hover {
+  background-color: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+}
+
+.btn-link:focus-visible {
+  box-shadow: 0 0 0 2px currentColor;
+}
+
 .btn-outline {
   background-color: transparent;
   border-color: currentColor;
@@ -1513,6 +1530,10 @@ html {
 }
 
 .drawer-toggle:focus-visible~.drawer-content .drawer-button.btn-ghost {
+  box-shadow: 0 0 0 2px currentColor;
+}
+
+.drawer-toggle:focus-visible~.drawer-content .drawer-button.btn-link {
   box-shadow: 0 0 0 2px currentColor;
 }
 
@@ -1989,6 +2010,10 @@ html {
   margin-bottom: -1rem;
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -2097,6 +2122,10 @@ html {
   padding: 0.5rem;
 }
 
+.p-0 {
+  padding: 0px;
+}
+
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -2145,6 +2174,16 @@ html {
 .text-green-600 {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
+.text-error {
+  --tw-text-opacity: 1;
+  color: hsla(var(--er) / var(--tw-text-opacity));
+}
+
+.text-info {
+  --tw-text-opacity: 1;
+  color: hsla(var(--in) / var(--tw-text-opacity));
 }
 
 .opacity-95 {
