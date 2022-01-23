@@ -88,8 +88,6 @@ export enum HttpMethods {
   Delete = "delete",
 }
 
-export const BUTTON_ACTION_TYPE = "_perform";
-
 export enum FormButtonActions {
   Name = "_perform",
   Create = "create",
