@@ -64,6 +64,9 @@ export default ({
             isButtonDisabled ? "btn-disabled" : ""
           }`}
           disabled={isButtonDisabled}
+          onClick={() => {
+            onActionButtonClicked(ActionButtons.Share, data);
+          }}
         >
           {ActionButtons.Share}
         </button>

@@ -1,27 +1,23 @@
-import type { ActionFunction, LoaderFunction } from "remix";
-import { redirect } from "remix";
-import { AppPaths } from "~/constants";
+import type { LoaderFunction } from "remix";
+import { piiGetShareableToken } from "~/utilities/REST/pii";
+import * as queryString from "query-string";
 import { sendMessage } from "../utilities/REST/twilio";
 
-
-
-export let action: ActionFunction = async ({ request }) => {
-  const RECIPIENT= '+919554960514';
-  const message=  `curl -X 'GET' \
-    'https://api-smoke4.eng.macrometa.io/_api/key' \
-    -H 'accept: application/json' \
-    -H 'Authorization: '`
-  let encoded = new URLSearchParams()
-  encoded.append("To", RECIPIENT)
-  encoded.append("From", "+19378822331")
-  encoded.append("Body", message)
-
-  let result = await sendMessage(encoded);
-  result = await result.json()
-console.log("result",result)
-  return redirect(AppPaths.UserManagement)
-};
-
-export let loader: LoaderFunction = async () => {
-  return redirect(AppPaths.UserManagement);
+export const loader: LoaderFunction = async ({ request }) => {
+  const {
+    query: { token, phoneNumber = "" },
+  } = queryString.parseUrl(request.url);
+  if (!phoneNumber) {
+    return piiGetShareableToken(token?.toString() || "");
+  } else {
+    const message = `curl --location --request GET ${PRIVACY_SERVICE_URL}/v1/get/${token}`;
+    const RECIPIENT = `+${phoneNumber?.toString()}`;
+    let encoded = new URLSearchParams();
+    encoded.append("To", RECIPIENT);
+    encoded.append("From", TWILIO_NUMBER);
+    encoded.append("Body", message);
+    let result = await sendMessage(encoded);
+    result = await result.json();
+    return result;
+  }
 };

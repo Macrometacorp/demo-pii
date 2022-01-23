@@ -1671,7 +1671,7 @@ html {
   background-color: hsla(var(--bc) / var(--tw-bg-opacity, 1));
 }
 
-.menu li>:where(a.active),.menu li>:where(button.active) {
+.menu li>:where(a.active) {
   --tw-bg-opacity: 1;
   background-color: hsla(var(--p) / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;

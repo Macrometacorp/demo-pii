@@ -13,8 +13,7 @@ export enum AppPaths {
   Login = "/login",
   Region = "/region",
   UserManagement = "/user-management",
-  Logout = "/logout",
-  Share = "/share"
+  Logout = "/logout"
 }
 
 export enum ModalPaths {
@@ -57,6 +56,10 @@ export const MM_TOKEN_PREFIX = "mm_";
 export const TRUNCATE_LENGTH = 30;
 
 export const CONTACTS_PER_PAGE = 10;
+
+export const PRIVACY_SERVICE_URL = 'http://privacy-service.eng.macrometa.io:3000';
+
+export const SHAREABLE_CURL_COMMAND_MESSAGE = 'Loading Shareable Curl Command...';
 
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
