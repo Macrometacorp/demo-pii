@@ -45,10 +45,10 @@ export const action: ActionFunction = async ({
   let result;
   switch (actionType) {
     case FormButtonActions.Create:
-      result = handleCreate(request, form);
+      result = await handleCreate(request, form);
       break;
     case FormButtonActions.Update:
-      result = handleUpdate(request, form);
+      result = await handleUpdate(request, form);
       break;
     // case FormButtonActions.Delete:
     //   result = { isPrivate: true };
