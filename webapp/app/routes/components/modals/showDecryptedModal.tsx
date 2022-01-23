@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
-import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
-import { DecryptModalProps, LocationData, UserData } from "~/interfaces";
+import { ModalPaths } from "~/constants";
+import { ModalProps, UserData } from "~/interfaces";
 import { getModalId } from "~/utilities/utils";
 
-export default ({ decryptModalDetails, onModalClose }: DecryptModalProps) => {
+export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   const [decryptData, setDecryptData] = useState({});
 
   useEffect(() => {
-    fetch(`/decrypt?token=${decryptModalDetails.token}`)
+    fetch(`/decrypt?token=${modalUserDetails.token}`)
       .then((response) => {
         return response.text();
       })
       .then((response) => {
         const parsed = JSON.parse(response);
-        const { state, country, zipcode, job_title, token } =
-          decryptModalDetails;
+        const { state, country, zipcode, job_title, token } = modalUserDetails;
         const { login, email, phone } = parsed?.data;
 
         const decryptedData: UserData = {
@@ -36,7 +35,7 @@ export default ({ decryptModalDetails, onModalClose }: DecryptModalProps) => {
       });
   }, []);
 
-  let content = <div>Loading...</div>;
+  let content = <div>Getting decrypted data...</div>;
   if (Object.keys(decryptData).length) {
     const { name, email, phone, state, country, zipcode, job_title } =
       decryptData as UserData;

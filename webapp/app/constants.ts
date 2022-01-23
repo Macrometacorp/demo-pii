@@ -56,6 +56,8 @@ export const MM_TOKEN_PREFIX = "mm_";
 
 export const TRUNCATE_LENGTH = 30;
 
+export const CONTACTS_PER_PAGE = 10;
+
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
   GetLocations: `FOR doc in ${Collections.UserLocations} RETURN doc`,
@@ -69,3 +71,17 @@ export const Queries = {
   SearchUserByToken: `FOR user IN ${Collections.Users} FILTER user._key == @token RETURN user`,
   SearchLocationByToken: `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
 };
+
+export enum ActionButtons {
+  Edit = "EDIT",
+  Remove = "REMOVE",
+  Share = "SHARE",
+  Show = "SHOW",
+}
+
+export enum HttpMethods {
+  Get = "get",
+  Post = "post",
+  Put = "put",
+  Delete = "delete",
+}

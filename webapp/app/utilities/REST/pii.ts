@@ -15,8 +15,6 @@ export const piiGetUserByToken = (token: string) =>
   });
 
 export const piiAddContact = (name: string, email: string, phone: string) => {
-  const [first, last] = name.split(" ");
-
   return fetch(`${PRIVACY_SERVICE_URL}/v1/user`, {
     method: "POST",
     headers: {
@@ -24,8 +22,26 @@ export const piiAddContact = (name: string, email: string, phone: string) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      first,
-      last,
+      login: name,
+      phone,
+      email,
+    }),
+  });
+};
+
+export const piiUpdateContact = (
+  token: string,
+  name: string,
+  email: string,
+  phone: string
+) => {
+  return fetch(`${PRIVACY_SERVICE_URL}/v1/user/token/${token}`, {
+    method: "PUT",
+    headers: {
+      "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       login: name,
       phone,
       email,
