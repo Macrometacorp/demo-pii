@@ -57,8 +57,6 @@ export const TRUNCATE_LENGTH = 30;
 
 export const CONTACTS_PER_PAGE = 10;
 
-export const PRIVACY_SERVICE_URL = 'http://privacy-service.eng.macrometa.io:3000';
-
 export const SHAREABLE_CURL_COMMAND_MESSAGE = 'Loading Shareable Curl Command...';
 
 export const Queries = {
