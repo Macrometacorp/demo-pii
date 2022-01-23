@@ -14,7 +14,7 @@ DATABUNKER_ROOTTOKEN="xxxx"
 TWILIO_ACCOUNT_SID="xxxx"
 TWILIO_AUTH_TOKEN="xxxx"
 TWILIO_MESSAGE_ENDPOINT="https://api.twilio.com/2010-04-01/Accounts/"
-
+TWILIO_NUMBER="XXXX"
 [site]
 bucket = "./public"
 entry-point = "."
