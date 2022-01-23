@@ -222,6 +222,7 @@ export default () => {
   const [showDecryptModal, setShowDecryptModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [modalUserDetails, setModalUserDetails] = useState({} as UserData);
 
   let toastType = ToastTypes.Info;
@@ -284,6 +285,9 @@ export default () => {
                   case ActionButtons.Remove:
                     setShowRemoveModal(true);
                     break;
+                  case ActionButtons.Share:
+                    setShowShareModal(true);
+                    break;
                 }
               }}
             />
@@ -308,8 +312,14 @@ export default () => {
         />
       )}
 
-      <ShareModal />
-
+      {showShareModal && (
+        <ShareModal
+          modalUserDetails={modalUserDetails}
+          onModalClose={() => {
+            setShowShareModal(false);
+          }}
+        />
+      )}
       <AddContactModal />
       {showDecryptModal && (
         <DecryptedModal

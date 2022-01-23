@@ -48,3 +48,15 @@ export const piiUpdateContact = (
     }),
   });
 };
+
+export const piiGetShareableToken = (token: string) =>
+  fetch(`${PRIVACY_SERVICE_URL}/v1/sharedrecord/token/${token}`, {
+    method: "POST",
+    headers: {
+      "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
+      "Content-Type": "application/json",
+    },
+    body:JSON.stringify({
+      "fields":"email,login,first,last,phone"
+    })
+  });
