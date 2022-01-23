@@ -17,7 +17,7 @@ import {
   FormButtonActions,
 } from "~/constants";
 
-import { UserData } from "~/interfaces";
+import { UserData, UserManagementActionResult } from "~/interfaces";
 import { isLoggedIn } from "~/utilities/utils";
 
 import EditModal from "./components/modals/editModal";
@@ -36,7 +36,9 @@ import handleUpdate from "../utilities/REST/handlers/update";
 import handleList from "../utilities/REST/handlers/list";
 import handleSearch from "../utilities/REST/handlers/search";
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({
+  request,
+}): Promise<UserManagementActionResult> => {
   const form = await request.formData();
   const actionType = form.get(FormButtonActions.Name)?.toString() ?? "";
 
@@ -48,8 +50,15 @@ export const action: ActionFunction = async ({ request }) => {
     case FormButtonActions.Update:
       result = handleUpdate(request, form);
       break;
-    case FormButtonActions.Delete:
-      break;
+    // case FormButtonActions.Delete:
+    //   result = { isPrivate: true };
+    //   break;
+    default:
+      result = {
+        error: true,
+        name: "Form action",
+        errorMessage: "Unhandled form action",
+      };
   }
 
   return result;

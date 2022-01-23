@@ -48,3 +48,16 @@ export interface ModalProps {
 
 export interface AddContactModalProps
   extends Omit<ModalProps, "modalUserDetails"> {}
+
+interface UserManagementActionSuccess {
+  isPrivate: boolean;
+}
+interface UserManagementActionFail {
+  error: boolean;
+  errorMessage: string;
+  name: string;
+}
+
+export type UserManagementActionResult =
+  | UserManagementActionSuccess
+  | UserManagementActionFail;
