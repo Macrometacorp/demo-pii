@@ -38,7 +38,7 @@ export const Pagination = ({
         <div className="btn-group" style={{marginTop:'-20px'}}>
  
               {pageNumbers.map((number) => (
-                <button className={currentPage === number?"btn btn-sm btn-active":"btn btn-sm" }  onClick={() => {
+                <button key={number} className={currentPage === number?"btn btn-sm btn-active":"btn btn-sm" }  onClick={() => {
                   paginate(number);
                 }}>  {number}</button> 
               ))}
