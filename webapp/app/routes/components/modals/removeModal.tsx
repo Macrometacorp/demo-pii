@@ -15,7 +15,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <input type="hidden" name="country" value={country} />
           <div className="modal-action">
             <button
-              className="btn btn-warning"
+              className="btn btn-error"
               type="submit"
               name={FormButtonActions.Name}
               value={FormButtonActions.Delete}
