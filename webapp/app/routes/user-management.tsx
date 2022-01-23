@@ -33,6 +33,7 @@ import Toast from "./components/toast";
 
 import handleCreate from "../utilities/REST/handlers/create";
 import handleUpdate from "../utilities/REST/handlers/update";
+import handleDelete from "../utilities/REST/handlers/delete";
 import handleList from "../utilities/REST/handlers/list";
 import handleSearch from "../utilities/REST/handlers/search";
 
@@ -50,9 +51,9 @@ export const action: ActionFunction = async ({
     case FormButtonActions.Update:
       result = await handleUpdate(request, form);
       break;
-    // case FormButtonActions.Delete:
-    //   result = { isPrivate: true };
-    //   break;
+    case FormButtonActions.Delete:
+      result = await handleDelete(request, form);
+      break;
     default:
       result = {
         error: true,
@@ -83,7 +84,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default () => {
   const actionData = useActionData();
-  const userData = useLoaderData();
+  const allUserData = useLoaderData();
+  const userData = allUserData.filter((user: UserData) => !!user?.name?.trim());
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

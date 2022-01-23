@@ -72,6 +72,8 @@ export const Queries = {
   SearchUserByEmail: `FOR user IN ${Collections.Users} FILTER user.email == @email RETURN user`,
   SearchUserByToken: `FOR user IN ${Collections.Users} FILTER user._key == @token RETURN user`,
   SearchLocationByToken: `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
+  DeleteUser: `REMOVE { _key: @token } IN ${Collections.Users}`,
+  DeleteLocation: `REMOVE { _key: @token } IN ${Collections.UserLocations}`,
 };
 
 export enum ActionButtons {
