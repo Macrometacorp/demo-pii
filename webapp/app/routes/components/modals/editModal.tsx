@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Form } from "remix";
-import { AppPaths, HttpMethods, ModalPaths } from "~/constants";
+import {
+  AppPaths,
+  FormButtonActions,
+  HttpMethods,
+  ModalPaths,
+} from "~/constants";
 import { ModalProps, UserData } from "~/interfaces";
 import { getModalId, isMMToken } from "~/utilities/utils";
 
@@ -60,9 +65,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
     content = (
       <Form
         action={AppPaths.UserManagement}
-        method={HttpMethods.Put}
-        // with "reloadDocument" always "post" request is being sent
-        // hence use "token" to distinguish between create/update
+        method={HttpMethods.Post}
         reloadDocument
       >
         <div className="form-control">
@@ -159,7 +162,12 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
         <input type="text" name="country" value={country} className="hidden" />
 
         <div className="modal-action">
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            type="submit"
+            name={FormButtonActions.Name}
+            value={FormButtonActions.Update}
+          >
             Update
           </button>
           <a onClick={onModalClose} className="btn">

@@ -1,5 +1,10 @@
 import { Form } from "remix";
-import { AppPaths, HttpMethods, ModalPaths } from "~/constants";
+import {
+  AppPaths,
+  FormButtonActions,
+  HttpMethods,
+  ModalPaths,
+} from "~/constants";
 import { getModalId } from "~/utilities/utils";
 
 export default () => (
@@ -102,7 +107,12 @@ export default () => (
         </div>
 
         <div className="modal-action">
-          <button className="btn btn-primary" type="submit">
+          <button
+            className="btn btn-primary"
+            name={FormButtonActions.Name}
+            value={FormButtonActions.Create}
+            type="submit"
+          >
             Accept
           </button>
           <a href={AppPaths.UserManagement} className="btn">

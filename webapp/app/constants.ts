@@ -13,7 +13,7 @@ export enum AppPaths {
   Login = "/login",
   Region = "/region",
   UserManagement = "/user-management",
-  Logout = "/logout"
+  Logout = "/logout",
 }
 
 export enum ModalPaths {
@@ -57,7 +57,8 @@ export const TRUNCATE_LENGTH = 30;
 
 export const CONTACTS_PER_PAGE = 10;
 
-export const SHAREABLE_CURL_COMMAND_MESSAGE = 'Loading Shareable Curl Command...';
+export const SHAREABLE_CURL_COMMAND_MESSAGE =
+  "Loading Shareable Curl Command...";
 
 export const Queries = {
   GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
@@ -85,4 +86,14 @@ export enum HttpMethods {
   Post = "post",
   Put = "put",
   Delete = "delete",
+}
+
+export const BUTTON_ACTION_TYPE = "_perform";
+
+export enum FormButtonActions {
+  Name = "_perform",
+  Create = "create",
+  Update = "update",
+  Delete = "delete",
+  Decrypt = "decrypt",
 }
