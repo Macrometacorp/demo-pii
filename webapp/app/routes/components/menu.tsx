@@ -38,36 +38,27 @@ export default () => {
         Region: <span className="badge ml-2">{region}</span>
       </div>
       <div className="-mb-4 flex flex-row">
-        <div className="flex-1 lg:flex-none">
-          <div className="form-control">
-            <input
-              type="text"
-              placeholder="Search by email"
-              className="input input-ghost"
-              value={search}
-              onChange={(event) => {
-                setSearch(event.target.value);
-              }}
-            />
+        <Form
+          action={
+            search?.trim()
+              ? `${AppPaths.UserManagement}?email=${search}`
+              : AppPaths.UserManagement
+          }
+        >
+          <div className="flex-1 lg:flex-none">
+            <div className="form-control">
+              <input
+                type="text"
+                placeholder="Search by email"
+                className="input input-ghost"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                }}
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex-none">
-          <Link
-            to={
-              search?.trim()
-                ? `${AppPaths.UserManagement}?email=${search}`
-                : AppPaths.UserManagement
-            }
-          >
-            <button
-              className="btn btn-square btn-ghost tooltip"
-              data-tip="Search"
-            >
-              <SearchSVG />
-            </button>
-          </Link>
-        </div>
-
+        </Form>
         <div className="flex-none">
           <button
             className="btn btn-square btn-ghost tooltip"
