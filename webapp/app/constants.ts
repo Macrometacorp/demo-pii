@@ -93,5 +93,4 @@ export enum FormButtonActions {
   Create = "create",
   Update = "update",
   Delete = "delete",
-  Decrypt = "decrypt",
 }
