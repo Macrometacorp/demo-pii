@@ -56,7 +56,16 @@ export const piiGetShareableToken = (token: string) =>
       "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
       "Content-Type": "application/json",
     },
-    body:JSON.stringify({
-      "fields":"email,login,first,last,phone"
-    })
+    body: JSON.stringify({
+      fields: "email,login,first,last,phone",
+    }),
+  });
+
+export const piiDeleteUser = (token: string) =>
+  fetch(`${PRIVACY_SERVICE_URL}/v1/user/token/${token}`, {
+    method: "DELETE",
+    headers: {
+      "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
+      "Content-Type": "application/json",
+    },
   });
