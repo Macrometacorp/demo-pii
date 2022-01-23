@@ -34,6 +34,7 @@ import Toast from "./components/toast";
 import handleCreate from "../utilities/REST/handlers/create";
 import handleUpdate from "../utilities/REST/handlers/update";
 import handleDelete from "../utilities/REST/handlers/delete";
+import handleUpload from "../utilities/REST/handlers/upload";
 import handleList from "../utilities/REST/handlers/list";
 import handleSearch from "../utilities/REST/handlers/search";
 
@@ -53,6 +54,9 @@ export const action: ActionFunction = async ({
       break;
     case FormButtonActions.Delete:
       result = await handleDelete(request, form);
+      break;
+    case FormButtonActions.Upload:
+      result = await handleUpload(request, form);
       break;
     default:
       result = {

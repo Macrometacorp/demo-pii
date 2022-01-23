@@ -95,4 +95,5 @@ export enum FormButtonActions {
   Create = "create",
   Update = "update",
   Delete = "delete",
+  Upload = "upload",
 }

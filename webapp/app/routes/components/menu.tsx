@@ -1,6 +1,12 @@
 import { parse as parseCSV } from "papaparse";
-import { Link } from "remix";
-import { AppPaths, ModalPaths, SessionStorage } from "~/constants";
+import { Form, Link, useSubmit } from "remix";
+import {
+  AppPaths,
+  FormButtonActions,
+  HttpMethods,
+  ModalPaths,
+  SessionStorage,
+} from "~/constants";
 import { useEffect, useState } from "react";
 import SearchSVG from "../components/svgs/search";
 import ContactSVG from "../components/svgs/contact";
@@ -10,6 +16,7 @@ const FILE_SELECTOR_ID = "file-selector";
 
 export default () => {
   const [showMenu, setShowMenu] = useState(false);
+  const submit = useSubmit();
   const [search, setSearch] = useState("");
   const [region, setRegion] = useState("");
 
@@ -74,19 +81,25 @@ export default () => {
         </div>
 
         <div className="flex-none">
-          <input
-            className="hidden"
-            type="file"
-            id={FILE_SELECTOR_ID}
+          <Form
+            action={AppPaths.UserManagement}
+            method={HttpMethods.Post}
             onChange={(event) => {
-              const file = event.target.files?.[0] || "";
-              parseCSV(file, {
-                complete: (results) => {
-                  console.log(results);
-                },
-              });
+              submit(event.currentTarget, { encType: "multipart/form-data" });
             }}
-          />
+          >
+            <input
+              type="hidden"
+              name={FormButtonActions.Name}
+              value={FormButtonActions.Upload}
+            ></input>
+            <input
+              className="hidden"
+              type="file"
+              name="upload"
+              id={FILE_SELECTOR_ID}
+            />
+          </Form>
           <button
             className="btn btn-square btn-ghost tooltip"
             data-tip="Upload CSV"
