@@ -1,10 +1,10 @@
-name = "mm-data-privacy"
+name = "pii"
 type = "javascript"
 
-zone_id = ""
+zone_id = "xxxxx"
 account_id = "xxxx"
-route = ""
-workers_dev = true
+route = "pii.macrometa.io/*"
+workers_dev = false
 
 # FIXME: change this to proper URL
 [vars]
