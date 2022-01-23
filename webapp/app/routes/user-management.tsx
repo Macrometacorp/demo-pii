@@ -16,7 +16,10 @@ import {
   ToastTypes,
   FormButtonActions,
 } from "~/constants";
+
 import { UserData } from "~/interfaces";
+import { isLoggedIn } from "~/utilities/utils";
+
 import EditModal from "./components/modals/editModal";
 import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
@@ -24,7 +27,6 @@ import AddContactModal from "./components/modals/addContactModal";
 import Row from "./components/tableRow";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
-import { isLoggedIn } from "~/utilities/utils";
 import DecryptedModal from "./components/modals/showDecryptedModal";
 import { Pagination } from "./components/Pagination";
 import Toast from "./components/toast";
