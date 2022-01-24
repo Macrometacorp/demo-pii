@@ -107,20 +107,20 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
           <div className="modal-action">
             <button
               className="btn btn-primary"
+              onClick={() => {
+                sendMessage();
+              }}
+            >
+              {sendingMessage ? `Sending Message ...` : "Send Message"}
+            </button>
+            <button
+              className="btn btn-neutral"
               disabled={copiedToClipboard}
               onClick={() => {
                 copyToClipboard(message);
               }}
             >
               {!copiedToClipboard ? `Copy To Clipboard` : "Copied"}
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                sendMessage();
-              }}
-            >
-              {sendingMessage ? `Sending Message ...` : "Send Message"}
             </button>
             <a onClick={onModalClose} className="btn">
               Close
