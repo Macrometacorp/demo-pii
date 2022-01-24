@@ -2294,6 +2294,10 @@ html {
   margin-right: 0.5rem;
 }
 
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -2318,6 +2322,10 @@ html {
   height: 1.5rem;
 }
 
+.h-8 {
+  height: 2rem;
+}
+
 .h-32 {
   height: 8rem;
 }
@@ -2326,16 +2334,8 @@ html {
   height: 5rem;
 }
 
-.h-8 {
-  height: 2rem;
-}
-
-.h-12 {
-  height: 3rem;
-}
-
-.h-40 {
-  height: 10rem;
+.h-4 {
+  height: 1rem;
 }
 
 .w-14 {
@@ -2344,6 +2344,10 @@ html {
 
 .w-6 {
   width: 1.5rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .w-full {
@@ -2358,16 +2362,8 @@ html {
   width: 13rem;
 }
 
-.w-8 {
-  width: 2rem;
-}
-
-.w-12 {
-  width: 3rem;
-}
-
-.w-40 {
-  width: 10rem;
+.w-4 {
+  width: 1rem;
 }
 
 .max-w-md {
@@ -2388,17 +2384,6 @@ html {
 
 .flex-none {
   flex: none;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin {
-  -webkit-animation: spin 1s linear infinite;
-          animation: spin 1s linear infinite;
 }
 
 @-webkit-keyframes pulse {
@@ -2448,12 +2433,6 @@ html {
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
-.space-x-10 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(2.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(2.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -2468,35 +2447,14 @@ html {
   border-radius: 9999px;
 }
 
-.border-4 {
-  border-width: 4px;
-}
-
-.border-t-4 {
-  border-top-width: 4px;
-}
-
-.border-b-4 {
-  border-bottom-width: 4px;
-}
-
-.border-green-900 {
-  --tw-border-opacity: 1;
-  border-color: rgb(20 83 45 / var(--tw-border-opacity));
+.bg-blue-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
 }
 
 .bg-primary {
   --tw-bg-opacity: 1;
   background-color: hsla(var(--p) / var(--tw-bg-opacity));
-}
-
-.bg-current {
-  background-color: currentColor;
-}
-
-.bg-blue-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
 }
 
 .stroke-current {
@@ -2520,14 +2478,19 @@ html {
   text-align: center;
 }
 
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
 }
 
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .font-bold {
@@ -2569,10 +2532,6 @@ html {
 
 .opacity-95 {
   opacity: 0.95;
-}
-
-.opacity-0 {
-  opacity: 0;
 }
 
 .shadow-lg {
