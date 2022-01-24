@@ -1,6 +1,7 @@
 import { createCookieSessionStorage, json, redirect } from "remix";
 import { AppPaths, Session } from "./constants";
 import { mmLogin } from "./utilities/REST/mm";
+import { piiSearchByEmail } from "./utilities/REST/pii";
 
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage({
@@ -38,6 +39,29 @@ export const login = async (
       },
     });
   }
+};
+
+export const userLogin = async (request: Request, email: string) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  try {
+    const textRes = await piiSearchByEmail(email.toString()).then((response) =>
+      response.text()
+    );
+    const res = JSON.parse(textRes);
+    const { token } = res;
+    if (!token) {
+      throw new Error("not found");
+    }
+    session.set(Session.PiiToken, token);
+    return redirect(AppPaths.UserDetails, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  } catch (err: any) {
+    // no-op
+  }
+  return json({ errorMessage: "unauthorized" }, { status: 401 });
 };
 
 export const logout = async (request: Request) => {

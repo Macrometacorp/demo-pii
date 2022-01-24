@@ -13,7 +13,10 @@ export default function Index() {
           </div>
           <p className="mb-5">Built with love by Macrometa</p>
           <Link to={AppPaths.Login}>
-            <button className="btn btn-primary">Login</button>
+            <button className="btn btn-primary mr-5">Admin Login</button>
+          </Link>
+          <Link to={AppPaths.UserLogin}>
+            <button className="btn btn-primary">User Login</button>
           </Link>
         </div>
       </div>

@@ -1,6 +1,7 @@
 export enum Session {
   Jwt = "jwt",
   Tenant = "tenant",
+  PiiToken = "piiToken",
 }
 
 export enum SessionStorage {
@@ -14,6 +15,8 @@ export enum AppPaths {
   Region = "/region",
   UserManagement = "/user-management",
   Logout = "/logout",
+  UserLogin = "/user-login",
+  UserDetails = "/user-details",
 }
 
 export enum ModalPaths {

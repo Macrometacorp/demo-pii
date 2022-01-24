@@ -1,20 +1,22 @@
 import { ActionFunction, Form, useActionData } from "remix";
 import { HttpMethods } from "~/constants";
-import { login } from "../sessions";
+import { userLogin } from "../sessions";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password") || "";
+
   if (typeof email !== "string" || typeof password !== "string") {
     throw new Error(`Form not submitted correctly.`);
   }
 
-  return await login(request, email, password);
+  return await userLogin(request, email);
 };
 
 export default function Login() {
   const actionData = useActionData();
+  console.log(actionData);
   return (
     <div className="card shadow-lg max-w-lg mx-auto mt-20 hover:shadow-2xl">
       <div className="card-body">
