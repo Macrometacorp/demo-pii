@@ -16,7 +16,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const actionData = useActionData();
-  console.log(actionData);
   return (
     <div className="card shadow-lg max-w-lg mx-auto mt-20 hover:shadow-2xl">
       <div className="card-body">

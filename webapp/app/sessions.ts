@@ -79,6 +79,7 @@ export const getAuthTokens = async (request: Request) => {
   return {
     [Session.Jwt]: session.get(Session.Jwt),
     [Session.Tenant]: session.get(Session.Tenant),
+    [Session.PiiToken]: session.get(Session.PiiToken),
   };
 };
 

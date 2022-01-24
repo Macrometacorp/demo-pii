@@ -30,8 +30,9 @@ export const isPrivateRegion = (country: string): boolean => {
 };
 
 export const isLoggedIn = async (request: Request): Promise<boolean> => {
-  const { [Session.Jwt]: token } = await getAuthTokens(request);
-  return !!token;
+  const { [Session.Jwt]: token, [Session.PiiToken]: piiToken } =
+    await getAuthTokens(request);
+  return !!token || !!piiToken;
 };
 
 export const truncate = (text: string) => {

@@ -25,13 +25,21 @@ export const c8ql = async (
   request: Request,
   fabric: string,
   query: string,
-  bindVars: Record<string, unknown> = {}
+  bindVars: Record<string, unknown> = {},
+  isApiKey: boolean = false
 ) => {
-  const { [Session.Jwt]: token } = await getAuthTokens(request);
+  let authorization = "";
+  if (isApiKey) {
+    authorization = `apikey ${MM_API_KEY}`;
+  } else {
+    // use jwt
+    const { [Session.Jwt]: token } = await getAuthTokens(request);
+    authorization = `bearer ${token}`;
+  }
   return fetch(`${FEDERATION_URL}/_fabric/${fabric}/_api/cursor`, {
     method: "POST",
     headers: {
-      Authorization: `bearer ${token}`,
+      Authorization: authorization,
     },
     body: JSON.stringify({ query, bindVars }),
   });
