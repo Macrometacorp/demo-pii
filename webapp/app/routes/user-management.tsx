@@ -5,6 +5,7 @@ import {
   useActionData,
   useCatch,
   useLoaderData,
+  useTransition,
 } from "remix";
 import * as queryString from "query-string";
 
@@ -24,6 +25,7 @@ import EditModal from "./components/modals/editModal";
 import RemoveModal from "./components/modals/removeModal";
 import ShareModal from "./components/modals/shareModal";
 import AddContactModal from "./components/modals/addContactModal";
+import ProgressModal from "./components/modals/progressModal";
 import Row from "./components/tableRow";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
@@ -89,6 +91,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default () => {
   const actionData = useActionData();
   const allUserData = useLoaderData();
+  const transition = useTransition();
   const userData = allUserData.filter((user: UserData) => !!user?.name?.trim());
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
@@ -145,6 +148,7 @@ export default () => {
             })}
           </tr>
         </thead>
+
         <tbody>
           {currentContacts.length > 0 &&
             currentContacts.map((data: UserData) => (
@@ -179,10 +183,10 @@ export default () => {
         </tbody>
       </table>
       {currentContacts.length == 0 && (
-            <div className="flex justify-center">
-                <p className="mb-5 text-3xl font-bold">No contacts found</p>
-            </div>
-          )}
+        <div className="flex justify-center">
+          <p className="mb-5 text-3xl font-bold">No contacts found</p>
+        </div>
+      )}
       {showEditModal && (
         <EditModal
           modalUserDetails={modalUserDetails}
@@ -219,14 +223,17 @@ export default () => {
         />
       )}
 
-      {currentContacts.length > 0 && (
-        <Pagination
-          contactsPerPage={contactsPerPage}
-          totalContacts={userData.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      )}
+      {transition.state !== "submitting" &&
+        transition.state !== "loading" &&
+        currentContacts.length > 0 && (
+          <Pagination
+            contactsPerPage={contactsPerPage}
+            totalContacts={userData.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        )}
+      {transition.state === "submitting" && <ProgressModal />}
 
       {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
