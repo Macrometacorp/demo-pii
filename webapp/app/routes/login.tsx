@@ -5,15 +5,10 @@ import { login } from "../sessions";
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = form.get("email");
-  const fabric = form.get("fabric");
   const password = form.get("password") || "";
   // we do this type check to be extra sure and to make TypeScript happy
   // we'll explore validation next!
-  if (
-    typeof email !== "string" ||
-    typeof fabric !== "string" ||
-    typeof fabric !== "string"
-  ) {
+  if (typeof email !== "string" || typeof password !== "string") {
     throw new Error(`Form not submitted correctly.`);
   }
 
@@ -38,20 +33,6 @@ export default function Login() {
               placeholder="demo@macrometa.io"
               className="input input-primary input-bordered"
               defaultValue="demo@macrometa.io"
-            />
-          </div>
-
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Fabric</span>
-            </label>
-            <input
-              type="text"
-              name="fabric"
-              required
-              placeholder="_system"
-              className="input input-primary input-bordered"
-              defaultValue="_system"
             />
           </div>
 
