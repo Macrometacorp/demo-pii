@@ -146,37 +146,43 @@ export default () => {
           </tr>
         </thead>
         <tbody>
-          {currentContacts.map((data: UserData) => (
-            <Row
-              key={data.token}
-              activeRow={activeRow}
-              setActiveRow={setActiveRow}
-              data={data}
-              isPrivateRegion={isPrivateRegion}
-              onActionButtonClicked={(
-                action: ActionButtons,
-                details: UserData
-              ) => {
-                setModalUserDetails(details);
-                switch (action) {
-                  case ActionButtons.Show:
-                    setShowDecryptModal(true);
-                    break;
-                  case ActionButtons.Edit:
-                    setShowEditModal(true);
-                    break;
-                  case ActionButtons.Remove:
-                    setShowRemoveModal(true);
-                    break;
-                  case ActionButtons.Share:
-                    setShowShareModal(true);
-                    break;
-                }
-              }}
-            />
-          ))}
+          {currentContacts.length > 0 &&
+            currentContacts.map((data: UserData) => (
+              <Row
+                key={data.token}
+                activeRow={activeRow}
+                setActiveRow={setActiveRow}
+                data={data}
+                isPrivateRegion={isPrivateRegion}
+                onActionButtonClicked={(
+                  action: ActionButtons,
+                  details: UserData
+                ) => {
+                  setModalUserDetails(details);
+                  switch (action) {
+                    case ActionButtons.Show:
+                      setShowDecryptModal(true);
+                      break;
+                    case ActionButtons.Edit:
+                      setShowEditModal(true);
+                      break;
+                    case ActionButtons.Remove:
+                      setShowRemoveModal(true);
+                      break;
+                    case ActionButtons.Share:
+                      setShowShareModal(true);
+                      break;
+                  }
+                }}
+              />
+            ))}
         </tbody>
       </table>
+      {currentContacts.length == 0 && (
+            <div className="flex justify-center">
+                <p className="mb-5 text-3xl font-bold">No contacts found</p>
+            </div>
+          )}
       {showEditModal && (
         <EditModal
           modalUserDetails={modalUserDetails}
@@ -213,12 +219,14 @@ export default () => {
         />
       )}
 
-      <Pagination
-        contactsPerPage={contactsPerPage}
-        totalContacts={userData.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {currentContacts.length > 0 && (
+        <Pagination
+          contactsPerPage={contactsPerPage}
+          totalContacts={userData.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      )}
 
       {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
