@@ -5,6 +5,7 @@ import {
   useActionData,
   useCatch,
   useLoaderData,
+  useTransition,
 } from "remix";
 import * as queryString from "query-string";
 
@@ -89,6 +90,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default () => {
   const actionData = useActionData();
   const allUserData = useLoaderData();
+  const transition = useTransition();
   const userData = allUserData.filter((user: UserData) => !!user?.name?.trim());
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
@@ -132,57 +134,69 @@ export default () => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="table w-full">
-        <thead>
-          <tr>
-            {HEADINGS.map((heading) => {
-              const textStyle = heading === "actions" ? "text-center" : "";
-              return (
-                <th className={textStyle} key={heading}>
-                  {heading}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {currentContacts.length > 0 &&
-            currentContacts.map((data: UserData) => (
-              <Row
-                key={data.token}
-                activeRow={activeRow}
-                setActiveRow={setActiveRow}
-                data={data}
-                isPrivateRegion={isPrivateRegion}
-                onActionButtonClicked={(
-                  action: ActionButtons,
-                  details: UserData
-                ) => {
-                  setModalUserDetails(details);
-                  switch (action) {
-                    case ActionButtons.Show:
-                      setShowDecryptModal(true);
-                      break;
-                    case ActionButtons.Edit:
-                      setShowEditModal(true);
-                      break;
-                    case ActionButtons.Remove:
-                      setShowRemoveModal(true);
-                      break;
-                    case ActionButtons.Share:
-                      setShowShareModal(true);
-                      break;
-                  }
-                }}
-              />
-            ))}
-        </tbody>
-      </table>
+      {transition.state === "submitting" ? (
+        <div className="flex items-center justify-center">
+          <p className="mb-5 text-4xl font-bold">Uploading</p>
+          <div className="flex items-center justify-center space-x-2 animate-pulse">
+            <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
+            <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
+            <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
+          </div>
+        </div>
+      ) : (
+        <table className="table w-full">
+          <thead>
+            <tr>
+              {HEADINGS.map((heading) => {
+                const textStyle = heading === "actions" ? "text-center" : "";
+                return (
+                  <th className={textStyle} key={heading}>
+                    {heading}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+
+          <tbody>
+            {currentContacts.length > 0 &&
+              currentContacts.map((data: UserData) => (
+                <Row
+                  key={data.token}
+                  activeRow={activeRow}
+                  setActiveRow={setActiveRow}
+                  data={data}
+                  isPrivateRegion={isPrivateRegion}
+                  onActionButtonClicked={(
+                    action: ActionButtons,
+                    details: UserData
+                  ) => {
+                    setModalUserDetails(details);
+                    switch (action) {
+                      case ActionButtons.Show:
+                        setShowDecryptModal(true);
+                        break;
+                      case ActionButtons.Edit:
+                        setShowEditModal(true);
+                        break;
+                      case ActionButtons.Remove:
+                        setShowRemoveModal(true);
+                        break;
+                      case ActionButtons.Share:
+                        setShowShareModal(true);
+                        break;
+                    }
+                  }}
+                />
+              ))}
+          </tbody>
+        </table>
+      )}
       {currentContacts.length == 0 && (
-            <div className="flex justify-center">
-                <p className="mb-5 text-3xl font-bold">No contacts found</p>
-            </div>
-          )}
+        <div className="flex justify-center">
+          <p className="mb-5 text-3xl font-bold">No contacts found</p>
+        </div>
+      )}
       {showEditModal && (
         <EditModal
           modalUserDetails={modalUserDetails}
@@ -219,14 +233,16 @@ export default () => {
         />
       )}
 
-      {currentContacts.length > 0 && (
-        <Pagination
-          contactsPerPage={contactsPerPage}
-          totalContacts={userData.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      )}
+      {transition.state !== "submitting" &&
+        transition.state !== "loading" &&
+        currentContacts.length > 0 && (
+          <Pagination
+            contactsPerPage={contactsPerPage}
+            totalContacts={userData.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        )}
 
       {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
