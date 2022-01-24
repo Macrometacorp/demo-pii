@@ -1,7 +1,4 @@
-import {
-  ModalPaths,
-  SHAREABLE_CURL_COMMAND_MESSAGE,
-} from "~/constants";
+import { ModalPaths, SHAREABLE_CURL_COMMAND_MESSAGE } from "~/constants";
 import { getModalId } from "~/utilities/utils";
 import { useEffect, useState } from "react";
 import { ModalProps, UserData } from "~/interfaces";
@@ -12,6 +9,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   const [message, setMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
   const [shareableToken, setShareableToken] = useState("");
+  const [copiedToClipboard, setcopiedToClipboard] = useState(false);
 
   const decryptToken = async () => {
     try {
@@ -39,12 +37,16 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   };
 
   useEffect(() => {
-      decryptToken();
+    decryptToken();
   }, []);
 
   const getShareableToken = async () => {
     const result = await fetch(`/share?token=${modalUserDetails.token}`);
-    const parsed: {status: string; record: string , privacy_service_url:string} =await result.json()
+    const parsed: {
+      status: string;
+      record: string;
+      privacy_service_url: string;
+    } = await result.json();
     setShareableToken(parsed.record);
     let messageToBeSent = `curl --location --request GET ${parsed.privacy_service_url}/v1/get/${parsed.record}`;
     setMessage(messageToBeSent);
@@ -67,13 +69,51 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
       }
     }
   };
+  const copyToClipboard = (text: string | null) => {
+    let content = document.createElement("textarea");
+    document.body.appendChild(content);
+    content.value = text || "";
+    content.select();
+    document.execCommand("copy");
+    document.body.removeChild(content);
+    setcopiedToClipboard(true)
+  };
 
   return (
     <div id={getModalId(ModalPaths.ShareModal)} className="modal modal-open">
       {message ? (
         <div className="modal-box">
-          {message}
+          <div
+            className="card"
+            style={{
+              backgroundColor: "rgba(60,68,81,1)",
+              borderColor: "grey",
+              color: "rgb(0,0,0)",
+            }}
+          >
+            <div className="card-body">
+              <p
+                style={{
+                  fontFamily: "Menlo",
+                  fontSize: "16px",
+                  color: "rgba(255,255,255,1)",
+                }}
+              >
+                {message}
+              </p>
+            </div>
+          </div>
+
           <div className="modal-action">
+            <button
+              className="btn btn-primary"
+              disabled={copiedToClipboard}
+              onClick={() => {
+                copyToClipboard(message);
+              }}
+            >
+              {!copiedToClipboard ? `Copy To Clipboard` : "Copied"}
+            </button>
             <button
               className="btn btn-primary"
               onClick={() => {
