@@ -1,5 +1,4 @@
-import { useLoaderData, Form, useCatch } from "remix";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, Form, useCatch, useNavigate } from "remix";
 import type { LoaderFunction } from "remix";
 import { AppPaths, HttpMethods, SessionStorage } from "~/constants";
 import { DataCenter, RegionInfo } from "~/interfaces";
