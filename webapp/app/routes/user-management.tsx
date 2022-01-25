@@ -16,6 +16,7 @@ import {
   SessionStorage,
   ToastTypes,
   FormButtonActions,
+  AppPaths,
 } from "~/constants";
 
 import { UserData, UserManagementActionResult } from "~/interfaces";
@@ -190,6 +191,7 @@ export default () => {
       {showEditModal && (
         <EditModal
           modalUserDetails={modalUserDetails}
+          formAction={AppPaths.UserManagement}
           onModalClose={() => {
             setShowEditModal(false);
           }}

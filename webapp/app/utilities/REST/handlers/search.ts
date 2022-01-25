@@ -3,8 +3,11 @@ import { LocationData, PiiData, UserData } from "~/interfaces";
 import { c8ql } from "../mm";
 import { piiSearchByEmail } from "../pii";
 
-export default async (request: Request, email: string) => {
-  let result: Array<UserData> = [];
+export const searchForEmail = async (
+  request: Request,
+  email: string,
+  isApiKey: boolean = false
+) => {
   let token;
   let user;
   // check PII
@@ -14,12 +17,9 @@ export default async (request: Request, email: string) => {
       return JSON.stringify({ error: true, message: err.message });
     });
 
-  try {
-    const res = JSON.parse(textRes);
-    token = res?.token;
-  } catch (error: any) {
-    console.error(error);
-  }
+  const res = JSON.parse(textRes);
+  token = res?.token;
+
   if (!token) {
     // not found in PII, check users table
     const c8Res = await c8ql(
@@ -28,11 +28,19 @@ export default async (request: Request, email: string) => {
       Queries.SearchUserByEmail,
       {
         email,
-      }
+      },
+      isApiKey
     ).then((response) => response.json());
     user = c8Res?.result?.[0];
     token = user?.token as string;
   }
+  return { token, user };
+};
+
+export default async (request: Request, email: string) => {
+  let result: Array<UserData> = [];
+
+  let { token, user } = await searchForEmail(request, email);
   if (token) {
     if (!user) {
       // this was from pii. Find user from the users table

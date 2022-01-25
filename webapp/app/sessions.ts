@@ -1,6 +1,8 @@
 import { createCookieSessionStorage, json, redirect } from "remix";
-import { AppPaths, Session } from "./constants";
-import { mmLogin } from "./utilities/REST/mm";
+import { AppPaths, Fabrics, Queries, Session } from "./constants";
+import { searchForEmail } from "./utilities/REST/handlers/search";
+import { c8ql, mmLogin } from "./utilities/REST/mm";
+import { piiSearchByEmail } from "./utilities/REST/pii";
 
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage({
@@ -40,6 +42,25 @@ export const login = async (
   }
 };
 
+export const userLogin = async (request: Request, email: string) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  try {
+    const { token } = await searchForEmail(request, email, true);
+    console.log("-----token---->", token);
+    session.set(Session.PiiToken, token);
+    if (token) {
+      return redirect(AppPaths.UserDetails, {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+    }
+  } catch (err: any) {
+    // no-op
+  }
+  return json({ errorMessage: "unauthorized" }, { status: 401 });
+};
+
 export const logout = async (request: Request) => {
   const session = await getSession(request.headers.get("Cookie"));
   return redirect(AppPaths.Root, {
@@ -55,6 +76,7 @@ export const getAuthTokens = async (request: Request) => {
   return {
     [Session.Jwt]: session.get(Session.Jwt),
     [Session.Tenant]: session.get(Session.Tenant),
+    [Session.PiiToken]: session.get(Session.PiiToken),
   };
 };
 

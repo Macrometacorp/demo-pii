@@ -3,7 +3,11 @@ import { isPrivateRegion } from "~/utilities/utils";
 import { c8ql } from "../mm";
 import { piiUpdateContact } from "../pii";
 
-export default async (request: Request, form: FormData) => {
+export default async (
+  request: Request,
+  form: FormData,
+  isApiKey: boolean = false
+) => {
   const name = form.get("name")?.toString() ?? "";
   const email = form.get("email")?.toString() ?? "";
   const phone = form.get("phone")?.toString() ?? "";
@@ -24,20 +28,32 @@ export default async (request: Request, form: FormData) => {
       // error if expected format is not received
       JSON.parse(resText);
     } else {
-      await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
-        token,
-        name,
-        email,
-        phone,
-      });
+      await c8ql(
+        request,
+        Fabrics.Global,
+        Queries.UpsertUser,
+        {
+          token,
+          name,
+          email,
+          phone,
+        },
+        isApiKey
+      );
     }
-    await c8ql(request, Fabrics.Global, Queries.UpsertLocation, {
-      token,
-      state,
-      country,
-      zipcode,
-      job_title,
-    });
+    await c8ql(
+      request,
+      Fabrics.Global,
+      Queries.UpsertLocation,
+      {
+        token,
+        state,
+        country,
+        zipcode,
+        job_title,
+      },
+      isApiKey
+    );
     return { isPrivate };
   } catch (error: any) {
     return { error: true, errorMessage: error?.message, name: error?.name };
