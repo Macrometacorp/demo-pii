@@ -35,9 +35,9 @@ export const isLoggedIn = async (request: Request): Promise<boolean> => {
   return !!token || !!piiToken;
 };
 
-export const truncate = (text: string) => {
-  if (text?.length > TRUNCATE_LENGTH) {
-    text = `${text.substring(0, TRUNCATE_LENGTH)}...`;
+export const truncate = (text: string,truncateLength=TRUNCATE_LENGTH) => {
+  if (text?.length > truncateLength) {
+    text = `${text.substring(0, truncateLength)}...`;
   }
   return text;
 };
