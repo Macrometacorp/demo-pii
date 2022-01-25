@@ -2310,6 +2310,10 @@ html {
   margin-bottom: 0.5rem;
 }
 
+.-mb-20 {
+  margin-bottom: -5rem;
+}
+
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -2324,18 +2328,6 @@ html {
 
 .mb-1 {
   margin-bottom: 0.25rem;
-}
-
-.-mb-40 {
-  margin-bottom: -10rem;
-}
-
-.-mb-20 {
-  margin-bottom: -5rem;
-}
-
-.-mb-28 {
-  margin-bottom: -7rem;
 }
 
 .inline-block {
