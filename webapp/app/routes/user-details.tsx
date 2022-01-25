@@ -1,19 +1,55 @@
 import { useEffect, useState } from "react";
 import {
+  ActionFunction,
   //   ActionFunction,
   LoaderFunction,
+  useActionData,
   //   useActionData,
   useCatch,
   useLoaderData,
 } from "remix";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
-import { UserData } from "~/interfaces";
+import { UserData, UserManagementActionResult } from "~/interfaces";
 import { getAuthTokens } from "~/sessions";
-import { AppPaths, Fabrics, Queries, Session } from "~/constants";
+import {
+  AppPaths,
+  Fabrics,
+  FormButtonActions,
+  Queries,
+  Session,
+  ToastTypes,
+} from "~/constants";
 import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
+import handleUpdate from "../utilities/REST/handlers/update";
+import Toast from "./components/toast";
+
+export const action: ActionFunction = async ({
+  request,
+}): Promise<UserManagementActionResult> => {
+  const form = await request.formData();
+  const actionType = form.get(FormButtonActions.Name)?.toString() ?? "";
+
+  let result;
+  switch (actionType) {
+    case FormButtonActions.Update:
+      result = await handleUpdate(request, form, true);
+      break;
+    // case FormButtonActions.Delete:
+    //   result = await handleDelete(request, form);
+    //   break;
+    default:
+      result = {
+        error: true,
+        name: "Form action",
+        errorMessage: "Unhandled form action",
+      };
+  }
+
+  return result;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { [Session.PiiToken]: piiToken } = await getAuthTokens(request);
@@ -72,6 +108,24 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default () => {
   const loaderData = useLoaderData();
+  const actionData = useActionData();
+
+  let toastType = ToastTypes.Info;
+  let toastMessage = "";
+  if (actionData) {
+    const { error, isPrivate } = actionData;
+    toastType = error
+      ? ToastTypes.Error
+      : isPrivate
+      ? ToastTypes.Info
+      : ToastTypes.Success;
+
+    toastMessage = error
+      ? `${error.name}: ${error.errorMessage}`
+      : isPrivate
+      ? "Your new record will reflect shortly"
+      : "New record added successfully";
+  }
   const { name, email, phone, state, country, zipcode, job_title } =
     loaderData as UserData;
   const [showEditModal, setShowEditModal] = useState(false);
@@ -189,6 +243,7 @@ export default () => {
           formAction={AppPaths.UserDetails}
         />
       )}
+      {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };
