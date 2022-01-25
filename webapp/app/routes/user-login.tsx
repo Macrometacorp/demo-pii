@@ -29,9 +29,8 @@ export default function Login() {
               type="email"
               name="email"
               required
-              placeholder="demo@macrometa.io"
+              placeholder="user@macrometa.io"
               className="input input-primary input-bordered"
-              defaultValue="demo@macrometa.io"
             />
           </div>
 
