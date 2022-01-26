@@ -25,14 +25,14 @@ export default async (request: Request, form: FormData) => {
       token = res.token;
     } else {
       token = token || `${MM_TOKEN_PREFIX}${uuidv4()}`;
-      await c8ql(request, Fabrics.Global, Queries.UpsertUser, {
+      await c8ql(request, Fabrics.Global, Queries.InsertUser(), {
         token,
         name,
         email,
         phone,
       });
     }
-    await c8ql(request, Fabrics.Global, Queries.UpsertLocation, {
+    await c8ql(request, Fabrics.Global, Queries.InsertLocation(), {
       token,
       state,
       country,

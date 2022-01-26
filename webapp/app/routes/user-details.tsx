@@ -23,6 +23,7 @@ import {
 import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
+import ShareModal from "./components/modals/shareModal";
 import handleUpdate from "../utilities/REST/handlers/update";
 import Toast from "./components/toast";
 
@@ -68,7 +69,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     : c8ql(
         request,
         Fabrics.Global,
-        Queries.SearchUserByToken,
+        Queries.SearchUserByToken(),
         {
           token: piiToken,
         },
@@ -78,7 +79,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const locationPromise = c8ql(
     request,
     Fabrics.Global,
-    Queries.SearchLocationByToken,
+    Queries.SearchLocationByToken(),
     { token: piiToken },
     true
   ).then((response) => response.json());
@@ -102,6 +103,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     zipcode,
     job_title,
     token: piiToken,
+    isPrivateRecord,
   };
   return decryptedData;
 };
@@ -109,6 +111,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default () => {
   const loaderData = useLoaderData();
   const actionData = useActionData();
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -128,7 +133,7 @@ export default () => {
   }
   const { name, email, phone, state, country, zipcode, job_title } =
     loaderData as UserData;
-  const [showEditModal, setShowEditModal] = useState(false);
+
   return (
     <div className="card text-center shadow-lg max-w-lg mx-auto mt-10 hover:shadow-2xl">
       <div className="card-body">
@@ -223,7 +228,12 @@ export default () => {
           />
         </div>
         <div className="justify-center card-actions">
-          <button className="btn btn-outline btn-primary">Share</button>
+          <button
+            className="btn btn-outline btn-primary"
+            disabled={!loaderData.isPrivateRecord}
+          >
+            Share
+          </button>
           <button
             className="btn btn-outline btn-neutral"
             onClick={() => setShowEditModal(true)}
@@ -241,6 +251,15 @@ export default () => {
           }}
           shouldDecrypt={false}
           formAction={AppPaths.UserDetails}
+        />
+      )}
+
+      {showShareModal && (
+        <ShareModal
+          modalUserDetails={loaderData}
+          onModalClose={() => {
+            setShowShareModal(false);
+          }}
         />
       )}
       {actionData && <Toast toastType={toastType} message={toastMessage} />}

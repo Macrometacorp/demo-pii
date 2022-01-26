@@ -25,7 +25,7 @@ export const searchForEmail = async (
     const c8Res = await c8ql(
       request,
       Fabrics.Global,
-      Queries.SearchUserByEmail,
+      Queries.SearchUserByEmail(),
       {
         email,
       },
@@ -47,7 +47,7 @@ export default async (request: Request, email: string) => {
       const c8Res = await c8ql(
         request,
         Fabrics.Global,
-        Queries.SearchUserByToken,
+        Queries.SearchUserByToken(),
         { token }
       ).then((response) => response.json());
       user = c8Res?.result?.[0] as PiiData;
@@ -57,7 +57,7 @@ export default async (request: Request, email: string) => {
     const locationRes = await c8ql(
       request,
       Fabrics.Global,
-      Queries.SearchLocationByToken,
+      Queries.SearchLocationByToken(),
       { token }
     ).then((response) => response.json());
     const locationDetails = locationRes?.result?.[0] as LocationData;

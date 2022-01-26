@@ -31,9 +31,9 @@ export const piiAddContact = (name: string, email: string, phone: string) => {
 
 export const piiUpdateContact = (
   token: string,
-  name: string,
-  email: string,
-  phone: string
+  name: string | undefined,
+  email: string | undefined,
+  phone: string | undefined
 ) => {
   return fetch(`${PRIVACY_SERVICE_URL}/v1/user/token/${token}`, {
     method: "PUT",

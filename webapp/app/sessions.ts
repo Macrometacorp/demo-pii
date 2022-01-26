@@ -46,7 +46,6 @@ export const userLogin = async (request: Request, email: string) => {
   const session = await getSession(request.headers.get("Cookie"));
   try {
     const { token } = await searchForEmail(request, email, true);
-    console.log("-----token---->", token);
     session.set(Session.PiiToken, token);
     if (token) {
       return redirect(AppPaths.UserDetails, {
