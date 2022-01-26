@@ -14,6 +14,11 @@ export const piiGetUserByToken = (token: string) =>
     },
   });
 
+  export const piiGetShareableRecord = (token: string) =>
+  fetch(`${PRIVACY_SERVICE_URL}/v1/get/${token}`, {
+    method: "GET",
+  });
+
 export const piiAddContact = (name: string, email: string, phone: string) => {
   return fetch(`${PRIVACY_SERVICE_URL}/v1/user`, {
     method: "POST",
