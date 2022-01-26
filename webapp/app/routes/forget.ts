@@ -22,7 +22,7 @@ export const loader: LoaderFunction = ({ request }) => {
   const url = new URL(request.url);
   const { host, protocol } = url;
   let piiToken = url.searchParams.get(Session.PiiToken);
-
+  
   if (!piiToken) {
     return json({ message: "PII token not present." }, 400);
   }

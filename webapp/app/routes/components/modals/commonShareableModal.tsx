@@ -5,27 +5,22 @@ import {
 } from "~/constants";
 import { getModalId } from "~/utilities/utils";
 import { useEffect, useState } from "react";
-import { EditForgetModalProps } from "~/interfaces";
+import { CommonShareModalProps } from "~/interfaces";
 export default ({
-  buttonType,
+  endpoint,
   onModalClose,
   piiToken,
-}: EditForgetModalProps) => {
+}: CommonShareModalProps) => {
   const [message, setMessage] = useState("");
   const [copiedToClipboard, setcopiedToClipboard] = useState(false);
 
   const getShareableCurlCommand = async () => {
     let messageToBeSent = "";
 
-    if (buttonType == "Edit") {
-      const result = await fetch(`/edit?${Session.PiiToken}=${piiToken}`);
+
+      const result = await fetch(`${endpoint}?${Session.PiiToken}=${piiToken}`);
       const parsedResult = await result.json();
       messageToBeSent = parsedResult.message;
-    } else if (buttonType == "Forget") {
-      const result = await fetch(`/forget?${Session.PiiToken}=${piiToken}`);
-      const parsedResult = await result.json();
-      messageToBeSent = parsedResult.message;
-    }
 
     setMessage(messageToBeSent);
   };

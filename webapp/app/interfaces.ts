@@ -46,8 +46,8 @@ export interface ModalProps {
   onModalClose: () => void;
 }
 
-export interface EditForgetModalProps {
-  buttonType: string;
+export interface CommonShareModalProps {
+  endpoint: string;
   onModalClose: () => void;
   piiToken: string;
 }

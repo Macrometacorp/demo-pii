@@ -24,7 +24,7 @@ import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
 import ShareModal from "./components/modals/shareModal";
-import EditForgetModal from "./components/modals/editForgetModal";
+import CommonShareableModal from "./components/modals/commonShareableModal";
 import handleUpdate from "../utilities/REST/handlers/update";
 import Toast from "./components/toast";
 
@@ -252,8 +252,8 @@ export default () => {
         </div>
       </div>
       {showEditModal && (
-        <EditForgetModal
-          buttonType={"Edit"}
+        <CommonShareableModal
+          endpoint={"/edit"}
           onModalClose={() => {
             setShowEditModal(false);
           }}
@@ -278,8 +278,8 @@ export default () => {
         />
       )}
       {showForgetModal && (
-        <EditForgetModal
-          buttonType={"Forget"}
+        <CommonShareableModal
+          endpoint={"/forget"}
           onModalClose={() => {
             setShowForgetModal(false);
           }}
