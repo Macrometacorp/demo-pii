@@ -13,7 +13,7 @@ import ErrorComponent from "./components/error";
 import { UserData, UserManagementActionResult } from "~/interfaces";
 import { getAuthTokens } from "~/sessions";
 import {
-  ShareEndpoints,
+  ResourceEndpoints,
   Fabrics,
   FormButtonActions,
   Queries,
@@ -239,7 +239,7 @@ export default () => {
           <button
             className="btn btn-outline btn-neutral"
             onClick={() => {
-              setSharedEndpoint(ShareEndpoints.Edit);
+              setSharedEndpoint(ResourceEndpoints.Edit);
               setShowCommonModal(true);
             }}
           >
@@ -248,7 +248,7 @@ export default () => {
           <button
             className="btn btn-outline btn-error"
             onClick={() => {
-              setSharedEndpoint(ShareEndpoints.Forget);
+              setSharedEndpoint(ResourceEndpoints.Forget);
               setShowCommonModal(true);
             }}
           >

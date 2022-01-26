@@ -45,7 +45,7 @@ export const HEADINGS = [
   "actions",
 ];
 
-export enum ShareEndpoints {
+export enum ResourceEndpoints {
   Edit = "/edit",
   Forget = "/forget",
 }
