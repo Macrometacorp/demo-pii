@@ -24,6 +24,7 @@ import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
 import EditModal from "./components/modals/editModal";
 import ShareModal from "./components/modals/shareModal";
+import EditForgetModal from "./components/modals/editForgetModal";
 import handleUpdate from "../utilities/REST/handlers/update";
 import Toast from "./components/toast";
 
@@ -114,6 +115,7 @@ export default () => {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showForgetModal, setShowForgetModal] = useState(false);
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -135,7 +137,7 @@ export default () => {
     loaderData as UserData;
 
   return (
-    <div className="card text-center shadow-lg max-w-lg mx-auto mt-10 hover:shadow-2xl">
+    <div className="card  shadow-lg max-w-lg mx-auto mt-10 hover:shadow-2xl">
       <div className="card-body">
         <div className="form-control">
           <label className="label font-semibold">
@@ -231,6 +233,7 @@ export default () => {
           <button
             className="btn btn-outline btn-primary"
             disabled={!loaderData.isPrivateRecord}
+            onClick={() => setShowShareModal(true)}
           >
             Share
           </button>
@@ -240,18 +243,30 @@ export default () => {
           >
             Edit
           </button>
-          <button className="btn btn-outline btn-error">Forget</button>
+          <button
+            className="btn btn-outline btn-error"
+            onClick={() => setShowForgetModal(true)}
+          >
+            Forget
+          </button>
         </div>
       </div>
       {showEditModal && (
-        <EditModal
-          modalUserDetails={loaderData}
+        <EditForgetModal
+          buttonType={"Edit"}
           onModalClose={() => {
             setShowEditModal(false);
           }}
-          shouldDecrypt={false}
-          formAction={AppPaths.UserDetails}
+          piiToken={loaderData.token}
         />
+        // <EditModal
+        //   modalUserDetails={loaderData}
+        //   onModalClose={() => {
+        //     setShowEditModal(false);
+        //   }}
+        //   shouldDecrypt={false}
+        //   formAction={AppPaths.UserDetails}
+        // />
       )}
 
       {showShareModal && (
@@ -260,6 +275,15 @@ export default () => {
           onModalClose={() => {
             setShowShareModal(false);
           }}
+        />
+      )}
+      {showForgetModal && (
+        <EditForgetModal
+          buttonType={"Forget"}
+          onModalClose={() => {
+            setShowForgetModal(false);
+          }}
+          piiToken={loaderData.token}
         />
       )}
       {actionData && <Toast toastType={toastType} message={toastMessage} />}
