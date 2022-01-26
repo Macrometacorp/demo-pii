@@ -15,14 +15,10 @@ export default ({
   const [copiedToClipboard, setcopiedToClipboard] = useState(false);
 
   const getShareableCurlCommand = async () => {
-    let messageToBeSent = "";
-
-
       const result = await fetch(`${endpoint}?${Session.PiiToken}=${piiToken}`);
       const parsedResult = await result.json();
-      messageToBeSent = parsedResult.message;
-
-    setMessage(messageToBeSent);
+      const messageToBeSent = parsedResult.message; 
+      setMessage(messageToBeSent);
   };
 
   useEffect(() => {
