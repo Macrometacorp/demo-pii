@@ -45,6 +45,11 @@ export const HEADINGS = [
   "actions",
 ];
 
+export enum ShareEndpoints {
+  Edit = "/edit",
+  Forget = "/forget",
+}
+
 export enum Fabrics {
   Global = "pii_global",
   Eu = "pii_eu",

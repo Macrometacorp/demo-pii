@@ -13,7 +13,7 @@ import ErrorComponent from "./components/error";
 import { UserData, UserManagementActionResult } from "~/interfaces";
 import { getAuthTokens } from "~/sessions";
 import {
-  AppPaths,
+  ShareEndpoints,
   Fabrics,
   FormButtonActions,
   Queries,
@@ -22,7 +22,6 @@ import {
 } from "~/constants";
 import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
-import EditModal from "./components/modals/editModal";
 import ShareModal from "./components/modals/shareModal";
 import CommonShareableModal from "./components/modals/commonShareableModal";
 import handleUpdate from "../utilities/REST/handlers/update";
@@ -113,9 +112,9 @@ export default () => {
   const loaderData = useLoaderData();
   const actionData = useActionData();
 
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCommonModal, setShowCommonModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showForgetModal, setShowForgetModal] = useState(false);
+  const [sharedEnpoint, setSharedEndpoint] = useState("");
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -239,27 +238,24 @@ export default () => {
           </button>
           <button
             className="btn btn-outline btn-neutral"
-            onClick={() => setShowEditModal(true)}
+            onClick={() => {
+              setSharedEndpoint(ShareEndpoints.Edit);
+              setShowCommonModal(true);
+            }}
           >
             Edit
           </button>
           <button
             className="btn btn-outline btn-error"
-            onClick={() => setShowForgetModal(true)}
+            onClick={() => {
+              setSharedEndpoint(ShareEndpoints.Forget);
+              setShowCommonModal(true);
+            }}
           >
             Forget
           </button>
         </div>
       </div>
-      {showEditModal && (
-        <CommonShareableModal
-          endpoint={"/edit"}
-          onModalClose={() => {
-            setShowEditModal(false);
-          }}
-          piiToken={loaderData.token}
-        />
-      )}
 
       {showShareModal && (
         <ShareModal
@@ -269,11 +265,11 @@ export default () => {
           }}
         />
       )}
-      {showForgetModal && (
+      {showCommonModal && (
         <CommonShareableModal
-          endpoint={"/forget"}
+          endpoint={sharedEnpoint}
           onModalClose={() => {
-            setShowForgetModal(false);
+            setShowCommonModal(false);
           }}
           piiToken={loaderData.token}
         />
