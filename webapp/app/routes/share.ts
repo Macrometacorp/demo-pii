@@ -13,10 +13,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     const result = await piiGetShareableToken(token?.toString() || "");
     const shareableTokenResult = await result.text();
     const parsedShareableTokenResult = JSON.parse(shareableTokenResult);
-
+    const shareAbleToken= parsedShareableTokenResult.record;
+    const message = `curl -X 'GET' '${protocol}//${host}/details?token=${shareAbleToken}'`;
     return {
-      ...parsedShareableTokenResult,
-      privacy_service_url: `${protocol}//${host}`,
+    message,
+    record:parsedShareableTokenResult.record
     };
   } else {
     const message = `curl -X 'GET' '${protocol}//${host}/details?token=${token}'`;

@@ -43,13 +43,11 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   const getShareableToken = async () => {
     const result = await fetch(`/share?token=${modalUserDetails.token}`);
     const parsed: {
-      status: string;
       record: string;
-      privacy_service_url: string;
+      message: string;
     } = await result.json();
     setShareableToken(parsed.record);
-    let messageToBeSent = `curl -X 'GET' '${parsed.privacy_service_url}/details?token=${parsed.record}'`;
-    setMessage(messageToBeSent);
+    setMessage(parsed.message);
   };
 
   useEffect(() => {
