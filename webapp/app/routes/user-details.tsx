@@ -259,14 +259,6 @@ export default () => {
           }}
           piiToken={loaderData.token}
         />
-        // <EditModal
-        //   modalUserDetails={loaderData}
-        //   onModalClose={() => {
-        //     setShowEditModal(false);
-        //   }}
-        //   shouldDecrypt={false}
-        //   formAction={AppPaths.UserDetails}
-        // />
       )}
 
       {showShareModal && (
