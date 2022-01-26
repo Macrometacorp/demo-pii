@@ -46,6 +46,11 @@ export interface ModalProps {
   onModalClose: () => void;
 }
 
+export type EditModalProps = ModalProps & {
+  formAction: string;
+  shouldDecrypt?: boolean;
+};
+
 export interface AddContactModalProps
   extends Omit<ModalProps, "modalUserDetails"> {}
 

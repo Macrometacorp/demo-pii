@@ -1,16 +1,17 @@
 import { ActionFunction, Form, useActionData } from "remix";
 import { HttpMethods } from "~/constants";
-import { login } from "../sessions";
+import { userLogin } from "../sessions";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password") || "";
+
   if (typeof email !== "string" || typeof password !== "string") {
     throw new Error(`Form not submitted correctly.`);
   }
 
-  return await login(request, email, password);
+  return await userLogin(request, email);
 };
 
 export default function Login() {
@@ -28,9 +29,8 @@ export default function Login() {
               type="email"
               name="email"
               required
-              placeholder="demo@macrometa.io"
+              placeholder="user@macrometa.io"
               className="input input-primary input-bordered"
-              defaultValue="demo@macrometa.io"
             />
           </div>
 

@@ -6,10 +6,15 @@ import {
   HttpMethods,
   ModalPaths,
 } from "~/constants";
-import { ModalProps, UserData } from "~/interfaces";
+import { EditModalProps, UserData } from "~/interfaces";
 import { getModalId, isMMToken } from "~/utilities/utils";
 
-export default ({ modalUserDetails, onModalClose }: ModalProps) => {
+export default ({
+  modalUserDetails,
+  onModalClose,
+  formAction,
+  shouldDecrypt = true,
+}: EditModalProps) => {
   const [decryptData, setDecryptData] = useState({} as UserData);
 
   const handleInput = (inputType: string) => {
@@ -26,7 +31,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
     const { token } = modalUserDetails;
     const isPrivateRecord = !isMMToken(token);
 
-    if (isPrivateRecord) {
+    if (shouldDecrypt && isPrivateRecord) {
       fetch(`/decrypt?token=${token}`)
         .then((response) => {
           return response.text();
@@ -63,11 +68,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   if (Object.keys(decryptData).length) {
     const { country, token } = decryptData as UserData;
     content = (
-      <Form
-        action={AppPaths.UserManagement}
-        method={HttpMethods.Post}
-        reloadDocument
-      >
+      <Form action={formAction} method={HttpMethods.Post} reloadDocument>
         <div className="form-control">
           <label className="label font-semibold">
             <span className="label-text">Name</span>

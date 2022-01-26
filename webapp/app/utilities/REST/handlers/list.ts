@@ -3,13 +3,15 @@ import { LocationData, UserData } from "~/interfaces";
 import { c8ql } from "../mm";
 
 export default async (request: Request) => {
-  const getUsersPromise = c8ql(request, Fabrics.Global, Queries.GetUsers).then(
-    (response) => response.json()
-  );
+  const getUsersPromise = c8ql(
+    request,
+    Fabrics.Global,
+    Queries.GetUsers()
+  ).then((response) => response.json());
   const getLocationsPromise = c8ql(
     request,
     Fabrics.Global,
-    Queries.GetLocations
+    Queries.GetLocations()
   ).then((response) => response.json());
 
   const allResponses = await Promise.all([

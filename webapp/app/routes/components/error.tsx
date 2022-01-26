@@ -9,7 +9,7 @@ export default () => (
           {" "}
           Something unexpected went wrong. Sorry about that.
         </p>
-        <Link to={AppPaths.Login}>
+        <Link to={AppPaths.Root}>
           <button className="btn btn-primary">Please Restart</button>
         </Link>
       </div>
