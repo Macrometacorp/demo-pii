@@ -25,6 +25,7 @@ export enum ModalPaths {
   ShareModal = "#share-modal",
   AddContactModal = "#contact-modal",
   ShowDecryptedModal = "#decrypted-modal",
+  ShowEditForgetModal ="#edit-forget-modal"
 }
 
 export enum ToastTypes {
@@ -43,6 +44,11 @@ export const HEADINGS = [
   "job title",
   "actions",
 ];
+
+export enum ResourceEndpoints {
+  Edit = "/edit",
+  Forget = "/forget",
+}
 
 export enum Fabrics {
   Global = "pii_global",

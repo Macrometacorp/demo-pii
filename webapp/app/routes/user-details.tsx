@@ -13,7 +13,7 @@ import ErrorComponent from "./components/error";
 import { UserData, UserManagementActionResult } from "~/interfaces";
 import { getAuthTokens } from "~/sessions";
 import {
-  AppPaths,
+  ResourceEndpoints,
   Fabrics,
   FormButtonActions,
   Queries,
@@ -22,8 +22,8 @@ import {
 } from "~/constants";
 import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
-import EditModal from "./components/modals/editModal";
 import ShareModal from "./components/modals/shareModal";
+import CommonShareableModal from "./components/modals/commonShareableModal";
 import handleUpdate from "../utilities/REST/handlers/update";
 import Toast from "./components/toast";
 
@@ -112,8 +112,9 @@ export default () => {
   const loaderData = useLoaderData();
   const actionData = useActionData();
 
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCommonModal, setShowCommonModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [sharedEnpoint, setSharedEndpoint] = useState("");
 
   let toastType = ToastTypes.Info;
   let toastMessage = "";
@@ -135,7 +136,7 @@ export default () => {
     loaderData as UserData;
 
   return (
-    <div className="card text-center shadow-lg max-w-lg mx-auto mt-10 hover:shadow-2xl">
+    <div className="card  shadow-lg max-w-lg mx-auto mt-10 hover:shadow-2xl">
       <div className="card-body">
         <div className="form-control">
           <label className="label font-semibold">
@@ -231,28 +232,30 @@ export default () => {
           <button
             className="btn btn-outline btn-primary"
             disabled={!loaderData.isPrivateRecord}
+            onClick={() => setShowShareModal(true)}
           >
             Share
           </button>
           <button
             className="btn btn-outline btn-neutral"
-            onClick={() => setShowEditModal(true)}
+            onClick={() => {
+              setSharedEndpoint(ResourceEndpoints.Edit);
+              setShowCommonModal(true);
+            }}
           >
             Edit
           </button>
-          <button className="btn btn-outline btn-error">Forget</button>
+          <button
+            className="btn btn-outline btn-error"
+            onClick={() => {
+              setSharedEndpoint(ResourceEndpoints.Forget);
+              setShowCommonModal(true);
+            }}
+          >
+            Forget
+          </button>
         </div>
       </div>
-      {showEditModal && (
-        <EditModal
-          modalUserDetails={loaderData}
-          onModalClose={() => {
-            setShowEditModal(false);
-          }}
-          shouldDecrypt={false}
-          formAction={AppPaths.UserDetails}
-        />
-      )}
 
       {showShareModal && (
         <ShareModal
@@ -260,6 +263,15 @@ export default () => {
           onModalClose={() => {
             setShowShareModal(false);
           }}
+        />
+      )}
+      {showCommonModal && (
+        <CommonShareableModal
+          endpoint={sharedEnpoint}
+          onModalClose={() => {
+            setShowCommonModal(false);
+          }}
+          piiToken={loaderData.token}
         />
       )}
       {actionData && <Toast toastType={toastType} message={toastMessage} />}

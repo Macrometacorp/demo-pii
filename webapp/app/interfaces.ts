@@ -46,6 +46,12 @@ export interface ModalProps {
   onModalClose: () => void;
 }
 
+export interface CommonShareModalProps {
+  endpoint: string;
+  onModalClose: () => void;
+  piiToken: string;
+}
+
 export type EditModalProps = ModalProps & {
   formAction: string;
   shouldDecrypt?: boolean;
