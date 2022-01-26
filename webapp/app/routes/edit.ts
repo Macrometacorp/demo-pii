@@ -14,7 +14,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const payload = await request.json();
   const { name, email, phone, state, zipcode, job_title } = payload;
-  
+
   const formData = new FormData();
   formData.set("token", token);
   name && formData.set("name", name);
@@ -28,6 +28,16 @@ export const action: ActionFunction = async ({ request }) => {
   return json(res, res.error ? 500 : 200);
 };
 
-export const loader: LoaderFunction = async () => {
-  return json({ message: "Method not allowed" }, 405);
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const { host, protocol } = url;
+  let piiToken = url.searchParams.get(Session.PiiToken);
+
+  if (!piiToken) {
+    return json({ message: "PII token not present." }, 400);
+  }
+
+  const curl = `curl -XPUT -H 'pii-token: ${piiToken}' '${protocol}//${host}/edit' -d '{json}'`;
+
+  return json({ message: curl }, 200);
 };
