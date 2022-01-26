@@ -48,7 +48,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
       privacy_service_url: string;
     } = await result.json();
     setShareableToken(parsed.record);
-    let messageToBeSent = `curl --location --request GET ${parsed.privacy_service_url}/v1/get/${parsed.record}`;
+    let messageToBeSent = `curl -X 'GET' '${parsed.privacy_service_url}/details?token=${parsed.record}'`;
     setMessage(messageToBeSent);
   };
 

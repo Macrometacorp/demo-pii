@@ -7,6 +7,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const {
     query: { token, phoneNumber = "" },
   } = queryString.parseUrl(request.url);
+  const url = new URL(request.url);
+  const { host, protocol } = url;
   if (!phoneNumber) {
     const result = await piiGetShareableToken(token?.toString() || "");
     const shareableTokenResult = await result.text();
@@ -14,10 +16,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return {
       ...parsedShareableTokenResult,
-      privacy_service_url: PRIVACY_SERVICE_URL,
+      privacy_service_url: `${protocol}//${host}`,
     };
   } else {
-    const message = `curl --location --request GET ${PRIVACY_SERVICE_URL}/v1/get/${token}`;
+    const message = `curl -X 'GET' '${protocol}//${host}/details?token=${token}'`;
     const RECIPIENT = `+${phoneNumber?.toString()}`;
     let encoded = new URLSearchParams();
     encoded.append("To", RECIPIENT);
