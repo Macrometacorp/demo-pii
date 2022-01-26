@@ -4,7 +4,7 @@ import handleUpdate from "../utilities/REST/handlers/update";
 
 export const action: ActionFunction = async ({ request }) => {
   const { method } = request;
-  if (method.toLowerCase() !== HttpMethods.Post) {
+  if (method.toLowerCase() !== HttpMethods.Put) {
     return json({ message: "Method not allowed" }, 405);
   }
   const token = request.headers.get(Session.PiiToken) || "";
