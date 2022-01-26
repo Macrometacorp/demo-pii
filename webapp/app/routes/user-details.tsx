@@ -69,7 +69,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     : c8ql(
         request,
         Fabrics.Global,
-        Queries.SearchUserByToken,
+        Queries.SearchUserByToken(),
         {
           token: piiToken,
         },
@@ -79,7 +79,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const locationPromise = c8ql(
     request,
     Fabrics.Global,
-    Queries.SearchLocationByToken,
+    Queries.SearchLocationByToken(),
     { token: piiToken },
     true
   ).then((response) => response.json());

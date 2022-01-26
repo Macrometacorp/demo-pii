@@ -1,7 +1,7 @@
 export enum Session {
   Jwt = "jwt",
   Tenant = "tenant",
-  PiiToken = "piiToken",
+  PiiToken = "pii-token",
 }
 
 export enum SessionStorage {
@@ -64,19 +64,35 @@ export const SHAREABLE_CURL_COMMAND_MESSAGE =
   "Loading Shareable Curl Command...";
 
 export const Queries = {
-  GetUsers: `FOR doc IN ${Collections.Users} RETURN doc`,
-  GetLocations: `FOR doc in ${Collections.UserLocations} RETURN doc`,
-  UpsertUser: `UPSERT { _key: @token }
-  INSERT { _key: @token, token: @token, name: @name, email: @email, phone: @phone }
-  UPDATE { name: @name, email: @email, phone: @phone } IN ${Collections.Users}`,
-  UpsertLocation: `UPSERT { _key: @token }
-  INSERT { _key: @token, token: @token, state: @state, country: @country, zipcode: @zipcode, job_title: @job_title }
-  UPDATE { state: @state, country: @country, zipcode: @zipcode, job_title: @job_title } IN ${Collections.UserLocations}`,
-  SearchUserByEmail: `FOR user IN ${Collections.Users} FILTER user.email == @email RETURN user`,
-  SearchUserByToken: `FOR user IN ${Collections.Users} FILTER user._key == @token RETURN user`,
-  SearchLocationByToken: `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
-  DeleteUser: `REMOVE { _key: @token } IN ${Collections.Users}`,
-  DeleteLocation: `REMOVE { _key: @token } IN ${Collections.UserLocations}`,
+  GetUsers: () => `FOR doc IN ${Collections.Users} RETURN doc`,
+
+  GetLocations: () => `FOR doc in ${Collections.UserLocations} RETURN doc`,
+
+  InsertUser: () =>
+    `INSERT { _key: @token, token: @token, name: @name, email: @email, phone: @phone } INTO ${Collections.Users}`,
+
+  UpdateUser: (updateWhat: string) =>
+    `FOR user IN ${Collections.Users} UPDATE { _key: @token, ${updateWhat} } IN ${Collections.Users}`,
+
+  InsertLocation: () =>
+    `INSERT { _key: @token, token: @token, state: @state, country: @country, zipcode: @zipcode, job_title: @job_title } INTO ${Collections.UserLocations}`,
+
+  UpdateLocation: (updateWhat: string) =>
+    `FOR loc in ${Collections.UserLocations} UPDATE { _key: @token, ${updateWhat} } IN ${Collections.UserLocations}`,
+
+  SearchUserByEmail: () =>
+    `FOR user IN ${Collections.Users} FILTER user.email == @email RETURN user`,
+
+  SearchUserByToken: () =>
+    `FOR user IN ${Collections.Users} FILTER user._key == @token RETURN user`,
+
+  SearchLocationByToken: () =>
+    `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
+
+  DeleteUser: () => `REMOVE { _key: @token } IN ${Collections.Users}`,
+
+  DeleteLocation: () =>
+    `REMOVE { _key: @token } IN ${Collections.UserLocations}`,
 };
 
 export enum ActionButtons {

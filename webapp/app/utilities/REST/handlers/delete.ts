@@ -16,11 +16,11 @@ export default async (request: Request, form: FormData) => {
       // error if expected format is not received
       JSON.parse(resText);
     } else {
-      await c8ql(request, Fabrics.Global, Queries.DeleteUser, {
+      await c8ql(request, Fabrics.Global, Queries.DeleteUser(), {
         token,
       });
     }
-    await c8ql(request, Fabrics.Global, Queries.DeleteLocation, {
+    await c8ql(request, Fabrics.Global, Queries.DeleteLocation(), {
       token,
     });
     return { isPrivate };
