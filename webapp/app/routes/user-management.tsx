@@ -111,23 +111,40 @@ export default () => {
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [modalUserDetails, setModalUserDetails] = useState({} as UserData);
+  const [showToast, setShowToast] = useState(false);
+  const [toastType, setToastType] = useState(ToastTypes.Info);
+  const [toastMessage, setToastMessage] = useState("");
 
-  let toastType = ToastTypes.Info;
-  let toastMessage = "";
-  if (actionData) {
-    const { error, isPrivate } = actionData;
-    toastType = error
-      ? ToastTypes.Error
-      : isPrivate
-      ? ToastTypes.Info
-      : ToastTypes.Success;
+  useEffect(() => {
+    setTimeout(() => {
+      setShowToast(false);
+      setToastType(ToastTypes.Info);
+      setToastMessage("");
+    }, 3000);
+  }, [showToast]);
 
-    toastMessage = error
-      ? `${error.name}: ${error.errorMessage}`
-      : isPrivate
-      ? "Your new record will reflect shortly"
-      : "New record added successfully";
-  }
+  useEffect(() => {
+    if (actionData) {
+      console.log("actionData", actionData);
+
+      const { error, isPrivate } = actionData;
+      let toastType = error
+        ? ToastTypes.Error
+        : isPrivate
+        ? ToastTypes.Info
+        : ToastTypes.Success;
+
+      let toastMessage = error
+        ? `${error.name}: ${error.errorMessage}`
+        : isPrivate
+        ? "Your new record will reflect shortly"
+        : "New record added successfully";
+      setShowToast(true);
+      setToastType(toastType);
+      setToastMessage(toastMessage);
+    }
+  }, [actionData]);
+
   useEffect(() => {
     setIsPrivateRegion(
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
@@ -237,7 +254,13 @@ export default () => {
         )}
       {transition.state === "submitting" && <ProgressModal />}
 
-      {actionData && <Toast toastType={toastType} message={toastMessage} />}
+      {actionData && (
+        <Toast
+          toastType={toastType}
+          message={toastMessage}
+          showToast={showToast}
+        />
+      )}
     </div>
   );
 };

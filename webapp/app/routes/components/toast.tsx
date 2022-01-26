@@ -1,37 +1,46 @@
-import { useState } from "react";
 import { ToastTypes } from "~/constants";
 
 export default ({
   toastType,
   message,
+  showToast,
 }: {
   toastType: ToastTypes;
   message: string;
+  showToast: boolean;
 }) => {
-  const [show, setShow] = useState(true);
 
-  let classes = "alert fixed bottom-10 right-10 left-10";
+  let classes = "";
   switch (toastType) {
     case ToastTypes.Success:
-      classes += " alert-success";
+      classes += "bg-green-500 ";
       break;
     case ToastTypes.Error:
-      classes += " alert-error";
+      classes += "bg-red-600 ";
       break;
     default:
-      classes += " alert-info";
+      classes += "bg-yellow-500 ";
   }
+
   return (
-    <div className={`${classes} ${show ? "" : "hidden"}`}>
-      <strong>{toastType}</strong> {message}
-      <button
-        className="btn btn-ghost btn-sm"
-        onClick={() => {
-          setShow(false);
-        }}
-      >
-        &times;
-      </button>
-    </div>
+    <>
+      {showToast ? (
+        <div className="flex flex-col justify-center absolute left-0 right-0 bottom-5">
+          <div
+            className={`${classes} shadow-lg mx-auto w-96 max-w-full text-sm pointer-events-auto bg-clip-padding rounded-lg block mb-3`}
+            id="static-example"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div
+              className={`p-3 ${classes} rounded-b-lg break-words text-white`}
+            >
+              {message}
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 };
