@@ -120,14 +120,13 @@ export default () => {
       setShowToast(false);
       setToastType(ToastTypes.Info);
       setToastMessage("");
-    }, 3000);
+    }, 2000);
   }, [showToast]);
 
   useEffect(() => {
     if (actionData) {
-      console.log("actionData", actionData);
+      const { error, isPrivate, isDeleted, isUpdated, isAdded } = actionData;
 
-      const { error, isPrivate } = actionData;
       let toastType = error
         ? ToastTypes.Error
         : isPrivate
@@ -136,9 +135,18 @@ export default () => {
 
       let toastMessage = error
         ? `${error.name}: ${error.errorMessage}`
-        : isPrivate
+        : isPrivate && isAdded
         ? "Your new record will reflect shortly"
-        : "New record added successfully";
+        : isPrivate && isUpdated
+        ? "Your record is updated and will reflect shortly"
+        : isPrivate && isDeleted
+        ? "Your record is deleted and will reflect shortly"
+        : isAdded
+        ? "New record added successfully"
+        : isUpdated
+        ? "Record updated successfully"
+        : "Record deleted successfully";
+
       setShowToast(true);
       setToastType(toastType);
       setToastMessage(toastMessage);
@@ -150,6 +158,10 @@ export default () => {
       sessionStorage.getItem(SessionStorage.IsPrivateRegion) || ""
     );
   }, []);
+
+  const closeToast =()=>{
+    setShowToast(false)
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -259,6 +271,7 @@ export default () => {
           toastType={toastType}
           message={toastMessage}
           showToast={showToast}
+          closeToast={closeToast}
         />
       )}
     </div>

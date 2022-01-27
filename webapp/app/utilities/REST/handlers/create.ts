@@ -39,7 +39,7 @@ export default async (request: Request, form: FormData) => {
       zipcode,
       job_title,
     });
-    return { isPrivate };
+    return { isPrivate, isAdded: true };
   } catch (error: any) {
     return { error: true, errorMessage: error?.message, name: error?.name };
   }

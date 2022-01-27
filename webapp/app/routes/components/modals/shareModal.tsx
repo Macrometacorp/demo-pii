@@ -3,7 +3,6 @@ import { getModalId } from "~/utilities/utils";
 import { useEffect, useState } from "react";
 import { ModalProps, UserData } from "~/interfaces";
 
-const SHARE_FORM_ID = "share_form";
 export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   const [decryptData, setDecryptData] = useState({} as UserData);
   const [message, setMessage] = useState("");

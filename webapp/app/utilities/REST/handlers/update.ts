@@ -88,7 +88,7 @@ export default async (
       }
     }
 
-    return { isPrivate };
+    return { isPrivate, isUpdated: true };
   } catch (error: any) {
     return {
       error: true,
