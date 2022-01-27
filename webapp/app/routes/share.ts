@@ -13,11 +13,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     const result = await piiGetShareableToken(token?.toString() || "");
     const shareableTokenResult = await result.text();
     const parsedShareableTokenResult = JSON.parse(shareableTokenResult);
-    const shareAbleToken= parsedShareableTokenResult.record;
+    const shareAbleToken = parsedShareableTokenResult.record;
     const message = `curl -X 'GET' '${protocol}//${host}/details?token=${shareAbleToken}'`;
     return {
-    message,
-    record:parsedShareableTokenResult.record
+      message,
+      record: parsedShareableTokenResult.record,
     };
   } else {
     const message = `curl -X 'GET' '${protocol}//${host}/details?token=${token}'`;
@@ -26,8 +26,15 @@ export const loader: LoaderFunction = async ({ request }) => {
     encoded.append("To", RECIPIENT);
     encoded.append("From", TWILIO_NUMBER);
     encoded.append("Body", message);
-    let result = await sendMessage(encoded);
-    result = await result.json();
-    return result;
+    try {
+      let result = await sendMessage(encoded);
+      result = await result.json();
+      return {
+        ...result,
+        isSend: true,
+      };
+    } catch (error: any) {
+      return { sendError: true, errorMessage: error?.message, name: error?.name };
+    }
   }
 };

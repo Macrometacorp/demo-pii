@@ -45,7 +45,7 @@ export default async (
     if (locationRes?.error) {
       throw new Error(JSON.stringify(locationRes));
     }
-    return { isPrivate };
+    return { isPrivate, isDeleted: true };
   } catch (error: any) {
     return { error: true, errorMessage: error?.message, name: error?.name };
   }
