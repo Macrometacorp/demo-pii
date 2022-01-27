@@ -1,56 +1,15 @@
-import { useEffect, useState } from "react";
-import {
-  ActionFunction,
-  //   ActionFunction,
-  LoaderFunction,
-  useActionData,
-  //   useActionData,
-  useCatch,
-  useLoaderData,
-} from "remix";
+import { useState } from "react";
+import { LoaderFunction, useCatch, useLoaderData } from "remix";
 import Unauthorized from "./components/unauthorized";
 import ErrorComponent from "./components/error";
-import { UserData, UserManagementActionResult } from "~/interfaces";
+import { UserData } from "~/interfaces";
 import { getAuthTokens } from "~/sessions";
-import {
-  ResourceEndpoints,
-  Fabrics,
-  FormButtonActions,
-  Queries,
-  Session,
-  ToastTypes,
-} from "~/constants";
+import { ResourceEndpoints, Fabrics, Queries, Session } from "~/constants";
 import { isLoggedIn, isMMToken } from "~/utilities/utils";
 import { c8ql } from "~/utilities/REST/mm";
 import ShareModal from "./components/modals/shareModal";
 import CommonShareableModal from "./components/modals/commonShareableModal";
-import handleUpdate from "../utilities/REST/handlers/update";
-import Toast from "./components/toast";
-
-export const action: ActionFunction = async ({
-  request,
-}): Promise<UserManagementActionResult> => {
-  const form = await request.formData();
-  const actionType = form.get(FormButtonActions.Name)?.toString() ?? "";
-
-  let result;
-  switch (actionType) {
-    case FormButtonActions.Update:
-      result = await handleUpdate(request, form, true);
-      break;
-    // case FormButtonActions.Delete:
-    //   result = await handleDelete(request, form);
-    //   break;
-    default:
-      result = {
-        error: true,
-        name: "Form action",
-        errorMessage: "Unhandled form action",
-      };
-  }
-
-  return result;
-};
+import { piiGetUserByToken } from "~/utilities/REST/pii";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { [Session.PiiToken]: piiToken } = await getAuthTokens(request);
@@ -60,12 +19,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const isPrivateRecord = !isMMToken(piiToken);
 
-  const url = new URL(request.url);
-  const { host, protocol } = url;
   const piiPromise = isPrivateRecord
-    ? fetch(`${protocol}//${host}/decrypt?token=${piiToken}`).then((response) =>
-        response.text()
-      )
+    ? piiGetUserByToken(piiToken)
+        .then((response) => {
+          return response.text();
+        })
+        .catch((err) => {
+          console.error(err.message);
+          return { error: true, message: err.message };
+        })
     : c8ql(
         request,
         Fabrics.Global,
@@ -89,49 +51,39 @@ export const loader: LoaderFunction = async ({ request }) => {
     locationPromise,
   ]);
 
-  const parsedPiiResponse = isPrivateRecord
-    ? JSON.parse(piiResponse)?.data
-    : piiResponse?.result?.[0];
-  const { state, country, zipcode, job_title } = locationResponse?.result?.[0];
-  const { login, email, phone, name } = parsedPiiResponse;
-  const decryptedData = {
-    name: isPrivateRecord ? login : name,
-    email,
-    phone,
-    state,
-    country,
-    zipcode,
-    job_title,
-    token: piiToken,
-    isPrivateRecord,
-  };
-  return decryptedData;
+  try {
+    const parsedPiiResponse = isPrivateRecord
+      ? JSON.parse(piiResponse)?.data
+      : piiResponse?.result?.[0];
+    const { state, country, zipcode, job_title } =
+      locationResponse?.result?.[0];
+    const { login, email, phone, name } = parsedPiiResponse;
+    const decryptedData = {
+      name: isPrivateRecord ? login : name,
+      email,
+      phone,
+      state,
+      country,
+      zipcode,
+      job_title,
+      token: piiToken,
+      isPrivateRecord,
+    };
+    return decryptedData;
+  } catch (error: any) {
+    console.error(error.message);
+    console.error(error.name);
+  }
+  return {};
 };
 
 export default () => {
   const loaderData = useLoaderData();
-  const actionData = useActionData();
 
   const [showCommonModal, setShowCommonModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [sharedEnpoint, setSharedEndpoint] = useState("");
 
-  let toastType = ToastTypes.Info;
-  let toastMessage = "";
-  if (actionData) {
-    const { error, isPrivate } = actionData;
-    toastType = error
-      ? ToastTypes.Error
-      : isPrivate
-      ? ToastTypes.Info
-      : ToastTypes.Success;
-
-    toastMessage = error
-      ? `${error.name}: ${error.errorMessage}`
-      : isPrivate
-      ? "Your new record will reflect shortly"
-      : "New record added successfully";
-  }
   const { name, email, phone, state, country, zipcode, job_title } =
     loaderData as UserData;
 
@@ -274,7 +226,6 @@ export default () => {
           piiToken={loaderData.token}
         />
       )}
-      {actionData && <Toast toastType={toastType} message={toastMessage} />}
     </div>
   );
 };
