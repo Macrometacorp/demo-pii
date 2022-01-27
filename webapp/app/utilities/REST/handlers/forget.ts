@@ -1,7 +1,7 @@
 import { Fabrics, Queries } from "~/constants";
 import { isMMToken } from "~/utilities/utils";
 import { c8ql } from "../mm";
-import { piiDeleteUser } from "../pii";
+import { piiDeleteUser, piiForgetUser } from "../pii";
 
 export default async (
   request: Request,
@@ -11,13 +11,16 @@ export default async (
   const token = form.get("token")?.toString() ?? "";
 
   const isPrivate = !isMMToken(token);
+  let exptoken;
   try {
     if (isPrivate) {
-      const resText = await piiDeleteUser(token).then((response) =>
+      const resText = await piiForgetUser(token).then((response) =>
         response.text()
       );
       // error if expected format is not received
-      JSON.parse(resText);
+      console.log(resText);
+      const res = JSON.parse(resText);
+      exptoken = res.exptoken;
     } else {
       const userRes = await c8ql(
         request,
@@ -45,7 +48,15 @@ export default async (
     if (locationRes?.error) {
       throw new Error(JSON.stringify(locationRes));
     }
-    return { isPrivate };
+    const finalResp: {
+      isPrivate: boolean;
+      exptoken?: string;
+      error?: boolean;
+    } = { isPrivate };
+    if (exptoken) {
+      finalResp.exptoken = exptoken;
+    }
+    return finalResp;
   } catch (error: any) {
     return { error: true, errorMessage: error?.message, name: error?.name };
   }

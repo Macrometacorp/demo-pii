@@ -14,7 +14,7 @@ export const piiGetUserByToken = (token: string) =>
     },
   });
 
-  export const piiGetShareableRecord = (token: string) =>
+export const piiGetShareableRecord = (token: string) =>
   fetch(`${PRIVACY_SERVICE_URL}/v1/get/${token}`, {
     method: "GET",
   });
@@ -72,5 +72,14 @@ export const piiDeleteUser = (token: string) =>
     headers: {
       "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
       "Content-Type": "application/json",
+    },
+  });
+
+export const piiForgetUser = (token: string) =>
+  fetch(`${PRIVACY_SERVICE_URL}/v1/exp/start/token/${token}`, {
+    method: "POST",
+    body: JSON.stringify({ expiration: "5s" }),
+    headers: {
+      "X-Bunker-Token": DATABUNKER_ROOTTOKEN,
     },
   });
