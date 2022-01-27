@@ -164,7 +164,7 @@ export default () => {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div>
       <table className="table w-full">
         <thead>
           <tr>
