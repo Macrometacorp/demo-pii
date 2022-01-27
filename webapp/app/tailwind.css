@@ -1395,11 +1395,24 @@ html {
   border-color: hsla(var(--in) / var(--tw-border-opacity, 1));
 }
 
+.btn-success {
+  --tw-bg-opacity: 1;
+  background-color: hsla(var(--su) / var(--tw-bg-opacity, 1));
+  --tw-border-opacity: 1;
+  border-color: hsla(var(--su) / var(--tw-border-opacity, 1));
+  --tw-text-opacity: 1;
+  color: hsla(var(--b2) / var(--tw-text-opacity, 1));
+}
+
 .btn-success.btn-active,.btn-success:hover {
   --tw-bg-opacity: 1;
   background-color: hsla(var(--su) / var(--tw-bg-opacity, 1));
   --tw-border-opacity: 1;
   border-color: hsla(var(--su) / var(--tw-border-opacity, 1));
+}
+
+.btn-success:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--su));
 }
 
 .btn-warning.btn-active,.btn-warning:hover {
@@ -1706,6 +1719,10 @@ html {
 
 .drawer-toggle:focus-visible~.drawer-content .drawer-button.btn-primary {
   box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--p));
+}
+
+.drawer-toggle:focus-visible~.drawer-content .drawer-button.btn-success {
+  box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--su));
 }
 
 .drawer-toggle:focus-visible~.drawer-content .drawer-button.btn-error {
