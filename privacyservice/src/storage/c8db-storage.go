@@ -1092,14 +1092,16 @@ func (dbobj C8DB) GetExpiring(t Tbl, keyName string, keyValue string) ([]bson.M,
 
 	var results []bson.M
 
-	recBson := bson.M{}
-	for key, element := range resultObject[0].(map[string]interface{}) {
-		if key == "_id" || key == "_key" || key == "_rev" {
-			continue
+	for _, object := range(resultObject) {
+		recBson := bson.M{}
+		for key, element := range object.(map[string]interface{}) {
+			if key == "_id" || key == "_key" || key == "_rev" {
+				continue
+			}
+			recBson[key] = element
 		}
-		recBson[key] = element
+		results = append(results, recBson)
 	}
-	results = append(results, recBson)
 
 	return results, nil
 
