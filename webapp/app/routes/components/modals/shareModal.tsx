@@ -9,6 +9,7 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [shareableToken, setShareableToken] = useState("");
   const [copiedToClipboard, setcopiedToClipboard] = useState(false);
+  const [isMessageSent, setIsMessageSent] = useState(false)
 
   const decryptToken = async () => {
     try {
@@ -56,14 +57,13 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
   const sendMessage = async () => {
     if (decryptData && shareableToken) {
       setSendingMessage(true);
+      setIsMessageSent(false);
       const result = await fetch(
         `/share?token=${shareableToken}&phoneNumber=${decryptData.phone}`
       );
       const sendMessageResult = await result.json();
       setSendingMessage(false);
-      if (sendMessageResult.sid) {
-        onModalClose();
-      }
+      setIsMessageSent(true);
     }
   };
   const copyToClipboard = (text: string | null) => {
@@ -103,16 +103,15 @@ export default ({ modalUserDetails, onModalClose }: ModalProps) => {
 
           <div className="modal-action">
             <button
-              className="btn btn-primary"
+              className={isMessageSent?"btn btn-success":"btn btn-primary"}
               onClick={() => {
                 sendMessage();
               }}
             >
-              {sendingMessage ? `Sending Message ...` : "Send Message"}
+              {sendingMessage ? `Sending Message ...` :isMessageSent? 'Message Sent': "Send Message"}
             </button>
             <button
-              className="btn btn-neutral"
-              disabled={copiedToClipboard}
+              className={!copiedToClipboard?"btn btn-neutral":"btn btn-success"}
               onClick={() => {
                 copyToClipboard(message);
               }}
