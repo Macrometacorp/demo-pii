@@ -27,121 +27,130 @@ The user flow is where a user logs in using his decrypted email address and sees
 
 ### Macrometa GDN setup
 
-
-##STREAM WORKERS
+## STREAM WORKERS
 
 1. Create and publish the following Stream Workers in your federation:
 
-Refer to the following links to add content for each Stream worker:
+    Refer to the following links to add content for each Stream worker:
 
-* **[DataAnonymizer](stream-apps/DataAnonymizer.md)**
-* **[DataAnonymizerUpdate](stream-apps/DataAnonymizerUpdate.md)**
+    * **[DataAnonymizer](stream-apps/DataAnonymizer.md)**
+    * **[DataAnonymizerUpdate](stream-apps/DataAnonymizerUpdate.md)**
 
 2. Create the following Queries  in your federation:
 
-## Queries
+    **GetUsers**
 
+    ```js
+    FOR doc IN users RETURN doc,
+    ```
 
-  **GetUsers** 
+    **GetLocations**
 
-  ```js 
-  FOR doc IN users RETURN doc,
-  ```
+    ```js
+    FOR doc in user_locations RETURN doc
+    ```
 
-  **GetLocations** 
-  
-  ```js
-  FOR doc in user_locations RETURN doc
-  ```
-
-  **InsertUser**
+    **InsertUser**
 
     ```js
     INSERT { _key: @token, token: @token, name: @name, email: @email, phone: @phone } INTO users
     ```
 
-  **UpdateUser**
+    **UpdateUser**
 
     ```js
     FOR user IN users UPDATE { _key: @token, ${updateWhat} } IN users
     ```
 
-  **InsertLocation**
+    **InsertLocation**
 
     ```js
     INSERT { _key: @token, token: @token, state: @state, country: @country, zipcode: @zipcode, job_title: @job_title } INTO user_locations
     ```
 
-  **UpdateLocation**
+    **UpdateLocation**
 
     ```js
     FOR loc in user_locations UPDATE { _key: @token, ${updateWhat} } IN user_locations
     ```
 
-  **SearchUserByEmail**
+    **SearchUserByEmail**
 
     ```js
     FOR user IN users FILTER user.email == @email RETURN user
     ```
 
-  **SearchUserByToken**
+    **SearchUserByToken**
 
     ```js
     FOR user IN users FILTER user._key == @token RETURN user
     ```
 
-  **SearchLocationByToken**
+    **SearchLocationByToken**
 
     ```js
     FOR location IN user_locations FILTER location.token == @token RETURN location
     ```
 
-  **DeleteUser** 
-  ```js
-  REMOVE { _key: @token } IN users
-  ```
+    **DeleteUser**
 
-  **DeleteLocation**
+    ```js
+    REMOVE { _key: @token } IN users
+    ```
 
-  ```js
-   REMOVE { _key: @token } IN user_locations
-   ```
+    **DeleteLocation**
 
+    ```js
+    REMOVE { _key: @token } IN user_locations
+    ```
 
 3. Create the following collections in your federation:
 
-
-| **Collection**     | **Fabric**                           |     **UserCreated**   |
-| ----------------   | ------------------------------------ |-----------------------|
-| pii_users          |  `pii_eu`                            |     YES               |
-| users              |  `pii_global`                        |     YES               |
-| user_locations     |  `pii_global`                        |     YES               |
-| agreements         |   `pii_eu`                           |     NO                |
-| audit              |  `pii_eu`                            |     NO                |
-| legalbasis         |  `pii_eu`                            |     NO                |
-| processingactivites|  `pii_eu`                            |     NO                |
-| requests           |  `pii_eu`                            |     NO                |
-| sessions           |  `pii_eu`                            |     NO                |
-| sharedrecords      |  `pii_eu`                            |     NO                |
-| userapps           |  `pii_eu`                            |     NO                |
-| xtokens            |  `pii_eu`                            |     NO                |
-
-
+    | **Collection**     | **Fabric**                           |     **UserCreated**   |
+    | ----------------   | ------------------------------------ |-----------------------|
+    | users              |  `pii_global`                        |     YES               |
+    | user_locations     |  `pii_global`                        |     YES               |
 
 4. On the development machine, run the following commands in a console:
 
-```
-1. git clone git@github.com:Macrometacorp/demo-pii
-2. cd demo-pii
-3. git fetch
-4. npm install
-5. npm run dev (to start the UI)
-6. npm start (to start the miniflare)
-```
-
-
+    ```
+    1. git clone git@github.com:Macrometacorp/demo-pii
+    2. cd demo-pii
+    3. git fetch
+    4. npm install
+    5. npm run dev (to start the UI)
+    6. npm start (to start the miniflare)
+    ```
 
 # Project setup
+
+## Privacy Service Setup
+
+```
+In the demo-pii repo
+1. cd demo-pii/privacyservice
+2. Change the following three variables in the initdb.sh file:
+   a. MMURL=<GDN REST API url to the European fabric>
+   b. MMAPIKEY=<The GDN API KEY>
+   c. MMFABRIC=<The European fabric name>
+   d. DATABUNKER_MASTER=<the master encryption key>
+   e. DATABUNKER_ROOTTOKEN<the root token>
+
+   DATABUNKER_MASTER can be generated using this command:
+      < /dev/urandom LC_CTYPE=C tr -dc 'a-f0-9' | head -c${1:-48}
+   DATABIMLER_ROOTTOKEN can be generated using this command:
+      uuidgen
+3. Execute the initdb.sh script (this creates all the collections in the European fabric)
+4. Edit the Dockerfile and change the following environment variables with the variables created in step #2
+   a. DATABUNKER_MASTER
+   b. MMURL
+   c. MMAPIKEY
+   d. MMFABRIC
+5. Build the docker image:
+   docker build -t demo-pii .
+6. Start the privacy service docker image:
+   docker run -d --restart on-failure -p 3000:3000 demo-pii
+```
 
 ## Setup Twilio for text message
 
@@ -155,7 +164,6 @@ Refer to the following links to add content for each Stream worker:
 8. After successfull sign up you will get `ACCOUNT SID` and `AUTH TOKEN` which is to be used to send message programmatically.
 9. Visit this link for more information https://www.twilio.com/docs/sms/send-messages
  
-
 ## Installing workers CLI
 
 There are multiple ways to install the workers CLI. Official docs say it to install via [npm](https://developers.cloudflare.com/workers/learning/getting-started#2-install-the-workers-cli) or [cargo](https://github.com/cloudflare/wrangler#install-with-cargo).
@@ -199,4 +207,3 @@ If there are changes to the UI code then first run `npm run dev` to make the UI 
 ## Publishing
 
 Run `wrangler publish` and it will deploy your worker along with the static files used by the UI.
-
