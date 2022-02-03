@@ -8,7 +8,6 @@ import {
   SessionStorage,
 } from "~/constants";
 import { useEffect, useState } from "react";
-import SearchSVG from "../components/svgs/search";
 import ContactSVG from "../components/svgs/contact";
 import UploadSVG from "../components/svgs/upload";
 

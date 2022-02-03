@@ -93,13 +93,14 @@ export default () => {
   const actionData = useActionData();
   const allUserData = useLoaderData();
   const transition = useTransition();
+
   const userData = allUserData.filter((user: UserData) => !!user?.name?.trim());
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [contactsPerPage] = useState(CONTACTS_PER_PAGE);
-  const indexOfLastContact = currentPage * contactsPerPage;
-  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+
+  const indexOfLastContact = currentPage * CONTACTS_PER_PAGE;
+  const indexOfFirstContact = indexOfLastContact - CONTACTS_PER_PAGE;
   const currentContacts = userData.slice(
     indexOfFirstContact,
     indexOfLastContact
@@ -114,6 +115,13 @@ export default () => {
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState(ToastTypes.Info);
   const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    // to reset page when using search
+    if (userData.length < CONTACTS_PER_PAGE) {
+      setCurrentPage(1);
+    }
+  }, [userData.length]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -159,9 +167,9 @@ export default () => {
     );
   }, []);
 
-  const closeToast =()=>{
-    setShowToast(false)
-  }
+  const closeToast = () => {
+    setShowToast(false);
+  };
 
   return (
     <div>
@@ -258,7 +266,7 @@ export default () => {
         transition.state !== "loading" &&
         currentContacts.length > 0 && (
           <Pagination
-            contactsPerPage={contactsPerPage}
+            contactsPerPage={CONTACTS_PER_PAGE}
             totalContacts={userData.length}
             paginate={paginate}
             currentPage={currentPage}
