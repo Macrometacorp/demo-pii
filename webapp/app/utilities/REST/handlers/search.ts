@@ -1,5 +1,6 @@
 import { Fabrics, Queries } from "~/constants";
 import { LocationData, PiiData, UserData } from "~/interfaces";
+import { isMMToken } from "~/utilities/utils";
 import { c8ql } from "../mm";
 import { piiSearchByEmail } from "../pii";
 
@@ -31,8 +32,14 @@ export const searchForEmail = async (
       },
       isApiKey
     ).then((response) => response.json());
-    user = c8Res?.result?.[0];
-    token = user?.token as string;
+    const c8User = c8Res?.result?.[0];
+    const c8Token = c8User?.token as string;
+
+    // this should be a non-encrypted user
+    if (isMMToken(c8Token)) {
+      user = c8User;
+      token = c8Token;
+    }
   }
   return { token, user };
 };
