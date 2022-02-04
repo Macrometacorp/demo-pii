@@ -36,7 +36,7 @@ export const searchForEmail = async (
     const c8Token = c8User?.token as string;
 
     // this should be a non-encrypted user
-    if (isMMToken(c8Token)) {
+    if (c8Token && isMMToken(c8Token)) {
       user = c8User;
       token = c8Token;
     }
