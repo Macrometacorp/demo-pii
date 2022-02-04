@@ -141,19 +141,18 @@ export default () => {
         ? ToastTypes.Info
         : ToastTypes.Success;
 
-      let toastMessage = error
-        ? `${error.name}: ${error.errorMessage}`
-        : isPrivate && isAdded
-        ? "Your new record will reflect shortly"
-        : isPrivate && isUpdated
-        ? "Your record is updated and will reflect shortly"
-        : isPrivate && isDeleted
-        ? "Your record is deleted and will reflect shortly"
-        : isAdded
-        ? "New record added successfully"
-        : isUpdated
-        ? "Record updated successfully"
-        : "Record deleted successfully";
+      let toastMessage = "";
+      if (error) {
+        toastMessage = `${error.name}: ${error.errorMessage}`;
+      } else {
+        if (isAdded) {
+          toastMessage = "Your new record will reflect shortly";
+        } else if (isUpdated) {
+          toastMessage = "Your record is updated and will reflect shortly";
+        } else if (isDeleted) {
+          toastMessage = "Your record is deleted and will reflect shortly";
+        }
+      }
 
       setShowToast(true);
       setToastType(toastType);

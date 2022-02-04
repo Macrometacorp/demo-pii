@@ -28,11 +28,12 @@ export default async (request: Request, form: FormData) => {
       });
 
       for (let i = 0; i < allFormData.length; ++i) {
-        await handleCreate(request, allFormData[i]);
-        console.log(`Done for ${allFormData[i].get("name")}`);
+        const createRes = await handleCreate(request, allFormData[i]);
+        console.log(createRes);
+        console.log(`Uploaded for ${allFormData[i].get("name")}`);
       }
       // some of the records maybe private
-      return { isPrivate: true };
+      return { isPrivate: true, isAdded: true };
     }
   } catch (error: any) {
     return { error: true, errorMessage: error?.message, name: error?.name };
