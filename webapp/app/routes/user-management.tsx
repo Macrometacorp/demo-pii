@@ -135,7 +135,15 @@ export default () => {
 
   useEffect(() => {
     if (actionData) {
-      const { error, isPrivate, isDeleted, isUpdated, isAdded } = actionData;
+      const {
+        error,
+        isPrivate,
+        isDeleted,
+        isUpdated,
+        isAdded,
+        name,
+        errorMessage,
+      } = actionData;
 
       let toastType = error
         ? ToastTypes.Error
@@ -145,7 +153,7 @@ export default () => {
 
       let toastMessage = "";
       if (error) {
-        toastMessage = `${error.name}: ${error.errorMessage}`;
+        toastMessage = `${name}: ${errorMessage}`;
       } else {
         if (isAdded) {
           toastMessage = "Your new record will reflect shortly";
