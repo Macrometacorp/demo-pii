@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   ActionFunction,
   LoaderFunction,
+  redirect,
   useActionData,
   useCatch,
   useLoaderData,
@@ -74,7 +75,7 @@ export const action: ActionFunction = async ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   if (!(await isLoggedIn(request))) {
-    throw new Response("Unauthorized", { status: 401 });
+    return redirect("/");
   }
   const {
     query: { email },
@@ -94,7 +95,9 @@ export default () => {
   const allUserData = useLoaderData();
   const transition = useTransition();
 
-  const userData = allUserData.filter((user: UserData) => !!user?.name?.trim());
+  const userData = allUserData.filter(
+    (user: UserData) => !!user?.name?.trim() && !!user?.country?.trim()
+  );
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -133,7 +136,15 @@ export default () => {
 
   useEffect(() => {
     if (actionData) {
-      const { error, isPrivate, isDeleted, isUpdated, isAdded } = actionData;
+      const {
+        error,
+        isPrivate,
+        isDeleted,
+        isUpdated,
+        isAdded,
+        name,
+        errorMessage,
+      } = actionData;
 
       let toastType = error
         ? ToastTypes.Error
@@ -143,7 +154,7 @@ export default () => {
 
       let toastMessage = "";
       if (error) {
-        toastMessage = `${error.name}: ${error.errorMessage}`;
+        toastMessage = `${name}: ${errorMessage}`;
       } else {
         if (isAdded) {
           toastMessage = "Your new record will reflect shortly";

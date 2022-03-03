@@ -18,11 +18,24 @@ export default async (request: Request, form: FormData) => {
   let token = "";
   try {
     if (isPrivate) {
-      const resText = await piiAddContact(name, email, phone).then((response) =>
-        response.text()
-      );
-      const res = JSON.parse(resText);
-      token = res.token;
+      const piiResponsePromise = await piiAddContact(name, email, phone);
+      const piiResponse = await piiResponsePromise.json();
+      token = piiResponse.token;
+      if (piiResponse?.status === "error") {
+        let errorMessage = "Something went wrong. Please try again.";
+        switch (piiResponse?.message) {
+          case "duplicate index: email":
+            errorMessage = `Contact already exists with email ${email}`;
+            break;
+          case "duplicate index: login":
+            errorMessage = `Contact already exists with name ${name}`;
+            break;
+          case "duplicate index: phone":
+            errorMessage = `Contact already exists with phone ${phone}`;
+            break;
+        }
+        throw new Error(errorMessage);
+      }
     } else {
       token = token || `${MM_TOKEN_PREFIX}${uuidv4()}`;
       await c8ql(request, Fabrics.Global, Queries.InsertUser(), {
@@ -41,6 +54,10 @@ export default async (request: Request, form: FormData) => {
     });
     return { isPrivate, isAdded: true };
   } catch (error: any) {
-    return { error: true, errorMessage: error?.message, name: error?.name };
+    return {
+      error: true,
+      errorMessage: error?.message,
+      name: error?.name || "Error",
+    };
   }
 };
