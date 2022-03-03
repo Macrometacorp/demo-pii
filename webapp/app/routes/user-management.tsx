@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   ActionFunction,
   LoaderFunction,
+  redirect,
   useActionData,
   useCatch,
   useLoaderData,
@@ -74,7 +75,7 @@ export const action: ActionFunction = async ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   if (!(await isLoggedIn(request))) {
-    throw new Response("Unauthorized", { status: 401 });
+    return redirect("/");
   }
   const {
     query: { email },
