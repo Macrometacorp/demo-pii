@@ -77,6 +77,7 @@ export default ({
             type="text"
             name="name"
             value={decryptData?.name}
+            required
             onChange={handleInput("name")}
             className="input input-primary input-bordered"
           />
@@ -89,6 +90,7 @@ export default ({
           <input
             type="email"
             name="email"
+            required
             value={decryptData?.email}
             onChange={handleInput("email")}
             className="input input-primary input-bordered"
@@ -102,6 +104,7 @@ export default ({
           <input
             type="tel"
             name="phone"
+            required
             value={decryptData?.phone}
             onChange={handleInput("phone")}
             className="input input-primary input-bordered"
@@ -115,6 +118,7 @@ export default ({
           <input
             type="text"
             name="state"
+            required
             value={decryptData?.state}
             onChange={handleInput("state")}
             className="input input-primary input-bordered"
@@ -140,6 +144,7 @@ export default ({
           <input
             type="text"
             name="zipcode"
+            required
             value={decryptData?.zipcode}
             onChange={handleInput("zipcode")}
             className="input input-primary input-bordered"
@@ -154,6 +159,7 @@ export default ({
             type="text"
             name="job_title"
             value={decryptData?.job_title}
+            required
             onChange={handleInput("job_title")}
             className="input input-primary input-bordered"
           />
