@@ -94,7 +94,9 @@ export default () => {
   const allUserData = useLoaderData();
   const transition = useTransition();
 
-  const userData = allUserData.filter((user: UserData) => !!user?.name?.trim());
+  const userData = allUserData.filter(
+    (user: UserData) => !!user?.name?.trim() && !!user?.country?.trim()
+  );
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
