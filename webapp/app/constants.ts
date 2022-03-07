@@ -121,6 +121,7 @@ export enum FormButtonActions {
   Update = "update",
   Delete = "delete",
   Upload = "upload",
+  RefreshPage = "refreshPage",
 }
 
 export enum SortingDirection {

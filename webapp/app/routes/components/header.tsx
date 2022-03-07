@@ -1,11 +1,14 @@
 import { Link } from "remix";
 import { AppPaths } from "~/constants";
 import Menu from "./menu";
+import LeftMenu from "./leftMenu";
 
 export default () => {
   return (
     <div className="navbar mb-2 shadow-lg bg-primary text-neutral-content box h-32">
-      <div className="flex-1"></div>
+      <div className="flex-1">
+        <LeftMenu />
+      </div>
       <div className="flex-1 justify-center">
         <div>
           <Link to={AppPaths.Logout} reloadDocument>

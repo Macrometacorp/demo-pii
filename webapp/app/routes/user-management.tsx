@@ -64,6 +64,11 @@ export const action: ActionFunction = async ({
     case FormButtonActions.Upload:
       result = await handleUpload(request, form);
       break;
+    case FormButtonActions.RefreshPage:
+      result = {
+        isPageRefresh: true
+      } as any;
+      break;
     default:
       result = {
         error: true,
@@ -148,6 +153,7 @@ export default () => {
         isAdded,
         name,
         errorMessage,
+        isPageRefresh
       } = actionData;
 
       let toastType = error
@@ -166,6 +172,8 @@ export default () => {
           toastMessage = "Your record is updated and will reflect shortly";
         } else if (isDeleted) {
           toastMessage = "Your record is deleted and will reflect shortly";
+        } else if (isPageRefresh) {
+          toastMessage = "Page refreshed successfully";
         }
       }
 
