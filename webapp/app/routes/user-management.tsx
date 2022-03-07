@@ -109,7 +109,7 @@ export default () => {
   const [currentContacts, setCurrentContacts] = useState(userData.slice(
     indexOfFirstContact,
     indexOfLastContact
-  ));
+  ).sort((a: UserData, b: UserData) => a[Headings.Name].localeCompare(b[Headings.Name])));
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -193,7 +193,9 @@ export default () => {
         : Asc
       : Desc;
     const sortedContacts = currentContacts;
-    sortedContacts.sort((a: any, b: any) => a[Headings.Name].localeCompare(b[Headings.Name]));
+    sortedContacts.sort((a: UserData, b: UserData) =>
+      a[Headings.Name].localeCompare(b[Headings.Name])
+    );
     if (direction === Desc) {
       sortedContacts.reverse();
     }

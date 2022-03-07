@@ -124,8 +124,8 @@ export enum FormButtonActions {
 }
 
 export enum SortingDirection {
-  Asc = 'Asc',
-  Desc = 'Desc'
+  Asc = 'ASC',
+  Desc = 'DESC'
 }
 
 export enum Headings {
