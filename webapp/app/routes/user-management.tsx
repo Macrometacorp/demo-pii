@@ -18,6 +18,8 @@ import {
   ToastTypes,
   FormButtonActions,
   AppPaths,
+  SortingDirection,
+  Headings,
 } from "~/constants";
 
 import { UserData, UserManagementActionResult } from "~/interfaces";
@@ -101,13 +103,14 @@ export default () => {
   const [activeRow, setActiveRow] = useState("");
   const [isPrivateRegion, setIsPrivateRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
+  
   const indexOfLastContact = currentPage * CONTACTS_PER_PAGE;
   const indexOfFirstContact = indexOfLastContact - CONTACTS_PER_PAGE;
-  const currentContacts = userData.slice(
+  const [currentContacts, setCurrentContacts] = useState(userData.slice(
     indexOfFirstContact,
     indexOfLastContact
-  );
+  ));
+
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const [showDecryptModal, setShowDecryptModal] = useState(false);
@@ -118,6 +121,7 @@ export default () => {
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState(ToastTypes.Info);
   const [toastMessage, setToastMessage] = useState("");
+  const [sortingDirection, setSortingDirection] = useState("");
 
   useEffect(() => {
     // to reset page when using search
@@ -181,16 +185,51 @@ export default () => {
     setShowToast(false);
   };
 
+  const sortByName = () => {
+    const { Asc, Desc } = SortingDirection;
+    const direction = sortingDirection
+      ? sortingDirection === Asc
+        ? Desc
+        : Asc
+      : Desc;
+    const sortedContacts = currentContacts;
+    sortedContacts.sort((a: any, b: any) => a[Headings.Name].localeCompare(b[Headings.Name]));
+    if (direction === Desc) {
+      sortedContacts.reverse();
+    }
+    setSortingDirection(direction);
+    setCurrentContacts(sortedContacts);
+  };
+
   return (
     <div>
       <table className="table w-full">
         <thead>
           <tr>
-            {HEADINGS.map((heading) => {
-              const textStyle = heading === "actions" ? "text-center" : "";
+            {HEADINGS.map((heading, index) => {
+              let textStyle = "";
+              switch (heading) {
+                case Headings.Name:
+                  textStyle = "cursor-pointer";
+                  break;
+                case Headings.Actions:
+                  textStyle = "text-center";
+                  break;
+              }
+              const icons = !!sortingDirection && (
+                <span>
+                  {sortingDirection === SortingDirection.Asc ? "⬆" : "⬇"}
+                </span>
+              );
               return (
-                <th className={textStyle} key={heading}>
-                  {heading}
+                <th
+                  className={textStyle}
+                  key={heading}
+                  onClick={heading === Headings.Name ? sortByName : undefined}
+                >
+                  <div>
+                    {heading} {heading === Headings.Name && icons}
+                  </div>
                 </th>
               );
             })}
