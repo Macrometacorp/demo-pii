@@ -122,3 +122,13 @@ export enum FormButtonActions {
   Delete = "delete",
   Upload = "upload",
 }
+
+export enum SortingDirection {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
+export enum Headings {
+  Name = "name",
+  Actions = "actions"
+}
