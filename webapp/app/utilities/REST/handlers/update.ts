@@ -27,6 +27,12 @@ export default async (
       );
       // error if expected format is not received
       JSON.parse(resText);
+      // adding delay in case of eu records
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(null);
+        }, 600);
+      });
     } else {
       // "{ name: @name, email: @email, phone: @phone }"
       const whatToUpsert = [];
