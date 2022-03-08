@@ -50,6 +50,7 @@ export interface CommonShareModalProps {
   endpoint: string;
   onModalClose: () => void;
   piiToken: string;
+  modalUserDetails: UserData;
 }
 
 export type EditModalProps = ModalProps & {

@@ -224,6 +224,7 @@ export default () => {
             setShowCommonModal(false);
           }}
           piiToken={loaderData.token}
+          modalUserDetails={loaderData}
         />
       )}
     </div>

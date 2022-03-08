@@ -10,6 +10,7 @@ export default ({
   endpoint,
   onModalClose,
   piiToken,
+  modalUserDetails
 }: CommonShareModalProps) => {
   const [message, setMessage] = useState("");
   const [copiedToClipboard, setcopiedToClipboard] = useState(false);
@@ -17,7 +18,21 @@ export default ({
   const getShareableCurlCommand = async () => {
       const result = await fetch(`${endpoint}?${Session.PiiToken}=${piiToken}`);
       const parsedResult = await result.json();
-      const messageToBeSent = parsedResult.message; 
+      let editableContact: any = modalUserDetails;
+      delete editableContact.country;
+      delete editableContact.token;
+      delete editableContact.isPrivateRecord;
+      const isWindows =
+        navigator.userAgent.includes("Windows") ||
+        navigator.userAgent.includes("Win64") ||
+        navigator.userAgent.includes("Win32");
+
+      const messageToBeSent = parsedResult.message.replace(
+        /UPDATED_CONTACT_DETAILS/,
+        String.raw`${isWindows ? "'" : '"'}${JSON.stringify(
+          editableContact
+        ).replace(/"/g, '\\"')}${isWindows ? "'" : '"'}`
+      );
       setMessage(messageToBeSent);
   };
 
@@ -57,6 +72,7 @@ export default ({
                   fontSize: "16px",
                   color: "rgba(255,255,255,1)",
                 }}
+                className='break-words'
               >
                 {message}
               </p>
