@@ -8,8 +8,6 @@ export default () => {
   const [showMenu, setShowMenu] = useState(false);
   const fetcher = useFetcher();
 
-  useEffect(() => {}, [fetcher.state]);
-
   useEffect(() => {
     const {
       location: { pathname },
@@ -18,7 +16,7 @@ export default () => {
     pathname === AppPaths.UserManagement
       ? setShowMenu(true)
       : setShowMenu(false);
-  });
+  }, [window.location.pathname]);
 
   return (
     <div
