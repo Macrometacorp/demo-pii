@@ -13,9 +13,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   let requestData = await request.text();
-  const payload = JSON.stringify(requestData)
+  const payload = await JSON.parse(JSON.stringify(requestData))
   const { name, email, phone, state, zipcode, job_title } = JSON.parse(payload);
-
+  console.log(name, email, phone, state, zipcode, job_title)
   const formData = new FormData();
   formData.set("token", token);
   name && formData.set("name", name);
