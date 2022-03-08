@@ -36,12 +36,6 @@ export default async (request: Request, form: FormData) => {
         }
         throw new Error(errorMessage);
       }
-      // adding delay in case of eu records
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(null);
-        }, 600);
-      });
     } else {
       token = token || `${MM_TOKEN_PREFIX}${uuidv4()}`;
       await c8ql(request, Fabrics.Global, Queries.InsertUser(), {
