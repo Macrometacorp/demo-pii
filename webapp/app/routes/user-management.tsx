@@ -77,6 +77,12 @@ export const action: ActionFunction = async ({
       };
   }
 
+  await new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(null);
+    }, 600);
+  });
+
   return result;
 };
 

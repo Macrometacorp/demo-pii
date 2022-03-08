@@ -8,8 +8,6 @@ export default () => {
   const [showMenu, setShowMenu] = useState(false);
   const fetcher = useFetcher();
 
-  useEffect(() => {}, [fetcher.state]);
-
   useEffect(() => {
     const {
       location: { pathname },
