@@ -12,8 +12,9 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ message: "PII token not present. Unauthorized" }, 401);
   }
 
-  const payload = await request.json();
-  const { name, email, phone, state, zipcode, job_title } = payload;
+  let requestData = await request.text();
+  const payload = JSON.stringify(requestData)
+  const { name, email, phone, state, zipcode, job_title } = JSON.parse(payload);
 
   const formData = new FormData();
   formData.set("token", token);
