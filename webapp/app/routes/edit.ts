@@ -12,10 +12,8 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ message: "PII token not present. Unauthorized" }, 401);
   }
 
-  let requestData = await request.text();
-  const payload = JSON.stringify(requestData)
-  const { name, email, phone, state, zipcode, job_title } = JSON.parse(payload);
-
+  let payload = await request.json();
+  const { name, email, phone, state, zipcode, job_title } = payload;
   const formData = new FormData();
   formData.set("token", token);
   name && formData.set("name", name);
@@ -38,7 +36,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json({ message: "PII token not present." }, 400);
   }
 
-  const curl = `curl -XPUT -H 'pii-token: ${piiToken}' '${protocol}//${host}/edit' -d '{json}'`;
+  const curl = `curl -XPUT -H 'pii-token: ${piiToken}' '${protocol}//${host}/edit' -d UPDATED_CONTACT_DETAILS`;
 
   return json({ message: curl }, 200);
 };
