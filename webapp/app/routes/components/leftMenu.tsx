@@ -16,7 +16,7 @@ export default () => {
     pathname === AppPaths.UserManagement
       ? setShowMenu(true)
       : setShowMenu(false);
-  }, [window.location.pathname]);
+  });
 
   return (
     <div
