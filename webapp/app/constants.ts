@@ -95,6 +95,9 @@ export const Queries = {
   SearchLocationByToken: () =>
     `FOR location IN ${Collections.UserLocations} FILTER location.token == @token RETURN location`,
 
+  SearchDuplicateUser: () =>
+    `FOR user IN ${Collections.Users} FILTER (user.email == @email or user.name == @name or user.phone == @phone) and (user.token != @token) RETURN user`,
+
   DeleteUser: () => `REMOVE { _key: @token } IN ${Collections.Users}`,
 
   DeleteLocation: () =>
