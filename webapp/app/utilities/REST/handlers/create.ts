@@ -25,7 +25,6 @@ export const checkForDuplicateRecords = async (
   );
   // fetching duplicate non eu records
   const duplicateRecords = await duplicateRecordsPromise.json();
-  console.log(duplicateRecords);
   if (duplicateRecords?.result?.length > 0) {
     const duplicateUser = duplicateRecords.result[0] || [];
     let errorMessage = "Something went wrong. Please try again.";
