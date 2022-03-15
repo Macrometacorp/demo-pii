@@ -2,6 +2,7 @@ import { Fabrics, Queries } from "~/constants";
 import { isMMToken } from "~/utilities/utils";
 import { c8ql } from "../mm";
 import { piiUpdateContact } from "../pii";
+import { checkForDuplicateRecords } from './create';
 
 export default async (
   request: Request,
@@ -38,6 +39,13 @@ export default async (
         // user details really need to be updated
         const upsertStr = whatToUpsert.length ? whatToUpsert.join(",") : "";
 
+        await checkForDuplicateRecords(
+          request,
+          name as string,
+          email as string,
+          phone as string,
+          token
+        );
         const res = await c8ql(
           request,
           Fabrics.Global,

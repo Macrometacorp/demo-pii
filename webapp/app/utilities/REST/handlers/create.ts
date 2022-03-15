@@ -5,6 +5,41 @@ import { isPrivateRegion } from "~/utilities/utils";
 import { c8ql } from "../mm";
 import { piiAddContact } from "../pii";
 
+export const checkForDuplicateRecords = async (
+  request: Request,
+  name: string,
+  email: string,
+  phone: string,
+  token: string = ""
+) => {
+  const duplicateRecordsPromise = await c8ql(
+    request,
+    Fabrics.Global,
+    Queries.SearchDuplicateUser(),
+    {
+      name,
+      email,
+      phone,
+      token,
+    }
+  );
+  // fetching duplicate non eu records
+  const duplicateRecords = await duplicateRecordsPromise.json();
+  if (duplicateRecords.status === "error" || !duplicateRecords.result.length) {
+    return;
+  }
+  const duplicateUser = duplicateRecords.result[0] || {};
+  let errorMessage = "Something went wrong. Please try again.";
+  if (duplicateUser.email === email) {
+    errorMessage = `Contact already exists with email ${email}`;
+  } else if (duplicateUser.name === name) {
+    errorMessage = `Contact already exists with name ${name}`;
+  } else if (duplicateUser.phone === phone) {
+    errorMessage = `Contact already exists with phone ${phone}`;
+  }
+  throw new Error(errorMessage);
+};
+
 export default async (request: Request, form: FormData) => {
   const name = form.get("name")?.toString() ?? "";
   const email = form.get("email")?.toString() ?? "";
@@ -38,6 +73,7 @@ export default async (request: Request, form: FormData) => {
       }
     } else {
       token = token || `${MM_TOKEN_PREFIX}${uuidv4()}`;
+      await checkForDuplicateRecords(request, name, email, phone);
       await c8ql(request, Fabrics.Global, Queries.InsertUser(), {
         token,
         name,
