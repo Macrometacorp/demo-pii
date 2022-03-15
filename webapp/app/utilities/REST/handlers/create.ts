@@ -25,18 +25,22 @@ export const checkForDuplicateRecords = async (
   );
   // fetching duplicate non eu records
   const duplicateRecords = await duplicateRecordsPromise.json();
-  if (duplicateRecords?.result?.length > 0) {
-    const duplicateUser = duplicateRecords.result[0] || [];
-    let errorMessage = "Something went wrong. Please try again.";
-    if (duplicateUser.email === email) {
-      errorMessage = `Contact already exists with email ${email}`;
-    } else if (duplicateUser.name === name) {
-      errorMessage = `Contact already exists with name ${name}`;
-    } else if (duplicateUser.phone === phone) {
-      errorMessage = `Contact already exists with phone ${phone}`;
-    }
-    throw new Error(errorMessage);
+  if (
+    duplicateRecords.result.length == 0 ||
+    duplicateRecords.status === "error"
+  ) {
+    return;
   }
+  const duplicateUser = duplicateRecords.result[0] || [];
+  let errorMessage = "Something went wrong. Please try again.";
+  if (duplicateUser.email === email) {
+    errorMessage = `Contact already exists with email ${email}`;
+  } else if (duplicateUser.name === name) {
+    errorMessage = `Contact already exists with name ${name}`;
+  } else if (duplicateUser.phone === phone) {
+    errorMessage = `Contact already exists with phone ${phone}`;
+  }
+  throw new Error(errorMessage);
 };
 
 export default async (request: Request, form: FormData) => {
