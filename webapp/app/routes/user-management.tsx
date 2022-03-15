@@ -135,6 +135,11 @@ export default () => {
   const [sortingDirection, setSortingDirection] = useState("");
 
   useEffect(() => {
+    setCurrentContacts(userData.slice(indexOfFirstContact, indexOfLastContact));
+    setSortingDirection("");
+  }, [currentPage, indexOfFirstContact, indexOfLastContact, userData.length]);
+
+  useEffect(() => {
     // to reset page when using search
     if (userData.length < CONTACTS_PER_PAGE) {
       setCurrentPage(1);
