@@ -18,7 +18,7 @@ export default ({
   const getShareableCurlCommand = async () => {
       const result = await fetch(`${endpoint}?${Session.PiiToken}=${piiToken}`);
       const parsedResult = await result.json();
-      let editableContact: any = modalUserDetails;
+      const editableContact: any = { ...modalUserDetails };
       delete editableContact.country;
       delete editableContact.token;
       delete editableContact.isPrivateRecord;
